@@ -1,0 +1,29 @@
+project:
+  name: modular-rag-mcp-server
+  environment: local
+
+llm:
+  provider: openai
+  model: gpt-4o-mini
+
+embedding:
+  provider: openai
+  model: text-embedding-3-small
+
+vector_store:
+  provider: chroma
+  persist_directory: data/db/chroma
+
+retrieval:
+  top_k: 5
+
+rerank:
+  enabled: false
+  provider: none
+
+evaluation:
+  provider: custom
+
+observability:
+  traces_path: logs/traces.jsonl
+  app_log_path: logs/app.log

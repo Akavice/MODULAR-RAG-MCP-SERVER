@@ -52,7 +52,9 @@ coverage.xml
 
 # Environments
 .env
+.envrc
 .venv
+.venv/
 env/
 venv/
 ENV/
@@ -96,6 +98,7 @@ cache/
 logs/
 *.log
 traces.jsonl
+.DS_Store
 
 # Auto-coder skill cache
 .github/skills/auto-coder/.spec_hash

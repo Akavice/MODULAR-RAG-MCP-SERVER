@@ -1,0 +1,1 @@
+"""Multimodal assembly placeholder."""
