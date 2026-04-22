@@ -7,6 +7,7 @@ from typing import Any
 
 from libs.embedding.azure_embedding import AzureEmbedding
 from libs.embedding.base_embedding import BaseEmbedding
+from libs.embedding.ollama_embedding import OllamaEmbedding
 from libs.embedding.openai_embedding import OpenAIEmbedding
 
 
@@ -17,6 +18,7 @@ class EmbeddingFactory:
     _builtin_registry: dict[str, type[BaseEmbedding]] = {
         "openai": OpenAIEmbedding,
         "azure": AzureEmbedding,
+        "ollama": OllamaEmbedding,
     }
 
     @classmethod
