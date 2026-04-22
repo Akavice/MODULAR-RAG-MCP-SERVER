@@ -56,6 +56,7 @@ class VectorStoreFactory:
         config.pop("provider", None)
         collection_name = config.pop("collection_name", "default")
         collection_name = cls._validate_collection_name(collection_name)
+        config = cls._inject_embedding_signature(config=config, settings=settings)
         return vector_store_cls(collection_name=collection_name, **config)
 
     @classmethod
@@ -98,3 +99,37 @@ class VectorStoreFactory:
         if not isinstance(vector_store_settings, Mapping):
             raise ValueError("Missing required setting: vector_store")
         return dict(vector_store_settings)
+
+    @staticmethod
+    def _inject_embedding_signature(
+        *,
+        config: dict[str, Any],
+        settings: Mapping[str, Any] | Any,
+    ) -> dict[str, Any]:
+        if "embedding_provider" in config and "embedding_model" in config:
+            return config
+
+        if isinstance(settings, Mapping):
+            embedding_settings = settings.get("embedding")
+        else:
+            embedding_settings = getattr(settings, "embedding", None)
+
+        if not isinstance(embedding_settings, Mapping):
+            return config
+
+        if "embedding_provider" not in config:
+            provider = embedding_settings.get("provider")
+            if isinstance(provider, str) and provider.strip():
+                config["embedding_provider"] = provider.strip()
+
+        if "embedding_model" not in config:
+            model = embedding_settings.get("model")
+            if isinstance(model, str) and model.strip():
+                config["embedding_model"] = model.strip()
+
+        if "embedding_dimension" not in config:
+            dim = embedding_settings.get("dimension")
+            if isinstance(dim, int) and not isinstance(dim, bool) and dim > 0:
+                config["embedding_dimension"] = dim
+
+        return config

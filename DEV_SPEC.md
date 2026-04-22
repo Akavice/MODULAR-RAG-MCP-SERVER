@@ -1970,7 +1970,7 @@ dashboard:
 | B7.3 | OpenAI & Azure Embedding 实现 | [x] | 2026-04-22 | 已实现 OpenAI/Azure Embedding provider、工厂路由与 smoke 单测 |
 | B7.4 | Ollama Embedding 实现 | [x] | 2026-04-22 | 已实现 OllamaEmbedding、工厂路由与连接失败/超时 smoke 单测 |
 | B7.5 | Recursive Splitter 默认实现 | [x] | 2026-04-22 | 已实现 RecursiveSplitter、工厂内置路由与 markdown 切分单测；审查通过（含 custom separators 修复） |
-| B7.6 | ChromaStore 默认实现 | [x] | 2026-04-22 | 已实现 ChromaStore 持久化、工厂内置路由与 roundtrip 集成测试 |
+| B7.6 | ChromaStore 默认实现 | [x] | 2026-04-22 | 已实现 ChromaStore 持久化、工厂内置路由、roundtrip 集成测试与 embedding signature 一致性机制 |
 | B7.7 | LLM Reranker 实现 | [ ] | | |
 | B7.8 | Cross-Encoder Reranker 实现 | [ ] | | |
 | B8 | Vision LLM 抽象接口与工厂集成 | [ ] | | |

@@ -140,13 +140,16 @@ def test_factory_create_routes_by_provider_from_nested_mapping() -> None:
                 "provider": "fake",
                 "collection_name": "knowledge",
                 "persist_directory": "data/db/chroma",
-            }
+            },
+            "embedding": {"provider": "openai", "model": "text-embedding-3-small"},
         }
     )
 
     assert isinstance(store, FakeVectorStore)
     assert store.collection_name == "knowledge"
     assert store.options["persist_directory"] == "data/db/chroma"
+    assert store.options["embedding_provider"] == "openai"
+    assert store.options["embedding_model"] == "text-embedding-3-small"
 
 
 @pytest.mark.unit
