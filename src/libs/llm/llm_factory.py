@@ -6,12 +6,20 @@ from collections.abc import Mapping
 from typing import Any
 
 from libs.llm.base_llm import BaseLLM
+from libs.llm.azure_llm import AzureLLM
+from libs.llm.deepseek_llm import DeepSeekLLM
+from libs.llm.openai_llm import OpenAILLM
 
 
 class LLMFactory:
     """Provider-based constructor for `BaseLLM` implementations."""
 
     _registry: dict[str, type[BaseLLM]] = {}
+    _builtin_registry: dict[str, type[BaseLLM]] = {
+        "openai": OpenAILLM,
+        "azure": AzureLLM,
+        "deepseek": DeepSeekLLM,
+    }
 
     @classmethod
     def register(
@@ -23,6 +31,8 @@ class LLMFactory:
     ) -> None:
         """Register a provider implementation for later creation."""
         key = cls._normalize_provider(provider)
+        if key in cls._builtin_registry and not overwrite:
+            raise ValueError(f"Provider '{provider}' is reserved by built-in llms")
         if not overwrite and key in cls._registry:
             raise ValueError(f"Provider '{provider}' is already registered")
         cls._registry[key] = llm_cls
@@ -36,9 +46,11 @@ class LLMFactory:
             raise ValueError("Missing required setting: llm.provider")
 
         key = cls._normalize_provider(provider)
-        llm_cls = cls._registry.get(key)
+        llm_cls = cls._registry.get(key) or cls._builtin_registry.get(key)
         if llm_cls is None:
-            providers = ", ".join(sorted(cls._registry)) or "<none>"
+            providers = ", ".join(
+                sorted(set(cls._builtin_registry).union(cls._registry))
+            ) or "<none>"
             raise ValueError(
                 f"Unsupported llm provider: {provider}. Registered providers: {providers}"
             )
@@ -56,7 +68,7 @@ class LLMFactory:
     @classmethod
     def registered_providers(cls) -> tuple[str, ...]:
         """Return currently registered providers in deterministic order."""
-        return tuple(sorted(cls._registry))
+        return tuple(sorted(set(cls._builtin_registry).union(cls._registry)))
 
     @staticmethod
     def _normalize_provider(provider: str) -> str:

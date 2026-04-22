@@ -77,11 +77,11 @@ def test_create_raises_for_missing_provider() -> None:
 
 
 @pytest.mark.unit
-def test_create_raises_for_unregistered_provider() -> None:
+def test_create_raises_for_unknown_provider() -> None:
     LLMFactory.register("fake", FakeLLM)
 
-    with pytest.raises(ValueError, match="Registered providers: fake"):
-        LLMFactory.create({"llm": {"provider": "openai"}})
+    with pytest.raises(ValueError, match="Unsupported llm provider"):
+        LLMFactory.create({"llm": {"provider": "unknown-provider"}})
 
 
 @pytest.mark.unit
@@ -90,3 +90,9 @@ def test_register_raises_when_duplicate_provider_without_overwrite() -> None:
 
     with pytest.raises(ValueError, match="already registered"):
         LLMFactory.register("fake", FakeLLM)
+
+
+@pytest.mark.unit
+def test_register_raises_for_builtin_provider_without_overwrite() -> None:
+    with pytest.raises(ValueError, match="reserved by built-in llms"):
+        LLMFactory.register("openai", FakeLLM)
