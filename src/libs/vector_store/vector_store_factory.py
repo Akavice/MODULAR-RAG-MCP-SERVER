@@ -6,12 +6,14 @@ from collections.abc import Mapping
 from typing import Any
 
 from libs.vector_store.base_vector_store import BaseVectorStore
+from libs.vector_store.chroma_store import ChromaStore
 
 
 class VectorStoreFactory:
     """Provider-based constructor for `BaseVectorStore` implementations."""
 
     _registry: dict[str, type[BaseVectorStore]] = {}
+    _builtin_registry: dict[str, type[BaseVectorStore]] = {"chroma": ChromaStore}
 
     @classmethod
     def register(
@@ -23,6 +25,10 @@ class VectorStoreFactory:
     ) -> None:
         """Register a provider implementation for later creation."""
         key = cls._normalize_provider(provider)
+        if key in cls._builtin_registry and not overwrite:
+            raise ValueError(
+                f"Provider '{provider}' is reserved by built-in vector stores"
+            )
         if not overwrite and key in cls._registry:
             raise ValueError(f"Provider '{provider}' is already registered")
         cls._registry[key] = vector_store_cls
@@ -36,9 +42,11 @@ class VectorStoreFactory:
             raise ValueError("Missing required setting: vector_store.provider")
 
         key = cls._normalize_provider(provider)
-        vector_store_cls = cls._registry.get(key)
+        vector_store_cls = cls._registry.get(key) or cls._builtin_registry.get(key)
         if vector_store_cls is None:
-            providers = ", ".join(sorted(cls._registry)) or "<none>"
+            providers = ", ".join(
+                sorted(set(cls._builtin_registry).union(cls._registry))
+            ) or "<none>"
             raise ValueError(
                 f"Unsupported vector_store provider: {provider}. "
                 f"Registered providers: {providers}"
@@ -58,7 +66,7 @@ class VectorStoreFactory:
     @classmethod
     def registered_providers(cls) -> tuple[str, ...]:
         """Return currently registered providers in deterministic order."""
-        return tuple(sorted(cls._registry))
+        return tuple(sorted(set(cls._builtin_registry).union(cls._registry)))
 
     @staticmethod
     def _normalize_provider(provider: str) -> str:

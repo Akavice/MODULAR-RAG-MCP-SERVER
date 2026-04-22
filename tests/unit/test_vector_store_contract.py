@@ -170,11 +170,11 @@ def test_factory_raises_for_missing_provider() -> None:
 
 
 @pytest.mark.unit
-def test_factory_raises_for_unregistered_provider() -> None:
+def test_factory_raises_for_unknown_provider() -> None:
     VectorStoreFactory.register("fake", FakeVectorStore)
 
-    with pytest.raises(ValueError, match="Registered providers: fake"):
-        VectorStoreFactory.create({"vector_store": {"provider": "chroma"}})
+    with pytest.raises(ValueError, match="Unsupported vector_store provider"):
+        VectorStoreFactory.create({"vector_store": {"provider": "unknown-provider"}})
 
 
 @pytest.mark.unit
@@ -183,6 +183,12 @@ def test_factory_register_rejects_duplicate_provider_without_overwrite() -> None
 
     with pytest.raises(ValueError, match="already registered"):
         VectorStoreFactory.register("fake", FakeVectorStore)
+
+
+@pytest.mark.unit
+def test_factory_register_rejects_builtin_provider_without_overwrite() -> None:
+    with pytest.raises(ValueError, match="reserved by built-in vector stores"):
+        VectorStoreFactory.register("chroma", FakeVectorStore)
 
 
 @pytest.mark.unit
