@@ -5,13 +5,19 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
+from libs.embedding.azure_embedding import AzureEmbedding
 from libs.embedding.base_embedding import BaseEmbedding
+from libs.embedding.openai_embedding import OpenAIEmbedding
 
 
 class EmbeddingFactory:
     """Provider-based constructor for `BaseEmbedding` implementations."""
 
     _registry: dict[str, type[BaseEmbedding]] = {}
+    _builtin_registry: dict[str, type[BaseEmbedding]] = {
+        "openai": OpenAIEmbedding,
+        "azure": AzureEmbedding,
+    }
 
     @classmethod
     def register(
@@ -23,6 +29,8 @@ class EmbeddingFactory:
     ) -> None:
         """Register a provider implementation for later creation."""
         key = cls._normalize_provider(provider)
+        if key in cls._builtin_registry and not overwrite:
+            raise ValueError(f"Provider '{provider}' is reserved by built-in embeddings")
         if not overwrite and key in cls._registry:
             raise ValueError(f"Provider '{provider}' is already registered")
         cls._registry[key] = embedding_cls
@@ -36,9 +44,11 @@ class EmbeddingFactory:
             raise ValueError("Missing required setting: embedding.provider")
 
         key = cls._normalize_provider(provider)
-        embedding_cls = cls._registry.get(key)
+        embedding_cls = cls._registry.get(key) or cls._builtin_registry.get(key)
         if embedding_cls is None:
-            providers = ", ".join(sorted(cls._registry)) or "<none>"
+            providers = ", ".join(
+                sorted(set(cls._builtin_registry).union(cls._registry))
+            ) or "<none>"
             raise ValueError(
                 f"Unsupported embedding provider: {provider}. "
                 f"Registered providers: {providers}"
@@ -57,7 +67,7 @@ class EmbeddingFactory:
     @classmethod
     def registered_providers(cls) -> tuple[str, ...]:
         """Return currently registered providers in deterministic order."""
-        return tuple(sorted(cls._registry))
+        return tuple(sorted(set(cls._builtin_registry).union(cls._registry)))
 
     @staticmethod
     def _normalize_provider(provider: str) -> str:

@@ -77,11 +77,11 @@ def test_create_raises_for_missing_provider() -> None:
 
 
 @pytest.mark.unit
-def test_create_raises_for_unregistered_provider() -> None:
+def test_create_raises_for_unknown_provider() -> None:
     EmbeddingFactory.register("fake", FakeEmbedding)
 
-    with pytest.raises(ValueError, match="Registered providers: fake"):
-        EmbeddingFactory.create({"embedding": {"provider": "openai"}})
+    with pytest.raises(ValueError, match="Unsupported embedding provider"):
+        EmbeddingFactory.create({"embedding": {"provider": "unknown-provider"}})
 
 
 @pytest.mark.unit
@@ -91,3 +91,8 @@ def test_register_raises_when_duplicate_provider_without_overwrite() -> None:
     with pytest.raises(ValueError, match="already registered"):
         EmbeddingFactory.register("fake", FakeEmbedding)
 
+
+@pytest.mark.unit
+def test_register_raises_for_builtin_provider_without_overwrite() -> None:
+    with pytest.raises(ValueError, match="reserved by built-in embeddings"):
+        EmbeddingFactory.register("openai", FakeEmbedding)
