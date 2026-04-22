@@ -37,12 +37,12 @@ def reset_splitter_registry() -> None:
 
 @pytest.mark.unit
 def test_create_routes_by_provider_from_nested_mapping() -> None:
-    SplitterFactory.register("recursive", FakeSplitter)
+    SplitterFactory.register("custom_recursive", FakeSplitter)
 
     splitter = SplitterFactory.create(
         {
             "splitter": {
-                "provider": "recursive",
+                "provider": "custom_recursive",
                 "chunk_size": 128,
                 "chunk_overlap": 16,
                 "separator": "\n\n",
@@ -94,16 +94,16 @@ def test_create_raises_for_missing_provider() -> None:
 def test_create_raises_for_unregistered_provider() -> None:
     SplitterFactory.register("fixed", FakeSplitter)
 
-    with pytest.raises(ValueError, match="Registered providers: fixed"):
+    with pytest.raises(ValueError, match="Unsupported splitter provider"):
         SplitterFactory.create({"splitter": {"provider": "unknown"}})
 
 
 @pytest.mark.unit
 def test_register_raises_when_duplicate_provider_without_overwrite() -> None:
-    SplitterFactory.register("recursive", FakeSplitter)
+    SplitterFactory.register("custom_recursive", FakeSplitter)
 
     with pytest.raises(ValueError, match="already registered"):
-        SplitterFactory.register("recursive", FakeSplitter)
+        SplitterFactory.register("custom_recursive", FakeSplitter)
 
 
 @pytest.mark.unit
@@ -134,3 +134,9 @@ def test_create_raises_when_chunk_overlap_is_not_smaller_than_chunk_size() -> No
         SplitterFactory.create(
             {"splitter": {"provider": "fixed", "chunk_size": 64, "chunk_overlap": 64}}
         )
+
+
+@pytest.mark.unit
+def test_register_raises_for_builtin_provider_without_overwrite() -> None:
+    with pytest.raises(ValueError, match="reserved by built-in splitters"):
+        SplitterFactory.register("recursive", FakeSplitter)

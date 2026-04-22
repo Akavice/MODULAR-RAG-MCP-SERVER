@@ -6,12 +6,14 @@ from collections.abc import Mapping
 from typing import Any
 
 from libs.splitter.base_splitter import BaseSplitter
+from libs.splitter.recursive_splitter import RecursiveSplitter
 
 
 class SplitterFactory:
     """Provider-based constructor for `BaseSplitter` implementations."""
 
     _registry: dict[str, type[BaseSplitter]] = {}
+    _builtin_registry: dict[str, type[BaseSplitter]] = {"recursive": RecursiveSplitter}
 
     @classmethod
     def register(
@@ -23,6 +25,8 @@ class SplitterFactory:
     ) -> None:
         """Register a provider implementation for later creation."""
         key = cls._normalize_provider(provider)
+        if key in cls._builtin_registry and not overwrite:
+            raise ValueError(f"Provider '{provider}' is reserved by built-in splitters")
         if not overwrite and key in cls._registry:
             raise ValueError(f"Provider '{provider}' is already registered")
         cls._registry[key] = splitter_cls
@@ -36,9 +40,11 @@ class SplitterFactory:
             raise ValueError("Missing required setting: splitter.provider")
 
         key = cls._normalize_provider(provider)
-        splitter_cls = cls._registry.get(key)
+        splitter_cls = cls._registry.get(key) or cls._builtin_registry.get(key)
         if splitter_cls is None:
-            providers = ", ".join(sorted(cls._registry)) or "<none>"
+            providers = ", ".join(
+                sorted(set(cls._builtin_registry).union(cls._registry))
+            ) or "<none>"
             raise ValueError(
                 f"Unsupported splitter provider: {provider}. "
                 f"Registered providers: {providers}"
@@ -66,7 +72,7 @@ class SplitterFactory:
     @classmethod
     def registered_providers(cls) -> tuple[str, ...]:
         """Return currently registered providers in deterministic order."""
-        return tuple(sorted(cls._registry))
+        return tuple(sorted(set(cls._builtin_registry).union(cls._registry)))
 
     @staticmethod
     def _normalize_provider(provider: str) -> str:
