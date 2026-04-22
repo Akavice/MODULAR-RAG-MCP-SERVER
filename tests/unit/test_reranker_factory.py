@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 
 from libs.reranker.base_reranker import BaseReranker, RerankCandidate
+from libs.reranker.llm_reranker import LLMReranker
 from libs.reranker.reranker_factory import NoneReranker, RerankerFactory
 
 
@@ -47,6 +48,34 @@ def test_create_with_none_provider_returns_none_reranker() -> None:
     reranker = RerankerFactory.create({"rerank": {"provider": "none"}})
 
     assert isinstance(reranker, NoneReranker)
+
+
+@pytest.mark.unit
+def test_create_with_llm_provider_returns_llm_reranker() -> None:
+    reranker = RerankerFactory.create(
+        {
+            "rerank": {
+                "provider": "llm",
+                "llm_settings": {"provider": "openai", "model": "gpt-4o-mini"},
+            }
+        }
+    )
+
+    assert isinstance(reranker, LLMReranker)
+    assert reranker.llm_settings["provider"] == "openai"
+
+
+@pytest.mark.unit
+def test_create_with_llm_provider_injects_top_level_llm_settings() -> None:
+    reranker = RerankerFactory.create(
+        {
+            "llm": {"provider": "azure", "model": "gpt-4o-mini"},
+            "rerank": {"provider": "llm"},
+        }
+    )
+
+    assert isinstance(reranker, LLMReranker)
+    assert reranker.llm_settings["provider"] == "azure"
 
 
 @pytest.mark.unit
@@ -97,4 +126,3 @@ def test_register_rejects_duplicate_provider_without_overwrite() -> None:
 
     with pytest.raises(ValueError, match="already registered"):
         RerankerFactory.register("fake", FakeReranker)
-

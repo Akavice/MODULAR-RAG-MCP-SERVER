@@ -1971,7 +1971,7 @@ dashboard:
 | B7.4 | Ollama Embedding 实现 | [x] | 2026-04-22 | 已实现 OllamaEmbedding、工厂路由与连接失败/超时 smoke 单测 |
 | B7.5 | Recursive Splitter 默认实现 | [x] | 2026-04-22 | 已实现 RecursiveSplitter、工厂内置路由与 markdown 切分单测；审查通过（含 custom separators 修复） |
 | B7.6 | ChromaStore 默认实现 | [x] | 2026-04-22 | 已实现 ChromaStore 持久化、工厂内置路由、roundtrip 集成测试与 embedding signature 一致性机制 |
-| B7.7 | LLM Reranker 实现 | [ ] | | |
+| B7.7 | LLM Reranker 实现 | [x] | 2026-04-22 | 已实现 LLMReranker（prompt 文件读取、严格 ranked_ids schema 解析）、工厂 llm 内置路由；修复空/缺失 id 与重复 id 候选丢失问题并补齐综合单测 |
 | B7.8 | Cross-Encoder Reranker 实现 | [ ] | | |
 | B8 | Vision LLM 抽象接口与工厂集成 | [ ] | | |
 | B9 | Azure Vision LLM 实现 | [ ] | | |
@@ -2067,7 +2067,7 @@ dashboard:
 | 阶段 | 总任务数 | 已完成 | 进度 |
 |------|---------|--------|------|
 | 阶段 A | 3 | 3 | 100% |
-| 阶段 B | 16 | 12 | 75% |
+| 阶段 B | 16 | 13 | 81% |
 | 阶段 C | 15 | 0 | 0% |
 | 阶段 D | 7 | 0 | 0% |
 | 阶段 E | 6 | 0 | 0% |
@@ -2075,7 +2075,7 @@ dashboard:
 | 阶段 G | 6 | 0 | 0% |
 | 阶段 H | 5 | 0 | 0% |
 | 阶段 I | 5 | 0 | 0% |
-| **总计** | **68** | **15** | **22%** |
+| **总计** | **68** | **16** | **24%** |
 
 
 ---
@@ -2289,10 +2289,12 @@ dashboard:
 - **修改文件**：
   - `src/libs/reranker/llm_reranker.py`
   - `tests/unit/test_llm_reranker.py`（mock LLM）
+  - `tests/unit/test_llm_reranker_b77_comprehensive.py`（空/缺失 id、重复 id、工厂配置边界）
 - **验收标准**：
   - backend=llm 时 `RerankerFactory` 可创建。
   - 输出严格结构化（例如 ranked ids），不满足 schema 时抛出可读错误。
-- **测试方法**：`pytest -q tests/unit/test_llm_reranker.py`。
+  - 候选重排不丢数据：空/缺失 `id` 与重复 `id` 的候选均需完整保留（仅重排，不裁剪）。
+- **测试方法**：`pytest -q tests/unit/test_llm_reranker.py tests/unit/test_llm_reranker_b77_comprehensive.py`。
 
 ### B7.8：Cross-Encoder Reranker（本地/托管模型，占位可跑）
 - **目标**：补齐 `cross_encoder_reranker.py`，支持对 Top-M candidates 打分排序；测试中用 mock scorer 保证 deterministic。

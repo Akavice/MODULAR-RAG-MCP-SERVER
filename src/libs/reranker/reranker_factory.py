@@ -6,6 +6,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from libs.reranker.base_reranker import BaseReranker, RerankCandidate
+from libs.reranker.llm_reranker import LLMReranker
 
 
 class NoneReranker(BaseReranker):
@@ -25,7 +26,10 @@ class RerankerFactory:
     """Provider-based constructor for `BaseReranker` implementations."""
 
     _registry: dict[str, type[BaseReranker]] = {}
-    _builtin_registry: dict[str, type[BaseReranker]] = {"none": NoneReranker}
+    _builtin_registry: dict[str, type[BaseReranker]] = {
+        "none": NoneReranker,
+        "llm": LLMReranker,
+    }
 
     @classmethod
     def register(
@@ -64,6 +68,8 @@ class RerankerFactory:
 
         config = dict(rerank_settings)
         config.pop("provider", None)
+        if key == "llm":
+            config = cls._inject_llm_settings(config=config, settings=settings)
         return reranker_cls(**config)
 
     @classmethod
@@ -95,3 +101,31 @@ class RerankerFactory:
         if not isinstance(rerank_settings, Mapping):
             raise ValueError("Missing required setting: rerank")
         return dict(rerank_settings)
+
+    @staticmethod
+    def _inject_llm_settings(
+        *,
+        config: dict[str, Any],
+        settings: Mapping[str, Any] | Any,
+    ) -> dict[str, Any]:
+        if "llm_settings" in config:
+            llm_settings = config["llm_settings"]
+            if not isinstance(llm_settings, Mapping):
+                raise TypeError("rerank.llm_settings must be a mapping")
+            config["llm_settings"] = dict(llm_settings)
+            return config
+
+        rerank_llm = config.pop("llm", None)
+        if rerank_llm is not None:
+            if not isinstance(rerank_llm, Mapping):
+                raise TypeError("rerank.llm must be a mapping")
+            config["llm_settings"] = dict(rerank_llm)
+            return config
+
+        if isinstance(settings, Mapping):
+            top_level_llm = settings.get("llm")
+        else:
+            top_level_llm = getattr(settings, "llm", None)
+        if isinstance(top_level_llm, Mapping):
+            config["llm_settings"] = dict(top_level_llm)
+        return config
