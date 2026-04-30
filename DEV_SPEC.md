@@ -1972,7 +1972,7 @@ dashboard:
 | B7.5 | Recursive Splitter 默认实现 | [x] | 2026-04-22 | 已实现 RecursiveSplitter、工厂内置路由与 markdown 切分单测；审查通过（含 custom separators 修复） |
 | B7.6 | ChromaStore 默认实现 | [x] | 2026-04-22 | 已实现 ChromaStore 持久化、工厂内置路由、roundtrip 集成测试与 embedding signature 一致性机制 |
 | B7.7 | LLM Reranker 实现 | [x] | 2026-04-22 | 已实现 LLMReranker（prompt 文件读取、严格 ranked_ids schema 解析）、工厂 llm 内置路由；修复空/缺失 id 与重复 id 候选丢失问题并补齐综合单测 |
-| B7.8 | Cross-Encoder Reranker 实现 | [ ] | | |
+| B7.8 | Cross-Encoder Reranker 实现 | [x] | 2026-04-28 | 已实现 CrossEncoderReranker（Top-M 重排、可注入 scorer、默认可运行打分）、工厂 cross_encoder 内置路由与超时/失败回退信号 |
 | B8 | Vision LLM 抽象接口与工厂集成 | [ ] | | |
 | B9 | Azure Vision LLM 实现 | [ ] | | |
 
@@ -2067,7 +2067,7 @@ dashboard:
 | 阶段 | 总任务数 | 已完成 | 进度 |
 |------|---------|--------|------|
 | 阶段 A | 3 | 3 | 100% |
-| 阶段 B | 16 | 13 | 81% |
+| 阶段 B | 16 | 14 | 87% |
 | 阶段 C | 15 | 0 | 0% |
 | 阶段 D | 7 | 0 | 0% |
 | 阶段 E | 6 | 0 | 0% |
@@ -2075,7 +2075,7 @@ dashboard:
 | 阶段 G | 6 | 0 | 0% |
 | 阶段 H | 5 | 0 | 0% |
 | 阶段 I | 5 | 0 | 0% |
-| **总计** | **68** | **16** | **24%** |
+| **总计** | **68** | **17** | **25%** |
 
 
 ---
@@ -2300,11 +2300,14 @@ dashboard:
 - **目标**：补齐 `cross_encoder_reranker.py`，支持对 Top-M candidates 打分排序；测试中用 mock scorer 保证 deterministic。
 - **修改文件**：
   - `src/libs/reranker/cross_encoder_reranker.py`
+  - `src/libs/reranker/reranker_factory.py`
+  - `src/libs/reranker/__init__.py`
   - `tests/unit/test_cross_encoder_reranker.py`（mock scorer）
+  - `tests/unit/test_reranker_factory.py`（provider=cross_encoder 路由）
 - **验收标准**：
   - backend=cross_encoder 时 `RerankerFactory` 可创建。
   - 提供超时/失败回退信号（供 Core 层 `D6` fallback 使用）。
-- **测试方法**：`pytest -q tests/unit/test_cross_encoder_reranker.py`。
+- **测试方法**：`pytest -q tests/unit/test_cross_encoder_reranker.py tests/unit/test_reranker_factory.py`。
 
 ### B8：Vision LLM 抽象接口与工厂集成
 - **目标**：定义 `BaseVisionLLM` 抽象接口，扩展 `LLMFactory` 支持 Vision LLM 创建，为 C7 的 ImageCaptioner 提供底层抽象。

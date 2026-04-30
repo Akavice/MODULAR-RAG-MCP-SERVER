@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 
 from libs.reranker.base_reranker import BaseReranker, RerankCandidate
+from libs.reranker.cross_encoder_reranker import CrossEncoderReranker
 from libs.reranker.llm_reranker import LLMReranker
 from libs.reranker.reranker_factory import NoneReranker, RerankerFactory
 
@@ -79,6 +80,17 @@ def test_create_with_llm_provider_injects_top_level_llm_settings() -> None:
 
 
 @pytest.mark.unit
+def test_create_with_cross_encoder_provider_returns_cross_encoder_reranker() -> None:
+    reranker = RerankerFactory.create(
+        {"rerank": {"provider": "cross_encoder", "top_m": 3, "timeout": 5}}
+    )
+
+    assert isinstance(reranker, CrossEncoderReranker)
+    assert reranker.top_m == 3
+    assert reranker.timeout_seconds == pytest.approx(5.0)
+
+
+@pytest.mark.unit
 def test_none_reranker_preserves_candidate_order() -> None:
     reranker = RerankerFactory.create({"rerank": {"provider": "none"}})
     candidates = [{"id": "b"}, {"id": "a"}, {"id": "c"}]
@@ -126,3 +138,9 @@ def test_register_rejects_duplicate_provider_without_overwrite() -> None:
 
     with pytest.raises(ValueError, match="already registered"):
         RerankerFactory.register("fake", FakeReranker)
+
+
+@pytest.mark.unit
+def test_register_rejects_builtin_provider_without_overwrite() -> None:
+    with pytest.raises(ValueError, match="reserved by built-in rerankers"):
+        RerankerFactory.register("cross_encoder", FakeReranker)

@@ -6,6 +6,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from libs.reranker.base_reranker import BaseReranker, RerankCandidate
+from libs.reranker.cross_encoder_reranker import CrossEncoderReranker
 from libs.reranker.llm_reranker import LLMReranker
 
 
@@ -29,6 +30,7 @@ class RerankerFactory:
     _builtin_registry: dict[str, type[BaseReranker]] = {
         "none": NoneReranker,
         "llm": LLMReranker,
+        "cross_encoder": CrossEncoderReranker,
     }
 
     @classmethod
