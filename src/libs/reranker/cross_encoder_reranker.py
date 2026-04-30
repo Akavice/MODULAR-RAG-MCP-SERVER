@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import time
 from collections.abc import Callable
 from typing import Any
@@ -105,7 +106,13 @@ class CrossEncoderReranker(BaseReranker):
                     "ResponseError",
                     f"Score at index {index} must be numeric",
                 )
-            normalized.append(float(score))
+            numeric_score = float(score)
+            if not math.isfinite(numeric_score):
+                raise CrossEncoderRerankerError(
+                    "ResponseError",
+                    f"Score at index {index} must be a finite number",
+                )
+            normalized.append(numeric_score)
         return normalized
 
     @staticmethod
@@ -125,7 +132,7 @@ class CrossEncoderReranker(BaseReranker):
         if isinstance(value, bool) or not isinstance(value, (int, float)):
             raise TypeError("timeout must be a number when provided")
         normalized = float(value)
-        if normalized <= 0:
+        if not math.isfinite(normalized) or normalized <= 0:
             raise ValueError("timeout must be greater than 0")
         return normalized
 

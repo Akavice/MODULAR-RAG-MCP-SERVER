@@ -1973,7 +1973,7 @@ dashboard:
 | B7.6 | ChromaStore 默认实现 | [x] | 2026-04-22 | 已实现 ChromaStore 持久化、工厂内置路由、roundtrip 集成测试与 embedding signature 一致性机制 |
 | B7.7 | LLM Reranker 实现 | [x] | 2026-04-22 | 已实现 LLMReranker（prompt 文件读取、严格 ranked_ids schema 解析）、工厂 llm 内置路由；修复空/缺失 id 与重复 id 候选丢失问题并补齐综合单测 |
 | B7.8 | Cross-Encoder Reranker 实现 | [x] | 2026-04-28 | 已实现 CrossEncoderReranker（Top-M 重排、可注入 scorer、默认可运行打分）、工厂 cross_encoder 内置路由与超时/失败回退信号 |
-| B8 | Vision LLM 抽象接口与工厂集成 | [ ] | | |
+| B8 | Vision LLM 抽象接口与工厂集成 | [x] | 2026-04-30 | 已实现 BaseVisionLLM/ChatResponse、LLMFactory.create_vision_llm/register_vision 路由能力与 vision 工厂单测 |
 | B9 | Azure Vision LLM 实现 | [ ] | | |
 
 #### 阶段 C：Ingestion Pipeline MVP
@@ -2067,7 +2067,7 @@ dashboard:
 | 阶段 | 总任务数 | 已完成 | 进度 |
 |------|---------|--------|------|
 | 阶段 A | 3 | 3 | 100% |
-| 阶段 B | 16 | 14 | 87% |
+| 阶段 B | 16 | 15 | 94% |
 | 阶段 C | 15 | 0 | 0% |
 | 阶段 D | 7 | 0 | 0% |
 | 阶段 E | 6 | 0 | 0% |
@@ -2075,7 +2075,7 @@ dashboard:
 | 阶段 G | 6 | 0 | 0% |
 | 阶段 H | 5 | 0 | 0% |
 | 阶段 I | 5 | 0 | 0% |
-| **总计** | **68** | **17** | **25%** |
+| **总计** | **68** | **18** | **26%** |
 
 
 ---
@@ -2314,6 +2314,7 @@ dashboard:
 - **修改文件**：
   - `src/libs/llm/base_vision_llm.py`
   - `src/libs/llm/llm_factory.py`（扩展 `create_vision_llm` 方法）
+  - `src/libs/llm/__init__.py`
   - `tests/unit/test_vision_llm_factory.py`
 - **实现类/函数**：
   - `BaseVisionLLM.chat_with_image(text: str, image_path: str | bytes, trace: TraceContext | None = None) -> ChatResponse`

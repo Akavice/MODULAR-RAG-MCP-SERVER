@@ -6,6 +6,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from libs.llm.base_llm import BaseLLM
+from libs.llm.base_vision_llm import BaseVisionLLM
 from libs.llm.azure_llm import AzureLLM
 from libs.llm.deepseek_llm import DeepSeekLLM
 from libs.llm.ollama_llm import OllamaLLM
@@ -16,12 +17,14 @@ class LLMFactory:
     """Provider-based constructor for `BaseLLM` implementations."""
 
     _registry: dict[str, type[BaseLLM]] = {}
+    _vision_registry: dict[str, type[BaseVisionLLM]] = {}
     _builtin_registry: dict[str, type[BaseLLM]] = {
         "openai": OpenAILLM,
         "azure": AzureLLM,
         "deepseek": DeepSeekLLM,
         "ollama": OllamaLLM,
     }
+    _builtin_vision_registry: dict[str, type[BaseVisionLLM]] = {}
 
     @classmethod
     def register(
@@ -63,14 +66,64 @@ class LLMFactory:
         return llm_cls(model=model, **config)
 
     @classmethod
+    def register_vision(
+        cls,
+        provider: str,
+        llm_cls: type[BaseVisionLLM],
+        *,
+        overwrite: bool = False,
+    ) -> None:
+        """Register a vision LLM implementation for later creation."""
+        key = cls._normalize_provider(provider)
+        if key in cls._builtin_vision_registry and not overwrite:
+            raise ValueError(
+                f"Provider '{provider}' is reserved by built-in vision llms"
+            )
+        if not overwrite and key in cls._vision_registry:
+            raise ValueError(f"Provider '{provider}' is already registered")
+        cls._vision_registry[key] = llm_cls
+
+    @classmethod
+    def create_vision_llm(cls, settings: Mapping[str, Any] | Any) -> BaseVisionLLM:
+        """Create a vision LLM from settings containing `vision_llm.provider`."""
+        llm_settings = cls._extract_vision_llm_settings(settings)
+        provider = llm_settings.get("provider")
+        if not isinstance(provider, str) or not provider.strip():
+            raise ValueError("Missing required setting: vision_llm.provider")
+
+        key = cls._normalize_provider(provider)
+        llm_cls = cls._vision_registry.get(key) or cls._builtin_vision_registry.get(key)
+        if llm_cls is None:
+            providers = ", ".join(
+                sorted(set(cls._builtin_vision_registry).union(cls._vision_registry))
+            ) or "<none>"
+            raise ValueError(
+                f"Unsupported vision_llm provider: {provider}. "
+                f"Registered providers: {providers}"
+            )
+
+        config = dict(llm_settings)
+        config.pop("provider", None)
+        model = config.pop("model", None)
+        return llm_cls(model=model, **config)
+
+    @classmethod
     def clear_registry(cls) -> None:
         """Clear all providers (mainly for tests)."""
         cls._registry.clear()
+        cls._vision_registry.clear()
 
     @classmethod
     def registered_providers(cls) -> tuple[str, ...]:
         """Return currently registered providers in deterministic order."""
         return tuple(sorted(set(cls._builtin_registry).union(cls._registry)))
+
+    @classmethod
+    def registered_vision_providers(cls) -> tuple[str, ...]:
+        """Return currently registered vision providers in deterministic order."""
+        return tuple(
+            sorted(set(cls._builtin_vision_registry).union(cls._vision_registry))
+        )
 
     @staticmethod
     def _normalize_provider(provider: str) -> str:
@@ -90,4 +143,17 @@ class LLMFactory:
 
         if not isinstance(llm_settings, Mapping):
             raise ValueError("Missing required setting: llm")
+        return dict(llm_settings)
+
+    @staticmethod
+    def _extract_vision_llm_settings(settings: Mapping[str, Any] | Any) -> dict[str, Any]:
+        if isinstance(settings, Mapping):
+            if "provider" in settings:
+                return dict(settings)
+            llm_settings = settings.get("vision_llm")
+        else:
+            llm_settings = getattr(settings, "vision_llm", None)
+
+        if not isinstance(llm_settings, Mapping):
+            raise ValueError("Missing required setting: vision_llm")
         return dict(llm_settings)
