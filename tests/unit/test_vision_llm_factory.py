@@ -7,6 +7,7 @@ from typing import Any
 
 import pytest
 
+from libs.llm.azure_vision_llm import AzureVisionLLM
 from libs.llm.base_vision_llm import BaseVisionLLM, ChatResponse
 from libs.llm.llm_factory import LLMFactory
 
@@ -102,6 +103,56 @@ def test_register_vision_raises_when_duplicate_provider_without_overwrite() -> N
 
     with pytest.raises(ValueError, match="already registered"):
         LLMFactory.register_vision("fake_vision", FakeVisionLLM)
+
+
+@pytest.mark.unit
+def test_register_vision_raises_for_builtin_provider_without_overwrite() -> None:
+    with pytest.raises(ValueError, match="reserved by built-in vision llms"):
+        LLMFactory.register_vision("azure", FakeVisionLLM)
+
+
+@pytest.mark.unit
+def test_create_vision_llm_routes_to_builtin_azure_provider() -> None:
+    llm = LLMFactory.create_vision_llm(
+        {
+            "vision_llm": {
+                "provider": "azure",
+                "model": "gpt-4o-mini",
+                "endpoint": "https://example.openai.azure.com",
+                "api_key": "test-key",
+            }
+        }
+    )
+
+    assert isinstance(llm, AzureVisionLLM)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    ("endpoint_key", "endpoint_value"),
+    [
+        ("endpoint", "https://example.openai.azure.com"),
+        ("base_url", "https://example.openai.azure.com"),
+        ("azure_endpoint", "https://example.openai.azure.com"),
+    ],
+)
+def test_create_vision_llm_builtin_azure_accepts_endpoint_aliases(
+    endpoint_key: str,
+    endpoint_value: str,
+) -> None:
+    settings = {
+        "vision_llm": {
+            "provider": "azure",
+            "model": "gpt-4o-mini",
+            "api_key": "test-key",
+            endpoint_key: endpoint_value,
+        }
+    }
+
+    llm = LLMFactory.create_vision_llm(settings)
+
+    assert isinstance(llm, AzureVisionLLM)
+    assert llm.base_url == endpoint_value
 
 
 @pytest.mark.unit

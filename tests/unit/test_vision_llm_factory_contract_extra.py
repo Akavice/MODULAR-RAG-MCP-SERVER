@@ -70,7 +70,7 @@ def test_registered_vision_providers_includes_custom_provider() -> None:
 
     providers = LLMFactory.registered_vision_providers()
 
-    assert providers == ("zz_provider",)
+    assert "zz_provider" in providers
 
 
 @pytest.mark.unit
@@ -78,3 +78,9 @@ def test_create_vision_llm_raises_for_missing_vision_llm_block() -> None:
     with pytest.raises(ValueError, match="Missing required setting: vision_llm"):
         LLMFactory.create_vision_llm({"llm": {"provider": "openai"}})
 
+
+@pytest.mark.unit
+def test_registered_vision_providers_includes_builtin_azure() -> None:
+    providers = LLMFactory.registered_vision_providers()
+
+    assert "azure" in providers

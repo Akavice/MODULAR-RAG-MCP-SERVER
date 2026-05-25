@@ -1,6 +1,7 @@
 """LLM abstractions."""
 
 from libs.llm.azure_llm import AzureLLM
+from libs.llm.azure_vision_llm import AzureVisionLLM, AzureVisionLLMProviderError
 from libs.llm.base_llm import BaseLLM, ChatMessage
 from libs.llm.base_vision_llm import BaseVisionLLM, ChatResponse
 from libs.llm.deepseek_llm import DeepSeekLLM
@@ -18,6 +19,8 @@ __all__ = [
     "OpenAICompatibleLLM",
     "OpenAILLM",
     "AzureLLM",
+    "AzureVisionLLM",
+    "AzureVisionLLMProviderError",
     "DeepSeekLLM",
     "OllamaLLM",
 ]

@@ -1974,7 +1974,7 @@ dashboard:
 | B7.7 | LLM Reranker 实现 | [x] | 2026-04-22 | 已实现 LLMReranker（prompt 文件读取、严格 ranked_ids schema 解析）、工厂 llm 内置路由；修复空/缺失 id 与重复 id 候选丢失问题并补齐综合单测 |
 | B7.8 | Cross-Encoder Reranker 实现 | [x] | 2026-04-28 | 已实现 CrossEncoderReranker（Top-M 重排、可注入 scorer、默认可运行打分）、工厂 cross_encoder 内置路由与超时/失败回退信号 |
 | B8 | Vision LLM 抽象接口与工厂集成 | [x] | 2026-04-30 | 已实现 BaseVisionLLM/ChatResponse、LLMFactory.create_vision_llm/register_vision 路由能力与 vision 工厂单测 |
-| B9 | Azure Vision LLM 实现 | [ ] | | |
+| B9 | Azure Vision LLM 实现 | [x] | 2026-04-30 | 已实现 AzureVisionLLM（路径/base64 输入、max_image_size 压缩钩子、Azure 错误码包装），并接入 vision 工厂内置 azure 路由 |
 
 #### 阶段 C：Ingestion Pipeline MVP
 
@@ -2067,7 +2067,7 @@ dashboard:
 | 阶段 | 总任务数 | 已完成 | 进度 |
 |------|---------|--------|------|
 | 阶段 A | 3 | 3 | 100% |
-| 阶段 B | 16 | 15 | 94% |
+| 阶段 B | 16 | 16 | 100% |
 | 阶段 C | 15 | 0 | 0% |
 | 阶段 D | 7 | 0 | 0% |
 | 阶段 E | 6 | 0 | 0% |
@@ -2075,7 +2075,7 @@ dashboard:
 | 阶段 G | 6 | 0 | 0% |
 | 阶段 H | 5 | 0 | 0% |
 | 阶段 I | 5 | 0 | 0% |
-| **总计** | **68** | **18** | **26%** |
+| **总计** | **68** | **19** | **28%** |
 
 
 ---
@@ -2329,7 +2329,10 @@ dashboard:
 - **目标**：实现 `AzureVisionLLM`，支持通过 Azure OpenAI 调用 GPT-4o/GPT-4-Vision-Preview 进行图像理解。
 - **修改文件**：
   - `src/libs/llm/azure_vision_llm.py`
+  - `src/libs/llm/llm_factory.py`
+  - `src/libs/llm/__init__.py`
   - `tests/unit/test_azure_vision_llm.py`（mock HTTP，不走真实 API）
+  - `tests/unit/test_vision_llm_factory.py`（vision_llm.provider=azure 路由验证）
 - **实现类/函数**：
   - `AzureVisionLLM(BaseVisionLLM)`：实现 `chat_with_image` 方法
   - 支持 Azure 特有配置：`azure_endpoint`, `api_version`, `deployment_name`, `api_key`
@@ -2339,7 +2342,7 @@ dashboard:
   - 图片过大时自动压缩至 `max_image_size` 配置的尺寸（默认2048px）。
   - API 调用失败时抛出清晰错误，包含 Azure 特有错误码。
   - mock 测试覆盖：正常调用、图片压缩、超时、认证失败等场景。
-- **测试方法**：`pytest -q tests/unit/test_azure_vision_llm.py`。
+- **测试方法**：`pytest -q tests/unit/test_azure_vision_llm.py tests/unit/test_vision_llm_factory.py`。
 
 ---
 
