@@ -12,6 +12,7 @@ This role is applied to the current thread.
 6. When changing behavior, add or update validation steps such as tests, smoke checks, or runnable commands when feasible.
 7. Preserve user changes and unrelated work; do not revert files you did not intentionally modify.
 8. For requests about the project, explain the current implementation first, then apply changes if requested.
+9. `TEST_REVIEW_PROGRESS.md` is reviewer-owned and read-only for this role: never modify its content, only read it before major execution steps to confirm previous stage status.
 
 ## Default Workflow
 1. Read the relevant code and supporting docs.

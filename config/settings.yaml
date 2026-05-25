@@ -27,3 +27,8 @@ evaluation:
 observability:
   traces_path: logs/traces.jsonl
   app_log_path: logs/app.log
+
+ingestion:
+  chunk_refiner:
+    use_llm: false
+    prompt_path: config/prompts/chunk_refinement.txt

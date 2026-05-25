@@ -1,0 +1,34 @@
+{
+  "typical_noise_scenario": {
+    "input": "Page 1 of 12\n  Quarterly   Report  \n\nRevenue increased.\n---\n",
+    "expected": "Quarterly Report\n\nRevenue increased."
+  },
+  "ocr_errors": {
+    "input": "Th1s   l1ne   has   OCR   no1se",
+    "expected": "Th1s l1ne has OCR no1se"
+  },
+  "page_header_footer": {
+    "input": "PAGE 2/9\nMain body paragraph.\n2/9",
+    "expected": "Main body paragraph."
+  },
+  "excessive_whitespace": {
+    "input": "A     B\t\tC\n\n\nD",
+    "expected": "A B C\n\nD"
+  },
+  "format_markers": {
+    "input": "alpha\n<!-- hidden -->\n***\nbeta",
+    "expected": "alpha\n\nbeta"
+  },
+  "clean_text": {
+    "input": "Already clean text.",
+    "expected": "Already clean text."
+  },
+  "code_blocks": {
+    "input": "before\n```python\nx   =  1\nprint(x)\n```\nafter",
+    "expected": "before\n```python\nx   =  1\nprint(x)\n```\nafter"
+  },
+  "mixed_noise": {
+    "input": "Page 3 of 9\nHello   world\n<!-- comment -->\n```js\nconst  x = 1;\n```\n___\nTail",
+    "expected": "Hello world\n```js\nconst  x = 1;\n```\nTail"
+  }
+}

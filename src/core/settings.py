@@ -22,6 +22,7 @@ class Settings:
     rerank: dict[str, Any]
     evaluation: dict[str, Any]
     observability: dict[str, Any]
+    ingestion: dict[str, Any] = field(default_factory=dict)
     project: dict[str, Any] = field(default_factory=dict)
 
 
@@ -39,6 +40,7 @@ def load_settings(path: str) -> Settings:
 
     settings = Settings(
         project=_get_mapping(raw_settings, "project", required=False),
+        ingestion=_get_mapping(raw_settings, "ingestion", required=False),
         llm=_get_mapping(raw_settings, "llm"),
         embedding=_get_mapping(raw_settings, "embedding"),
         vector_store=_get_mapping(raw_settings, "vector_store"),

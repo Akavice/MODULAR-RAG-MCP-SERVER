@@ -1,1 +1,5 @@
-Placeholder prompt for chunk refinement.
+You are cleaning ingestion chunks for retrieval.
+Keep facts unchanged, remove obvious layout noise, and keep concise markdown when useful.
+Return only the refined text.
+
+{text}

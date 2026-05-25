@@ -71,3 +71,55 @@
     - "tests/unit/test_loader_pdf_contract.py"
     - "tests/unit/test_loader_pdf_contract_extra.py"
   failures: []
+
+- phase: C4-recheck-1
+  date: 2026-05-25
+  status: FAIL
+  summary: C4 当前未实现，仍为占位文件，且缺少对应测试
+  commands:
+    - "Get-Content src/ingestion/chunking/document_chunker.py"
+    - "rg --files tests | rg \"chunker|chunking|document_chunker\""
+  result: "document_chunker.py 仅占位文档字符串；未发现 C4 相关测试"
+  files:
+    - "src/ingestion/chunking/document_chunker.py"
+    - "src/ingestion/chunking/__init__.py"
+  failures:
+    - test: "N/A"
+      error: "C4 implementation missing"
+      cause: "Document chunking integration logic absent"
+      locations:
+        - "src/ingestion/chunking/document_chunker.py:1"
+
+- phase: C5-recheck-1
+  date: 2026-05-25
+  status: PASS
+  summary: C5 ChunkRefiner 本体逻辑与单测通过；集成测因缺少 OPENAI_API_KEY 跳过
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_chunk_refiner.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_chunk_refiner_llm.py"
+  result: "unit: 15 passed; integration: 2 skipped"
+  files:
+    - "src/ingestion/transform/base_transform.py"
+    - "src/ingestion/transform/chunk_refiner.py"
+    - "tests/unit/test_chunk_refiner.py"
+    - "tests/integration/test_chunk_refiner_llm.py"
+    - "tests/fixtures/noisy_chunks.json"
+  failures: []
+
+- phase: C4-C5-unified-test-1
+  date: 2026-05-25
+  status: PASS
+  summary: C4 与 C5 统一回归测试通过；C5 实网 LLM 集成测试按预期跳过
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_document_chunker.py tests/unit/test_document_chunker_contract_extra.py tests/unit/test_chunk_refiner.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_chunk_refiner_llm.py"
+  result: "unit: 26 passed; integration: 2 skipped"
+  files:
+    - "src/ingestion/chunking/document_chunker.py"
+    - "src/ingestion/transform/base_transform.py"
+    - "src/ingestion/transform/chunk_refiner.py"
+    - "tests/unit/test_document_chunker.py"
+    - "tests/unit/test_document_chunker_contract_extra.py"
+    - "tests/unit/test_chunk_refiner.py"
+    - "tests/integration/test_chunk_refiner_llm.py"
+  failures: []
