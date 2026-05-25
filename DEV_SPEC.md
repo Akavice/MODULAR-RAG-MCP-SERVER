@@ -1981,8 +1981,8 @@ dashboard:
 | 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
 |---------|---------|------|---------|------|
 | C1 | 定义核心数据类型/契约（Document/Chunk/ChunkRecord） | [x] | 2026-05-25 | 已实现 Document/Chunk/ChunkRecord 契约、metadata.images 结构校验、图片占位符规范与序列化单测 |
-| C2 | 文件完整性检查（SHA256） | [ ] | | |
-| C3 | Loader 抽象基类与 PDF Loader | [ ] | | |
+| C2 | 文件完整性检查（SHA256） | [x] | 2026-05-25 | 已实现 FileIntegrityChecker 抽象与 SQLiteIntegrityChecker（WAL、hash 去重判定、success/failed 标记）及单测 |
+| C3 | Loader 抽象基类与 PDF Loader | [x] | 2026-05-25 | 已实现 BaseLoader 抽象接口、PdfLoader 最小行为（Document 契约、图片占位符合并、图片提取失败降级）及契约单测 |
 | C4 | Splitter 集成（调用 Libs） | [ ] | | |
 | C5 | Transform 基类 + ChunkRefiner | [ ] | | |
 | C6 | MetadataEnricher | [ ] | | |
@@ -2068,14 +2068,14 @@ dashboard:
 |------|---------|--------|------|
 | 阶段 A | 3 | 3 | 100% |
 | 阶段 B | 16 | 16 | 100% |
-| 阶段 C | 15 | 1 | 7% |
+| 阶段 C | 15 | 3 | 20% |
 | 阶段 D | 7 | 0 | 0% |
 | 阶段 E | 6 | 0 | 0% |
 | 阶段 F | 5 | 0 | 0% |
 | 阶段 G | 6 | 0 | 0% |
 | 阶段 H | 5 | 0 | 0% |
 | 阶段 I | 5 | 0 | 0% |
-| **总计** | **68** | **20** | **29%** |
+| **总计** | **68** | **22** | **32%** |
 
 
 ---
