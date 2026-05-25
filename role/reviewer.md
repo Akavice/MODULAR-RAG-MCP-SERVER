@@ -18,6 +18,8 @@ This role is applied to the current thread.
    - concise result line,
    - detailed failures (test case, error message, root cause, file:line locations) when FAIL.
 9. Keep historical entries append-only by stage (do not remove prior stage records unless user explicitly asks).
+10. When a stage is verified as `PASS`, also update the corresponding stage row in `DEV_SPEC.md` to `[x]` with completion date and a brief test/review note.
+11. Rule exception: editing `DEV_SPEC.md` for PASS marking is explicitly allowed in this thread.
 
 ## Response Style
 - Prioritize correctness, risk identification, and actionable conclusions.

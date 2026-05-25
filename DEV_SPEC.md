@@ -1985,7 +1985,7 @@ dashboard:
 | C3 | Loader 抽象基类与 PDF Loader | [x] | 2026-05-25 | 已实现 BaseLoader 抽象接口、PdfLoader 最小行为（Document 契约、图片占位符合并、图片提取失败降级）及契约单测 |
 | C4 | Splitter integration (via Libs) | [x] | 2026-05-25 | Implemented `DocumentChunker` adapter and added C4 unit/contract tests; included in unified C4/C5 regression run. |
 | C5 | Transform base + ChunkRefiner | [x] | 2026-05-25 | Implemented `BaseTransform` + `ChunkRefiner` (rule cleanup, optional LLM refine, graceful fallback); unified run result: unit 26 passed, integration 2 skipped (missing OPENAI_API_KEY). |
-| C6 | MetadataEnricher | [ ] | | |
+| C6 | MetadataEnricher | [x] | 2026-05-25 | Implemented `MetadataEnricher` (rule-based metadata + optional LLM enrichment + graceful fallback); review recheck passed (unit 10 passed, fallback_count repro fixed). |
 | C7 | ImageCaptioner | [ ] | | |
 | C8 | DenseEncoder | [ ] | | |
 | C9 | SparseEncoder | [ ] | | |

@@ -1,15 +1,15 @@
-# Test Review Progress (Agent-Friendly)
+﻿# Test Review Progress (Agent-Friendly)
 
-## 规则
-- 固定记录文件：`TEST_REVIEW_PROGRESS.md`
-- 记录格式：列表（每个阶段一条），并带结构化字段
-- 状态枚举：`PASS` | `FAIL` | `PENDING`
+## Rules
+- Fixed record file: `TEST_REVIEW_PROGRESS.md`
+- Record format: list entries (one per phase) with structured fields
+- Status enum: `PASS` | `FAIL` | `PENDING`
 
-## 阶段状态列表
+## Phase Status List
 - phase: C1
   date: 2026-05-25
   status: PASS
-  summary: 核心数据类型契约检查通过
+  summary: Core data type contracts verified
   commands:
     - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_core_types.py"
   result: "8 passed"
@@ -22,7 +22,7 @@
 - phase: C2
   date: 2026-05-25
   status: PASS
-  summary: SHA256 与 SQLite 去重契约检查通过（含扩展边界测试）
+  summary: SHA256 + SQLite integrity checks passed (including extra boundary tests)
   commands:
     - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_file_integrity.py tests/unit/test_file_integrity_contract_extra.py"
   result: "14 passed"
@@ -36,7 +36,7 @@
 - phase: C3
   date: 2026-05-25
   status: FAIL
-  summary: Loader 抽象与 PDF Loader 存在 2 处确定性问题
+  summary: Loader abstraction + PDF Loader had 2 confirmed issues
   commands:
     - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_loader_pdf_contract.py tests/unit/test_loader_pdf_contract_extra.py"
   result: "2 failed, 8 passed"
@@ -48,12 +48,12 @@
   failures:
     - test: "test_pdf_loader_rejects_non_string_text_extractor_output"
       error: "Failed: DID NOT RAISE <class 'TypeError'>"
-      cause: "text_extractor 非字符串输出被静默转换为字符串，未 fail-fast"
+      cause: "non-string text_extractor output was silently stringified instead of fail-fast"
       locations:
         - "src/libs/loader/pdf_loader.py:54"
     - test: "test_pdf_loader_ignores_invalid_image_items_without_crashing"
       error: "ValueError: metadata.images[1].id must be a non-empty string"
-      cause: "图片提取结果未在 Loader 侧过滤最小必填字段，坏记录进入 Document 校验后导致 load 失败"
+      cause: "invalid image records were not filtered before Document contract validation"
       locations:
         - "src/libs/loader/pdf_loader.py:72"
         - "src/core/types.py:67"
@@ -61,7 +61,7 @@
 - phase: C3-retest-1
   date: 2026-05-25
   status: PASS
-  summary: C3 修复后复测通过，覆盖更多边界与异常路径
+  summary: C3 fixes verified with broader boundary and error-path coverage
   commands:
     - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_loader_pdf_contract.py tests/unit/test_loader_pdf_contract_extra.py"
   result: "14 passed"
@@ -75,11 +75,11 @@
 - phase: C4-recheck-1
   date: 2026-05-25
   status: FAIL
-  summary: C4 ��ǰδʵ�֣���Ϊռλ�ļ�����ȱ�ٶ�Ӧ����
+  summary: C4 was placeholder-only at that time, with missing tests
   commands:
     - "Get-Content src/ingestion/chunking/document_chunker.py"
     - "rg --files tests | rg \"chunker|chunking|document_chunker\""
-  result: "document_chunker.py ��ռλ�ĵ��ַ�����δ���� C4 ��ز���"
+  result: "document_chunker.py was placeholder; no C4 tests found"
   files:
     - "src/ingestion/chunking/document_chunker.py"
     - "src/ingestion/chunking/__init__.py"
@@ -93,7 +93,7 @@
 - phase: C5-recheck-1
   date: 2026-05-25
   status: PASS
-  summary: C5 ChunkRefiner �����߼��뵥��ͨ�������ɲ���ȱ�� OPENAI_API_KEY ����
+  summary: C5 ChunkRefiner logic and unit tests passed; integration skipped without OPENAI_API_KEY
   commands:
     - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_chunk_refiner.py"
     - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_chunk_refiner_llm.py"
@@ -109,7 +109,7 @@
 - phase: C4-C5-unified-test-1
   date: 2026-05-25
   status: PASS
-  summary: C4 �� C5 ͳһ�ع����ͨ����C5 ʵ�� LLM ���ɲ��԰�Ԥ������
+  summary: Unified C4/C5 regression passed; C5 online LLM integration skipped as expected
   commands:
     - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_document_chunker.py tests/unit/test_document_chunker_contract_extra.py tests/unit/test_chunk_refiner.py"
     - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_chunk_refiner_llm.py"
@@ -122,4 +122,39 @@
     - "tests/unit/test_document_chunker_contract_extra.py"
     - "tests/unit/test_chunk_refiner.py"
     - "tests/integration/test_chunk_refiner_llm.py"
+  failures: []
+
+- phase: C6-review-1
+  date: 2026-05-25
+  status: FAIL
+  summary: MetadataEnricher works functionally, but trace fallback_count has a reproducible counting bug
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_metadata_enricher_contract.py"
+    - "python repro for fallback_count with forced _rule_based_metadata error"
+  result: "unit: 9 passed; logic repro: fallback_count expected 1 but got 2"
+  files:
+    - "src/ingestion/transform/metadata_enricher.py"
+    - "tests/unit/test_metadata_enricher_contract.py"
+    - "config/settings.yaml"
+  failures:
+    - test: "fallback_count_repro_single_chunk"
+      error: "trace payload fallback_count == 2"
+      cause: "fallback_count incremented in except, then incremented again when metadata_fallback_reason exists"
+      locations:
+        - "src/ingestion/transform/metadata_enricher.py:64"
+        - "src/ingestion/transform/metadata_enricher.py:80"
+
+- phase: C6-retest-1
+  date: 2026-05-25
+  status: PASS
+  summary: C6 fallback_count 统计重复累加问题已修复，单测与复现实验通过
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_metadata_enricher_contract.py"
+    - "python repro for fallback_count with forced _rule_based_metadata error"
+  result: "unit: 10 passed; logic repro: fallback_count == 1"
+  files:
+    - "src/ingestion/transform/metadata_enricher.py"
+    - "tests/unit/test_metadata_enricher_contract.py"
+    - "config/settings.yaml"
+    - "src/ingestion/transform/__init__.py"
   failures: []
