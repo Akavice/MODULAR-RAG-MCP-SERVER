@@ -158,3 +158,18 @@
     - "config/settings.yaml"
     - "src/ingestion/transform/__init__.py"
   failures: []
+
+- phase: C7-review-1
+  date: 2026-05-25
+  status: PASS
+  summary: ImageCaptioner implementation and fallback behavior verified
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_image_captioner_fallback.py"
+  result: "unit: 6 passed"
+  files:
+    - "src/ingestion/transform/image_captioner.py"
+    - "src/ingestion/transform/__init__.py"
+    - "config/settings.yaml"
+    - "config/prompts/image_captioning.txt"
+    - "tests/unit/test_image_captioner_fallback.py"
+  failures: []

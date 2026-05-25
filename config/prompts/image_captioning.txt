@@ -1,1 +1,6 @@
-Placeholder prompt for image caption generation.
+Describe the image using concise factual language and preserve relevant technical details.
+Keep the caption grounded in the chunk context and avoid speculation.
+
+Image ID: {image_id}
+Chunk Context:
+{chunk_text}
