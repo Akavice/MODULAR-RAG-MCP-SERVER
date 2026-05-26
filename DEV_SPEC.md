@@ -3989,7 +3989,7 @@ dashboard:
 | C13 | ImageStorage?????+SQLite??? | [x] | 2026-05-26 | Implemented `ImageStorage` (filesystem save + SQLite image_id index + filter/list/delete APIs); recheck passed with extended contract tests (`10 passed`). |
 | C14 | Pipeline 编排（MVP 串起来） | [x] | 2026-05-26 | Implemented `IngestionPipeline` (integrity→load→split→transform→encode→store orchestration, skip/force, stage-scoped errors, progress callback, image persistence + metadata patch); passed `tests/integration/test_ingestion_pipeline.py` (3 passed). |
 
-| C15 | 脚本入口 ingest.py | [ ] | | |
+| C15 | 脚本入口 ingest.py | [x] | 2026-05-26 | Implemented `scripts/ingest.py` CLI (`--path` / `--collection` / `--force` / `--config`) and added E2E tests for first-ingest artifact creation + repeat-run skip behavior; passed `tests/e2e/test_data_ingestion.py` (2 passed). |
 
 
 
@@ -4137,7 +4137,7 @@ dashboard:
 
 | 阶段 B | 16 | 16 | 100% |
 
-| 阶段 C | 15 | 3 | 20% |
+| 阶段 C | 15 | 15 | 100% |
 
 | 阶段 D | 7 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **22** | **32%** |
+| **总计** | **68** | **34** | **50%** |
 
 
 

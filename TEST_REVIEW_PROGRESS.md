@@ -331,3 +331,15 @@
     - "src/ingestion/pipeline.py"
     - "tests/integration/test_ingestion_pipeline.py"
   failures: []
+
+- phase: C15-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: ingest CLI verified with success/skip/force/config-error/stage-error flows; added E2E edge-case coverage
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/e2e/test_data_ingestion.py"
+  result: "5 passed"
+  files:
+    - "scripts/ingest.py"
+    - "tests/e2e/test_data_ingestion.py"
+  failures: []
