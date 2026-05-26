@@ -415,3 +415,37 @@
     - "tests/unit/test_fusion_rrf.py"
     - "tests/unit/test_fusion_rrf_contract_extra.py"
   failures: []
+
+- phase: D5-review-1
+  date: 2026-05-26
+  status: FAIL
+  summary: HybridSearch orchestration has pre-filter top_k truncation bug; valid filtered hits can be dropped before metadata filtering
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/integration/test_hybrid_search_contract_extra.py"
+  result: "1 failed, 7 passed"
+  files:
+    - "src/core/query_engine/hybrid_search.py"
+    - "tests/integration/test_hybrid_search.py"
+    - "tests/integration/test_hybrid_search_contract_extra.py"
+  failures:
+    - test: "test_hybrid_search_applies_filters_before_final_top_k_trim"
+      error: "AssertionError: expected ['a','c'] but got ['a']"
+      cause: "HybridSearch.search passes top_k into fusion before metadata post-filtering, so candidates outside fused top_k are discarded early"
+      locations:
+        - "src/core/query_engine/hybrid_search.py:75"
+        - "src/core/query_engine/hybrid_search.py:80"
+        - "src/core/query_engine/hybrid_search.py:116"
+
+- phase: D5-retest-1
+  date: 2026-05-26
+  status: PASS
+  summary: D5 fix verified; HybridSearch now avoids pre-filter top_k truncation loss and passes extended contract coverage
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/integration/test_hybrid_search_contract_extra.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_query_processor.py tests/unit/test_query_processor_contract_extra.py tests/unit/test_dense_retriever.py tests/unit/test_dense_retriever_contract_extra.py tests/unit/test_sparse_retriever.py tests/unit/test_sparse_retriever_contract_extra.py tests/unit/test_fusion_rrf.py tests/unit/test_fusion_rrf_contract_extra.py tests/integration/test_hybrid_search.py tests/integration/test_hybrid_search_contract_extra.py"
+  result: "8 passed (D5 suite); 43 passed (D1-D5 regression)"
+  files:
+    - "src/core/query_engine/hybrid_search.py"
+    - "tests/integration/test_hybrid_search.py"
+    - "tests/integration/test_hybrid_search_contract_extra.py"
+  failures: []

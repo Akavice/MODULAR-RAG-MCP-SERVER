@@ -1,4 +1,4 @@
-﻿﻿<!-- Dev specification skeleton for the project. Fill sections with details later. -->
+﻿﻿﻿﻿<!-- Dev specification skeleton for the project. Fill sections with details later. -->
 
 # Developer Specification (DEV_SPEC)
 
@@ -4009,7 +4009,7 @@ dashboard:
 
 | D4 | RRF Fusion | [x] | 2026-05-26 | Implemented `Fusion` (Reciprocal Rank Fusion, configurable `rrf_k`, deterministic tie-break by `chunk_id`, per-channel duplicate-id guard, `top_k` control, trace stage recording); validated with `tests/unit/test_fusion_rrf.py` + `tests/unit/test_fusion_rrf_contract_extra.py` (`10 passed`). |
 
-| D5 | HybridSearch 编排 | [ ] | | |
+| D5 | HybridSearch 编排 | [x] | 2026-05-26 | Implemented `HybridSearch` orchestration (`query_processor -> dense/sparse -> fusion -> metadata post-filter`), with single-path degradation when one retriever fails and hard fail when both fail; added `tests/integration/test_hybrid_search.py` (`4 passed`). |
 
 | D6 | Reranker（Core 层编排 + Fallback） | [ ] | | |
 
@@ -4139,7 +4139,7 @@ dashboard:
 
 | 阶段 C | 15 | 15 | 100% |
 
-| 阶段 D | 7 | 4 | 57% |
+| 阶段 D | 7 | 5 | 71% |
 
 | 阶段 E | 6 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **38** | **56%** |
+| **总计** | **68** | **39** | **57%** |
 
 
 
