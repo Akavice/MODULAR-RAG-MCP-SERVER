@@ -343,3 +343,35 @@
     - "scripts/ingest.py"
     - "tests/e2e/test_data_ingestion.py"
   failures: []
+
+- phase: D1-review-1
+  date: 2026-05-26
+  status: FAIL
+  summary: QueryProcessor base tests pass, but extra contract tests found filter-pattern false-positive parsing bug
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_query_processor.py tests/unit/test_query_processor_contract_extra.py"
+  result: "1 failed, 7 passed"
+  files:
+    - "src/core/query_engine/query_processor.py"
+    - "tests/unit/test_query_processor.py"
+    - "tests/unit/test_query_processor_contract_extra.py"
+  failures:
+    - test: "test_filter_prefix_inside_word_must_not_be_parsed_as_filter"
+      error: "AssertionError: 'collection' unexpectedly present in filters"
+      cause: "_FILTER_PATTERN lacks boundary guard and matches 'collection:...' inside larger token (e.g., mycollection:kb)"
+      locations:
+        - "src/core/query_engine/query_processor.py:11"
+        - "src/core/query_engine/query_processor.py:99"
+
+- phase: D1-retest-1
+  date: 2026-05-26
+  status: PASS
+  summary: QueryProcessor filter-boundary bug fixed; base + extra contract tests all pass
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_query_processor.py tests/unit/test_query_processor_contract_extra.py"
+  result: "8 passed"
+  files:
+    - "src/core/query_engine/query_processor.py"
+    - "tests/unit/test_query_processor.py"
+    - "tests/unit/test_query_processor_contract_extra.py"
+  failures: []

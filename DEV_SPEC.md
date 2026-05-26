@@ -4001,7 +4001,7 @@ dashboard:
 
 |---------|---------|------|---------|------|
 
-| D1 | QueryProcessor（关键词提取 + filters） | [ ] | | |
+| D1 | QueryProcessor?????? + filters? | [x] | 2026-05-26 | Implemented `QueryProcessor` + `ProcessedQuery` (rule-based keyword extraction, inline filter parsing for collection/doc_type/language/access_level/time_range, explicit-filter merge, filter-boundary guard); unit + contract tests passed (`8 passed`). |
 
 | D2 | DenseRetriever（调用 VectorStore.query） | [ ] | | |
 
@@ -4139,7 +4139,7 @@ dashboard:
 
 | 阶段 C | 15 | 15 | 100% |
 
-| 阶段 D | 7 | 0 | 0% |
+| 阶段 D | 7 | 1 | 14% |
 
 | 阶段 E | 6 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **34** | **50%** |
+| **总计** | **68** | **35** | **51%** |
 
 
 
