@@ -76,3 +76,20 @@ def test_chroma_store_persistence_across_instances(tmp_path: Path) -> None:
 
     assert len(matches) == 1
     assert matches[0]["id"] == "x2"
+
+
+@pytest.mark.integration
+def test_chroma_store_get_by_ids_returns_payload_in_requested_order(tmp_path: Path) -> None:
+    store = ChromaStore(collection_name="lookup", persist_directory=str(tmp_path))
+    store.upsert(
+        [
+            {"id": "x1", "vector": [0.2, 0.8], "text": "alpha", "metadata": {"k": 1}},
+            {"id": "x2", "vector": [0.8, 0.2], "text": "beta", "metadata": {"k": 2}},
+        ]
+    )
+
+    rows = store.get_by_ids(["x2", "missing", "x1"])
+
+    assert [row["id"] for row in rows] == ["x2", "x1"]
+    assert rows[0]["text"] == "beta"
+    assert rows[1]["metadata"]["k"] == 1

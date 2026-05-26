@@ -7,6 +7,7 @@ from core.types import (
     Document,
     ImageMetadata,
     Metadata,
+    RetrievalResult,
     SparseVector,
     make_image_placeholder,
 )
@@ -17,6 +18,7 @@ __all__ = [
     "ChunkRecord",
     "ImageMetadata",
     "Metadata",
+    "RetrievalResult",
     "SparseVector",
     "IMAGE_PLACEHOLDER_TEMPLATE",
     "make_image_placeholder",

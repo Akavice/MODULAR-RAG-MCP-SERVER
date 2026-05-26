@@ -247,3 +247,46 @@ class ChunkRecord:
             dense_vector=payload.get("dense_vector"),
             sparse_vector=payload.get("sparse_vector"),
         )
+
+
+@dataclass(slots=True)
+class RetrievalResult:
+    """Canonical retrieval output payload for dense/sparse/fusion stages."""
+
+    chunk_id: str
+    score: float
+    text: str
+    metadata: Metadata
+
+    def __post_init__(self) -> None:
+        self.chunk_id = _require_non_empty_string(self.chunk_id, field_name="chunk_id")
+        if isinstance(self.score, bool) or not isinstance(self.score, (int, float)):
+            raise TypeError("score must be numeric")
+        numeric_score = float(self.score)
+        if not math.isfinite(numeric_score):
+            raise ValueError("score must be finite")
+        self.score = numeric_score
+        if not isinstance(self.text, str):
+            raise TypeError("text must be a string")
+        if not isinstance(self.metadata, dict):
+            raise TypeError("metadata must be a mapping")
+        self.metadata = dict(self.metadata)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "chunk_id": self.chunk_id,
+            "score": self.score,
+            "text": self.text,
+            "metadata": dict(self.metadata),
+        }
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> RetrievalResult:
+        if not isinstance(payload, dict):
+            raise TypeError("payload must be a mapping")
+        return cls(
+            chunk_id=payload.get("chunk_id"),
+            score=payload.get("score", 0.0),
+            text=payload.get("text", ""),
+            metadata=payload.get("metadata", {}),
+        )

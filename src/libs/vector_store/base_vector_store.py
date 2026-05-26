@@ -50,6 +50,12 @@ class BaseVectorStore(ABC):
     ) -> list[QueryMatch]:
         """Query nearest matches by input vector."""
 
+    def get_by_ids(self, ids: Sequence[str]) -> list[dict[str, Any]]:
+        """Fetch stored records by ids while preserving caller order where possible."""
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not implement get_by_ids()"
+        )
+
     @staticmethod
     def validate_records(records: Sequence[Mapping[str, Any]]) -> None:
         """Validate upsert payload shape before provider calls."""

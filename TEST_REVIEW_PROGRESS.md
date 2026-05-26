@@ -375,3 +375,30 @@
     - "tests/unit/test_query_processor.py"
     - "tests/unit/test_query_processor_contract_extra.py"
   failures: []
+
+- phase: D2-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: DenseRetriever logic verified with added contract tests for vector_store output/item type and invalid score handling
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dense_retriever.py tests/unit/test_dense_retriever_contract_extra.py"
+  result: "8 passed"
+  files:
+    - "src/core/query_engine/dense_retriever.py"
+    - "src/core/types.py"
+    - "tests/unit/test_dense_retriever.py"
+    - "tests/unit/test_dense_retriever_contract_extra.py"
+  failures: []
+
+- phase: D3-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: SparseRetriever logic verified with extra contract tests for bm25/get_by_ids output validation paths
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_sparse_retriever.py tests/unit/test_sparse_retriever_contract_extra.py"
+  result: "9 passed"
+  files:
+    - "src/core/query_engine/sparse_retriever.py"
+    - "tests/unit/test_sparse_retriever.py"
+    - "tests/unit/test_sparse_retriever_contract_extra.py"
+  failures: []

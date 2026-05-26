@@ -107,6 +107,26 @@ class ChromaStore(BaseVectorStore):
         scored.sort(key=lambda match: (-match["score"], str(match["id"])))
         return scored[:top_k]
 
+    def get_by_ids(self, ids: list[str]) -> list[dict[str, Any]]:
+        if not isinstance(ids, list):
+            raise TypeError("ids must be a list")
+        output: list[dict[str, Any]] = []
+        for index, item_id in enumerate(ids):
+            if not isinstance(item_id, str) or not item_id.strip():
+                raise ValueError(f"ids[{index}] must be a non-empty string")
+            record = self._records.get(item_id)
+            if not isinstance(record, dict):
+                continue
+            metadata = record.get("metadata", {})
+            output.append(
+                {
+                    "id": str(record.get("id", item_id)),
+                    "text": str(record.get("text", "")),
+                    "metadata": dict(metadata) if isinstance(metadata, dict) else {},
+                }
+            )
+        return output
+
     def _similarity(self, left: list[float], right: list[float]) -> float:
         if self.distance_metric != "cosine":
             # Default to dot product for unknown metrics to keep behavior deterministic.

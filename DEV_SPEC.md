@@ -4003,9 +4003,9 @@ dashboard:
 
 | D1 | QueryProcessor?????? + filters? | [x] | 2026-05-26 | Implemented `QueryProcessor` + `ProcessedQuery` (rule-based keyword extraction, inline filter parsing for collection/doc_type/language/access_level/time_range, explicit-filter merge, filter-boundary guard); unit + contract tests passed (`8 passed`). |
 
-| D2 | DenseRetriever（调用 VectorStore.query） | [ ] | | |
+| D2 | DenseRetriever??? VectorStore.query? | [x] | 2026-05-26 | Implemented `DenseRetriever` (embedding + vector_store orchestration, top_k/filters validation, retrieval normalization to `RetrievalResult`, injectable deps for tests); base + contract tests passed (`8 passed`). |
 
-| D3 | SparseRetriever（BM25 查询） | [ ] | | |
+| D3 | SparseRetriever?BM25 ??? | [x] | 2026-05-26 | Implemented `SparseRetriever` (BM25 keyword query + `vector_store.get_by_ids` hydration to `RetrievalResult`, keyword/top_k validation, missing-id fallback); base + contract tests passed (`9 passed`). |
 
 | D4 | RRF Fusion | [ ] | | |
 
@@ -4139,7 +4139,7 @@ dashboard:
 
 | 阶段 C | 15 | 15 | 100% |
 
-| 阶段 D | 7 | 1 | 14% |
+| 阶段 D | 7 | 3 | 43% |
 
 | 阶段 E | 6 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **35** | **51%** |
+| **总计** | **68** | **37** | **54%** |
 
 
 
