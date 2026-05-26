@@ -4013,7 +4013,7 @@ dashboard:
 
 | D6 | Reranker（Core 层编排 + Fallback） | [x] | 2026-05-26 | Implemented core `Reranker` orchestration (optional enable switch, provider invocation via `RerankerFactory`, backend-init/backend-runtime graceful fallback to fused order, trace payload with `fallback` reason); validated by `tests/unit/test_reranker_fallback.py` + `tests/unit/test_reranker_fallback_contract_extra.py` (`9 passed`). |
 
-| D7 | 脚本入口 query.py（查询可用） | [ ] | | |
+| D7 | 脚本入口 query.py（查询可用） | [x] | 2026-05-26 | Implemented `scripts/query.py` CLI (`--query` / `--top-k` / `--collection` / `--verbose` / `--no-rerank` / `--config`) wired to `HybridSearch + Reranker`; validated by `tests/e2e/test_query_cli.py` + `tests/e2e/test_query_cli_contract_extra.py` (`9 passed`). |
 
 
 
@@ -4139,7 +4139,7 @@ dashboard:
 
 | 阶段 C | 15 | 15 | 100% |
 
-| 阶段 D | 7 | 6 | 86% |
+| 阶段 D | 7 | 7 | 100% |
 
 | 阶段 E | 6 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **40** | **59%** |
+| **总计** | **68** | **41** | **60%** |
 
 
 
