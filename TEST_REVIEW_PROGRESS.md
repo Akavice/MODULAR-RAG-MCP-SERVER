@@ -402,3 +402,16 @@
     - "tests/unit/test_sparse_retriever.py"
     - "tests/unit/test_sparse_retriever_contract_extra.py"
   failures: []
+
+- phase: D4-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: Fusion (RRF) logic verified with additional contract coverage for trace payload, config precedence, init validation, and metadata copy isolation
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_fusion_rrf.py tests/unit/test_fusion_rrf_contract_extra.py"
+  result: "10 passed"
+  files:
+    - "src/core/query_engine/fusion.py"
+    - "tests/unit/test_fusion_rrf.py"
+    - "tests/unit/test_fusion_rrf_contract_extra.py"
+  failures: []
