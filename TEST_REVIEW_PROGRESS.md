@@ -254,3 +254,18 @@
     - "tests/unit/test_batch_processor_contract_extra.py"
     - "tests/unit/test_dense_sparse_encoder_contract_extra.py"
   failures: []
+
+- phase: C11-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: BM25Indexer logic verified with roundtrip and additional contract tests (upsert overwrite, remove persistence, tie ordering, config index_dir, invalid payload)
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_bm25_indexer_roundtrip.py tests/unit/test_bm25_indexer_contract_extra.py"
+  result: "9 passed"
+  files:
+    - "src/ingestion/storage/bm25_indexer.py"
+    - "src/ingestion/storage/__init__.py"
+    - "config/settings.yaml"
+    - "tests/unit/test_bm25_indexer_roundtrip.py"
+    - "tests/unit/test_bm25_indexer_contract_extra.py"
+  failures: []

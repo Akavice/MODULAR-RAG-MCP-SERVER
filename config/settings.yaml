@@ -48,3 +48,5 @@ ingestion:
     batch_size: 32
     enable_dense: true
     enable_sparse: true
+  bm25_indexer:
+    index_dir: data/db/bm25

@@ -1,204 +1,204 @@
-<!-- Dev specification skeleton for the project. Fill sections with details later. -->
+﻿<!-- Dev specification skeleton for the project. Fill sections with details later. -->
 # Developer Specification (DEV_SPEC)
 
-> 版本：0.1 — 文档结构草案
+> 鐗堟湰锛?.1 鈥?鏂囨。缁撴瀯鑽夋
 
-## 目录
+## 鐩綍
 
-- 项目概述
-- 核心特点
-- 技术选型
-- 测试方案
-- 系统架构与模块设计
-- 项目排期
-- 可扩展性与未来展望
+- 椤圭洰姒傝堪
+- 鏍稿績鐗圭偣
+- 鎶€鏈€夊瀷
+- 娴嬭瘯鏂规
+- 绯荤粺鏋舵瀯涓庢ā鍧楄璁?
+- 椤圭洰鎺掓湡
+- 鍙墿灞曟€т笌鏈潵灞曟湜
 
 ---
 
-## 1. 项目概述
-本项目基于多阶段检索增强生成（RAG, Retrieval-Augmented Generation）与模型上下文协议（MCP, Model Context Protocol）设计，目标是搭建一个可扩展、高可观测、易迭代的智能问答与知识检索框架。
+## 1. 椤圭洰姒傝堪
+鏈」鐩熀浜庡闃舵妫€绱㈠寮虹敓鎴愶紙RAG, Retrieval-Augmented Generation锛変笌妯″瀷涓婁笅鏂囧崗璁紙MCP, Model Context Protocol锛夎璁★紝鐩爣鏄惌寤轰竴涓彲鎵╁睍銆侀珮鍙娴嬨€佹槗杩唬鐨勬櫤鑳介棶绛斾笌鐭ヨ瘑妫€绱㈡鏋躲€?
 
-### 设计理念 (Design Philosophy)
+### 璁捐鐞嗗康 (Design Philosophy)
 
-> **核心定位：自学与教学同步 (Learning by Teaching)**
+> **鏍稿績瀹氫綅锛氳嚜瀛︿笌鏁欏鍚屾 (Learning by Teaching)**
 > 
-> 本项目是我个人技术学习、丰富简历、备战面试的实战历程，同时也是一份同步教学的开源资源。我相信"**教是最好的学**"——在整理代码、撰写文档、录制视频的过程中，我自己对 RAG 的理解也在不断深化。希望这份"边学边教"的成果能够帮助到更多同样在求职路上的朋友。
+> 鏈」鐩槸鎴戜釜浜烘妧鏈涔犮€佷赴瀵岀畝鍘嗐€佸鎴橀潰璇曠殑瀹炴垬鍘嗙▼锛屽悓鏃朵篃鏄竴浠藉悓姝ユ暀瀛︾殑寮€婧愯祫婧愩€傛垜鐩镐俊"**鏁欐槸鏈€濂界殑瀛?*"鈥斺€斿湪鏁寸悊浠ｇ爜銆佹挵鍐欐枃妗ｃ€佸綍鍒惰棰戠殑杩囩▼涓紝鎴戣嚜宸卞 RAG 鐨勭悊瑙ｄ篃鍦ㄤ笉鏂繁鍖栥€傚笇鏈涜繖浠?杈瑰杈规暀"鐨勬垚鏋滆兘澶熷府鍔╁埌鏇村鍚屾牱鍦ㄦ眰鑱岃矾涓婄殑鏈嬪弸銆?
 
-本项目不仅是一个功能完备的智能问答框架，更是一个专为 **RAG 技术学习与面试求职** 设计的实战平台：
+鏈」鐩笉浠呮槸涓€涓姛鑳藉畬澶囩殑鏅鸿兘闂瓟妗嗘灦锛屾洿鏄竴涓笓涓?**RAG 鎶€鏈涔犱笌闈㈣瘯姹傝亴** 璁捐鐨勫疄鎴樺钩鍙帮細
 
-#### 1️⃣ 实战驱动学习 (Learn by Doing)
-项目架构本身就是 RAG 面试题的"**活体答案**"。我们将经典面试考点直接融入代码设计，通过动手实践来巩固理论知识：
-- 分层检索 (Hierarchical Retrieval)
+#### 1锔忊儯 瀹炴垬椹卞姩瀛︿範 (Learn by Doing)
+椤圭洰鏋舵瀯鏈韩灏辨槸 RAG 闈㈣瘯棰樼殑"**娲讳綋绛旀**"銆傛垜浠皢缁忓吀闈㈣瘯鑰冪偣鐩存帴铻嶅叆浠ｇ爜璁捐锛岄€氳繃鍔ㄦ墜瀹炶返鏉ュ珐鍥虹悊璁虹煡璇嗭細
+- 鍒嗗眰妫€绱?(Hierarchical Retrieval)
 - Hybrid Search (BM25 + Dense Embedding)
-- Rerank 重排序机制
-- Embedding 策略与优化
-- RAG 性能评测 (Ragas/DeepEval)
+- Rerank 閲嶆帓搴忔満鍒?
+- Embedding 绛栫暐涓庝紭鍖?
+- RAG 鎬ц兘璇勬祴 (Ragas/DeepEval)
 
-#### 2️⃣ 开箱即用与深度扩展并重 (Plug-and-Play & Extensible)
-- **开箱即用**：提供 MCP 标准接口，可直接对接 Copilot/Claude，拿到项目即可运行体验。
-- **深度扩展**：保留完全模块化的内部结构，方便开发者替换组件、魔改算法，作为具备深度的个人简历项目。
-- **扩展指引**：文档中会明确指出各模块的扩展方向与建议，帮助你在掌握基础后继续深入迭代。
+#### 2锔忊儯 寮€绠卞嵆鐢ㄤ笌娣卞害鎵╁睍骞堕噸 (Plug-and-Play & Extensible)
+- **寮€绠卞嵆鐢?*锛氭彁渚?MCP 鏍囧噯鎺ュ彛锛屽彲鐩存帴瀵规帴 Copilot/Claude锛屾嬁鍒伴」鐩嵆鍙繍琛屼綋楠屻€?
+- **娣卞害鎵╁睍**锛氫繚鐣欏畬鍏ㄦā鍧楀寲鐨勫唴閮ㄧ粨鏋勶紝鏂逛究寮€鍙戣€呮浛鎹㈢粍浠躲€侀瓟鏀圭畻娉曪紝浣滀负鍏峰娣卞害鐨勪釜浜虹畝鍘嗛」鐩€?
+- **鎵╁睍鎸囧紩**锛氭枃妗ｄ腑浼氭槑纭寚鍑哄悇妯″潡鐨勬墿灞曟柟鍚戜笌寤鸿锛屽府鍔╀綘鍦ㄦ帉鎻″熀纭€鍚庣户缁繁鍏ヨ凯浠ｃ€?
 
-#### 3️⃣ 配套教学资源 (Comprehensive Learning Materials)
-我会提供**三位一体**的配套学习资源，帮助你快速吃透项目：
+#### 3锔忊儯 閰嶅鏁欏璧勬簮 (Comprehensive Learning Materials)
+鎴戜細鎻愪緵**涓変綅涓€浣?*鐨勯厤濂楀涔犺祫婧愶紝甯姪浣犲揩閫熷悆閫忛」鐩細
 
-| 资源类型 | 内容说明 |
+| 璧勬簮绫诲瀷 | 鍐呭璇存槑 |
 |---------|---------|
-| 📄 **技术文档** | 架构设计文档、技术选型说明、模块详解 |
-| 💻 **代码示范** | 带详细注释的源码、关键模块的 Step-by-step 实现 |
-| 🎬 **视频讲解** | RAG 核心知识点回顾、代码细节精讲、环境配置教程 |
+| 馃搫 **鎶€鏈枃妗?* | 鏋舵瀯璁捐鏂囨。銆佹妧鏈€夊瀷璇存槑銆佹ā鍧楄瑙?|
+| 馃捇 **浠ｇ爜绀鸿寖** | 甯﹁缁嗘敞閲婄殑婧愮爜銆佸叧閿ā鍧楃殑 Step-by-step 瀹炵幇 |
+| 馃幀 **瑙嗛璁茶В** | RAG 鏍稿績鐭ヨ瘑鐐瑰洖椤俱€佷唬鐮佺粏鑺傜簿璁层€佺幆澧冮厤缃暀绋?|
 
-#### 4️⃣ 学习路线与面试指南 (Study Guide & Interview Prep)
-针对每个模块，我会整理：
-- **📚 知识点清单**：这块涉及哪些理论知识需要提前学习（如 BM25 原理、FAISS 索引类型、Cross-Encoder vs Bi-Encoder）
-- **❓ 高频面试题**：结合项目代码讲解常见面试问题及参考答案
-- **📝 简历撰写建议**：如何将本项目的亮点写进简历，突出技术深度
+#### 4锔忊儯 瀛︿範璺嚎涓庨潰璇曟寚鍗?(Study Guide & Interview Prep)
+閽堝姣忎釜妯″潡锛屾垜浼氭暣鐞嗭細
+- **馃摎 鐭ヨ瘑鐐规竻鍗?*锛氳繖鍧楁秹鍙婂摢浜涚悊璁虹煡璇嗛渶瑕佹彁鍓嶅涔狅紙濡?BM25 鍘熺悊銆丗AISS 绱㈠紩绫诲瀷銆丆ross-Encoder vs Bi-Encoder锛?
+- **鉂?楂橀闈㈣瘯棰?*锛氱粨鍚堥」鐩唬鐮佽瑙ｅ父瑙侀潰璇曢棶棰樺強鍙傝€冪瓟妗?
+- **馃摑 绠€鍘嗘挵鍐欏缓璁?*锛氬浣曞皢鏈」鐩殑浜偣鍐欒繘绠€鍘嗭紝绐佸嚭鎶€鏈繁搴?
 
-#### 5️⃣ 社区交流与持续迭代 (Community & Iteration)
-- **经验分享**：我自己的面试经历、大家使用本项目面试的反馈，都会汇总沉淀
-- **问题讨论**：一起探讨"如何将本项目写进简历"、"针对本项目的面试题怎么答"
-- **持续更新**：从代码 → 八股知识 → 面试技巧，形成完整的求职知识库，帮助大家更好地拿到 Offer 🎯
+#### 5锔忊儯 绀惧尯浜ゆ祦涓庢寔缁凯浠?(Community & Iteration)
+- **缁忛獙鍒嗕韩**锛氭垜鑷繁鐨勯潰璇曠粡鍘嗐€佸ぇ瀹朵娇鐢ㄦ湰椤圭洰闈㈣瘯鐨勫弽棣堬紝閮戒細姹囨€绘矇娣€
+- **闂璁ㄨ**锛氫竴璧锋帰璁?濡備綍灏嗘湰椤圭洰鍐欒繘绠€鍘?銆?閽堝鏈」鐩殑闈㈣瘯棰樻€庝箞绛?
+- **鎸佺画鏇存柊**锛氫粠浠ｇ爜 鈫?鍏偂鐭ヨ瘑 鈫?闈㈣瘯鎶€宸э紝褰㈡垚瀹屾暣鐨勬眰鑱岀煡璇嗗簱锛屽府鍔╁ぇ瀹舵洿濂藉湴鎷垮埌 Offer 馃幆
 
 ---
 
-## 2. 核心特点
+## 2. 鏍稿績鐗圭偣
 
-### RAG 策略与设计亮点
-本项目在 RAG 链路的关键环节采用了经典的工程化优化策略，平衡了检索的查准率与查全率，具体思想如下：
-- **分块策略 (Chunking Strategy)**：采用智能分块与上下文增强，为高质量检索打下基础。
-    - **智能分块**：摒弃机械的定长切分，采用语义感知的切分策略以保留完整语义；
-    - **上下文增强**：为 Chunk 注入文档元数据（标题、页码）和图片描述（Image Caption），确保检索时不仅匹配文本，还能感知上下文。
-- **粗排召回 (Coarse Recall / Hybrid Search)**：采用 **混合检索** 策略作为第一阶段召回，快速筛选候选集。
-    - 结合 **稀疏检索 (Sparse Retrieval/BM25)** 利用关键词精确匹配，解决专有名词查找问题；
-    - 结合 **稠密检索 (Dense Retrieval/Embedding)** 利用语义向量，解决同义词与模糊表达问题；
-    - 两者互补，通过 RRF (Reciprocal Rank Fusion) 算法融合，确保查全率与查准率的平衡。
-- **精排重排 (Rerank / Fine Ranking)**：在粗排召回的基础上进行深度语义排序。
-	- 采用 Cross-Encoder（专用重排模型）或 LLM Rerank（可选后端）对候选集进行逐一打分，识别细微的语义差异。
-    - 通过 **"粗排(低成本泛召回) -> 精排(高成本精过滤)"** 的两段式架构，在不牺牲整体响应速度的前提下大幅提升 Top-Results 的精准度。
+### RAG 绛栫暐涓庤璁′寒鐐?
+鏈」鐩湪 RAG 閾捐矾鐨勫叧閿幆鑺傞噰鐢ㄤ簡缁忓吀鐨勫伐绋嬪寲浼樺寲绛栫暐锛屽钩琛′簡妫€绱㈢殑鏌ュ噯鐜囦笌鏌ュ叏鐜囷紝鍏蜂綋鎬濇兂濡備笅锛?
+- **鍒嗗潡绛栫暐 (Chunking Strategy)**锛氶噰鐢ㄦ櫤鑳藉垎鍧椾笌涓婁笅鏂囧寮猴紝涓洪珮璐ㄩ噺妫€绱㈡墦涓嬪熀纭€銆?
+    - **鏅鸿兘鍒嗗潡**锛氭憭寮冩満姊扮殑瀹氶暱鍒囧垎锛岄噰鐢ㄨ涔夋劅鐭ョ殑鍒囧垎绛栫暐浠ヤ繚鐣欏畬鏁磋涔夛紱
+    - **涓婁笅鏂囧寮?*锛氫负 Chunk 娉ㄥ叆鏂囨。鍏冩暟鎹紙鏍囬銆侀〉鐮侊級鍜屽浘鐗囨弿杩帮紙Image Caption锛夛紝纭繚妫€绱㈡椂涓嶄粎鍖归厤鏂囨湰锛岃繕鑳芥劅鐭ヤ笂涓嬫枃銆?
+- **绮楁帓鍙洖 (Coarse Recall / Hybrid Search)**锛氶噰鐢?**娣峰悎妫€绱?* 绛栫暐浣滀负绗竴闃舵鍙洖锛屽揩閫熺瓫閫夊€欓€夐泦銆?
+    - 缁撳悎 **绋€鐤忔绱?(Sparse Retrieval/BM25)** 鍒╃敤鍏抽敭璇嶇簿纭尮閰嶏紝瑙ｅ喅涓撴湁鍚嶈瘝鏌ユ壘闂锛?
+    - 缁撳悎 **绋犲瘑妫€绱?(Dense Retrieval/Embedding)** 鍒╃敤璇箟鍚戦噺锛岃В鍐冲悓涔夎瘝涓庢ā绯婅〃杈鹃棶棰橈紱
+    - 涓よ€呬簰琛ワ紝閫氳繃 RRF (Reciprocal Rank Fusion) 绠楁硶铻嶅悎锛岀‘淇濇煡鍏ㄧ巼涓庢煡鍑嗙巼鐨勫钩琛°€?
+- **绮炬帓閲嶆帓 (Rerank / Fine Ranking)**锛氬湪绮楁帓鍙洖鐨勫熀纭€涓婅繘琛屾繁搴﹁涔夋帓搴忋€?
+	- 閲囩敤 Cross-Encoder锛堜笓鐢ㄩ噸鎺掓ā鍨嬶級鎴?LLM Rerank锛堝彲閫夊悗绔級瀵瑰€欓€夐泦杩涜閫愪竴鎵撳垎锛岃瘑鍒粏寰殑璇箟宸紓銆?
+    - 閫氳繃 **"绮楁帓(浣庢垚鏈硾鍙洖) -> 绮炬帓(楂樻垚鏈簿杩囨护)"** 鐨勪袱娈靛紡鏋舵瀯锛屽湪涓嶇壓鐗叉暣浣撳搷搴旈€熷害鐨勫墠鎻愪笅澶у箙鎻愬崌 Top-Results 鐨勭簿鍑嗗害銆?
 
-### 全链路可插拔架构 (Pluggable Architecture)
-鉴于 AI 技术的快速演进，本项目在架构设计上追求**极致的灵活性**，拒绝与特定模型或供应商强绑定。**整个系统**（不仅是 RAG 链路）的每一个核心环节均定义了抽象接口，支持"乐高积木式"的自由替换与组合：
+### 鍏ㄩ摼璺彲鎻掓嫈鏋舵瀯 (Pluggable Architecture)
+閴翠簬 AI 鎶€鏈殑蹇€熸紨杩涳紝鏈」鐩湪鏋舵瀯璁捐涓婅拷姹?*鏋佽嚧鐨勭伒娲绘€?*锛屾嫆缁濅笌鐗瑰畾妯″瀷鎴栦緵搴斿晢寮虹粦瀹氥€?*鏁翠釜绯荤粺**锛堜笉浠呮槸 RAG 閾捐矾锛夌殑姣忎竴涓牳蹇冪幆鑺傚潎瀹氫箟浜嗘娊璞℃帴鍙ｏ紝鏀寔"涔愰珮绉湪寮?鐨勮嚜鐢辨浛鎹笌缁勫悎锛?
 
-- **LLM 调用层插拔 (LLM Provider Agnostic)**：
-    - 核心推理 LLM 通过统一的抽象接口封装，支持**多协议**无缝切换：
-        - **Azure OpenAI**：企业级 Azure 云端服务，符合合规与安全要求；
-        - **OpenAI API**：直接对接 OpenAI 官方接口；
-        - **本地模型**：支持 Ollama、vLLM、LM Studio 等本地私有化部署方案；
-        - **其他云服务**：DeepSeek、Anthropic Claude 等第三方 API。
-    - 通过配置文件一键切换后端，**零代码修改**即可完成 LLM 迁移，便于成本优化、隐私合规或 A/B 测试。
+- **LLM 璋冪敤灞傛彃鎷?(LLM Provider Agnostic)**锛?
+    - 鏍稿績鎺ㄧ悊 LLM 閫氳繃缁熶竴鐨勬娊璞℃帴鍙ｅ皝瑁咃紝鏀寔**澶氬崗璁?*鏃犵紳鍒囨崲锛?
+        - **Azure OpenAI**锛氫紒涓氱骇 Azure 浜戠鏈嶅姟锛岀鍚堝悎瑙勪笌瀹夊叏瑕佹眰锛?
+        - **OpenAI API**锛氱洿鎺ュ鎺?OpenAI 瀹樻柟鎺ュ彛锛?
+        - **鏈湴妯″瀷**锛氭敮鎸?Ollama銆乿LLM銆丩M Studio 绛夋湰鍦扮鏈夊寲閮ㄧ讲鏂规锛?
+        - **鍏朵粬浜戞湇鍔?*锛欴eepSeek銆丄nthropic Claude 绛夌涓夋柟 API銆?
+    - 閫氳繃閰嶇疆鏂囦欢涓€閿垏鎹㈠悗绔紝**闆朵唬鐮佷慨鏀?*鍗冲彲瀹屾垚 LLM 杩佺Щ锛屼究浜庢垚鏈紭鍖栥€侀殣绉佸悎瑙勬垨 A/B 娴嬭瘯銆?
 
-- **Embedding & Rerank 模型插拔 (Model Agnostic)**：
-    - Embedding 模型与 Rerank 模型同样采用统一接口封装；
-    - 支持云端服务（OpenAI Embedding, Cohere Rerank）与本地模型（Sentence-Transformers, BGE）自由切换。
+- **Embedding & Rerank 妯″瀷鎻掓嫈 (Model Agnostic)**锛?
+    - Embedding 妯″瀷涓?Rerank 妯″瀷鍚屾牱閲囩敤缁熶竴鎺ュ彛灏佽锛?
+    - 鏀寔浜戠鏈嶅姟锛圤penAI Embedding, Cohere Rerank锛変笌鏈湴妯″瀷锛圫entence-Transformers, BGE锛夎嚜鐢卞垏鎹€?
 
-- **RAG Pipeline 组件插拔**：
-    - **Loader（解析器）**：支持 PDF、Markdown、Code 等多种文档解析器独立替换；
-    - **Smart Splitter（切分策略）**：语义切分、定长切分、递归切分等策略可配置；
-    - **Transformation（元数据/图文增强逻辑）**：OCR、Image Captioning 等增强模块可独立配置。
+- **RAG Pipeline 缁勪欢鎻掓嫈**锛?
+    - **Loader锛堣В鏋愬櫒锛?*锛氭敮鎸?PDF銆丮arkdown銆丆ode 绛夊绉嶆枃妗ｈВ鏋愬櫒鐙珛鏇挎崲锛?
+    - **Smart Splitter锛堝垏鍒嗙瓥鐣ワ級**锛氳涔夊垏鍒嗐€佸畾闀垮垏鍒嗐€侀€掑綊鍒囧垎绛夌瓥鐣ュ彲閰嶇疆锛?
+    - **Transformation锛堝厓鏁版嵁/鍥炬枃澧炲己閫昏緫锛?*锛歄CR銆両mage Captioning 绛夊寮烘ā鍧楀彲鐙珛閰嶇疆銆?
 
-- **检索策略插拔 (Retrieval Strategy)**：
-    - 支持动态配置纯向量、纯关键词或混合检索模式；
-    - 支持灵活更换向量数据库后端（如从 Chroma 迁移至 Qdrant、Milvus）。
+- **妫€绱㈢瓥鐣ユ彃鎷?(Retrieval Strategy)**锛?
+    - 鏀寔鍔ㄦ€侀厤缃函鍚戦噺銆佺函鍏抽敭璇嶆垨娣峰悎妫€绱㈡ā寮忥紱
+    - 鏀寔鐏垫椿鏇存崲鍚戦噺鏁版嵁搴撳悗绔紙濡備粠 Chroma 杩佺Щ鑷?Qdrant銆丮ilvus锛夈€?
 
-- **评估体系插拔 (Evaluation Framework)**：
-    - 评估模块不锁定单一指标，支持挂载不同的 Evaluator（如 Ragas, DeepEval）以适应不同的业务考核维度。
+- **璇勪及浣撶郴鎻掓嫈 (Evaluation Framework)**锛?
+    - 璇勪及妯″潡涓嶉攣瀹氬崟涓€鎸囨爣锛屾敮鎸佹寕杞戒笉鍚岀殑 Evaluator锛堝 Ragas, DeepEval锛変互閫傚簲涓嶅悓鐨勪笟鍔¤€冩牳缁村害銆?
 
-这种设计确保开发者可以**零代码修改**即可进行 A/B 测试、成本优化或隐私迁移，使系统具备极强的生命力与环境适应性。
+杩欑璁捐纭繚寮€鍙戣€呭彲浠?*闆朵唬鐮佷慨鏀?*鍗冲彲杩涜 A/B 娴嬭瘯銆佹垚鏈紭鍖栨垨闅愮杩佺Щ锛屼娇绯荤粺鍏峰鏋佸己鐨勭敓鍛藉姏涓庣幆澧冮€傚簲鎬с€?
 
-### MCP 生态集成 (Copilot / ReSearch)
-本项目的核心设计完全遵循 Model Context Protocol (MCP) 标准，这使得它不仅是一个独立的问答服务，更是一个即插即用的知识上下文提供者。
+### MCP 鐢熸€侀泦鎴?(Copilot / ReSearch)
+鏈」鐩殑鏍稿績璁捐瀹屽叏閬靛惊 Model Context Protocol (MCP) 鏍囧噯锛岃繖浣垮緱瀹冧笉浠呮槸涓€涓嫭绔嬬殑闂瓟鏈嶅姟锛屾洿鏄竴涓嵆鎻掑嵆鐢ㄧ殑鐭ヨ瘑涓婁笅鏂囨彁渚涜€呫€?
 
-- **工作原理**：
-    - 我们的 Server 作为一个 **MCP Server** 运行，暴露一组标准的 `tools` 和 `resources` 接口。
-    - **MCP Clients**（如 GitHub Copilot, ReSearch Agent, Claude Desktop 等）可以直接连接到这个 Server。
-    - **无缝接入**：当你在 GitHub Copilot 中提问时，Copilot 作为一个 MCP Host，能够自动发现并调用我们的 Server 提供的工具（如 `search_documentation`），获取我们内置的私有文档知识，然后结合这些上下文来回答你的问题。
-- **优势**：
-    - **零前端开发**：无需为知识库开发专门的 Chat UI，直接复用开发者已有的编辑器（VS Code）和 AI 助手。
-    - **上下文互通**：Copilot 可以同时看到你的代码文件和我们的知识库内容，进行更深度的推理。
-    - **标准兼容**：任何支持 MCP 的 AI Agent（不仅是 Copilot）都可以即刻接入我们的知识库，一次开发，处处可用。
+- **宸ヤ綔鍘熺悊**锛?
+    - 鎴戜滑鐨?Server 浣滀负涓€涓?**MCP Server** 杩愯锛屾毚闇蹭竴缁勬爣鍑嗙殑 `tools` 鍜?`resources` 鎺ュ彛銆?
+    - **MCP Clients**锛堝 GitHub Copilot, ReSearch Agent, Claude Desktop 绛夛級鍙互鐩存帴杩炴帴鍒拌繖涓?Server銆?
+    - **鏃犵紳鎺ュ叆**锛氬綋浣犲湪 GitHub Copilot 涓彁闂椂锛孋opilot 浣滀负涓€涓?MCP Host锛岃兘澶熻嚜鍔ㄥ彂鐜板苟璋冪敤鎴戜滑鐨?Server 鎻愪緵鐨勫伐鍏凤紙濡?`search_documentation`锛夛紝鑾峰彇鎴戜滑鍐呯疆鐨勭鏈夋枃妗ｇ煡璇嗭紝鐒跺悗缁撳悎杩欎簺涓婁笅鏂囨潵鍥炵瓟浣犵殑闂銆?
+- **浼樺娍**锛?
+    - **闆跺墠绔紑鍙?*锛氭棤闇€涓虹煡璇嗗簱寮€鍙戜笓闂ㄧ殑 Chat UI锛岀洿鎺ュ鐢ㄥ紑鍙戣€呭凡鏈夌殑缂栬緫鍣紙VS Code锛夊拰 AI 鍔╂墜銆?
+    - **涓婁笅鏂囦簰閫?*锛欳opilot 鍙互鍚屾椂鐪嬪埌浣犵殑浠ｇ爜鏂囦欢鍜屾垜浠殑鐭ヨ瘑搴撳唴瀹癸紝杩涜鏇存繁搴︾殑鎺ㄧ悊銆?
+    - **鏍囧噯鍏煎**锛氫换浣曟敮鎸?MCP 鐨?AI Agent锛堜笉浠呮槸 Copilot锛夐兘鍙互鍗冲埢鎺ュ叆鎴戜滑鐨勭煡璇嗗簱锛屼竴娆″紑鍙戯紝澶勫鍙敤銆?
 
-### 多模态图像处理 (Multimodal Image Processing)
-本项目采用了经典的 **"Image-to-Text" (图转文)** 策略来处理文档中的图像内容，实现了低成本且高效的多模态检索：
-- **图像描述生成 (Captioning)**：利用 LLM 的视觉能力，自动提取文档中插图的核心信息，并生成详细的文字描述（Caption）。
-- **统一向量空间**：将生成的图像描述文字直接嵌入到文档文本块（Chunk）中进行向量化。
-- **优势**：
-    - **架构统一**：无需引入复杂的 CLIP 等多模态向量库，复用现有的纯文本 RAG 检索链路即可实现“搜文字出图”。
-    - **语义对齐**：通过 LLM 将图像的视觉特征转化为语义理解，使用户能通过自然语言精准检索到图表、流程图等视觉信息。
+### 澶氭ā鎬佸浘鍍忓鐞?(Multimodal Image Processing)
+鏈」鐩噰鐢ㄤ簡缁忓吀鐨?**"Image-to-Text" (鍥捐浆鏂?** 绛栫暐鏉ュ鐞嗘枃妗ｄ腑鐨勫浘鍍忓唴瀹癸紝瀹炵幇浜嗕綆鎴愭湰涓旈珮鏁堢殑澶氭ā鎬佹绱細
+- **鍥惧儚鎻忚堪鐢熸垚 (Captioning)**锛氬埄鐢?LLM 鐨勮瑙夎兘鍔涳紝鑷姩鎻愬彇鏂囨。涓彃鍥剧殑鏍稿績淇℃伅锛屽苟鐢熸垚璇︾粏鐨勬枃瀛楁弿杩帮紙Caption锛夈€?
+- **缁熶竴鍚戦噺绌洪棿**锛氬皢鐢熸垚鐨勫浘鍍忔弿杩版枃瀛楃洿鎺ュ祵鍏ュ埌鏂囨。鏂囨湰鍧楋紙Chunk锛変腑杩涜鍚戦噺鍖栥€?
+- **浼樺娍**锛?
+    - **鏋舵瀯缁熶竴**锛氭棤闇€寮曞叆澶嶆潅鐨?CLIP 绛夊妯℃€佸悜閲忓簱锛屽鐢ㄧ幇鏈夌殑绾枃鏈?RAG 妫€绱㈤摼璺嵆鍙疄鐜扳€滄悳鏂囧瓧鍑哄浘鈥濄€?
+    - **璇箟瀵归綈**锛氶€氳繃 LLM 灏嗗浘鍍忕殑瑙嗚鐗瑰緛杞寲涓鸿涔夌悊瑙ｏ紝浣跨敤鎴疯兘閫氳繃鑷劧璇█绮惧噯妫€绱㈠埌鍥捐〃銆佹祦绋嬪浘绛夎瑙変俊鎭€?
 
-### 可观测性、可视化管理与评估体系 (Observability, Visual Management & Evaluation)
-针对 RAG 系统常见的“黑盒”问题，本项目致力于让每一次生成过程都**透明可见**且**可量化**，并提供完整的**本地可视化管理平台**：
-- **全链路白盒化 (White-box Tracing)**：
-    - 记录并可视化 RAG 流水线的每一个中间状态：覆盖 Ingestion（加载→切分→增强→编码→存储）与 Query（查询预处理→Dense/Sparse 召回→融合→重排→响应构建）两条完整链路。
-    - 开发者可以清晰看到“系统为什么选了这个文档”以及“Rerank 起了什么作用”，从而精准定位坏 Case。
-- **可视化管理平台 (Visual Management Dashboard)**：
-    - 基于 Streamlit 的本地 Web 管理面板，提供六大功能页面：
-        - **系统总览**：展示当前可插拔组件配置（LLM/Embedding/Splitter/Reranker）与数据资产统计。
-        - **数据浏览器**：查看已索引的文档列表、Chunk 详情（原文、metadata 各字段、关联图片），支持搜索过滤。
-        - **Ingestion 管理**：通过界面选择文件触发摄取、实时展示各阶段进度、支持删除已摄入文档（跨 4 个存储的协调删除）。
-        - **Query 追踪**：查询历史列表，耗时瀑布图，Dense/Sparse 召回对比，Rerank 前后排名变化。
-        - **Ingestion 追踪**：摄取历史列表，各阶段耗时与处理详情。
-        - **评估面板**：运行评估任务、查看各项指标、历史趋势对比。
-    - 所有页面基于 Trace 中的 `method`/`provider` 字段**动态渲染**，更换可插拔组件后 Dashboard 自动适配，无需修改代码。
-- **自动化评估闭环 (Automated Evaluation)**：
-    - 集成 Ragas 等评估框架（可插拔），为每一次检索和生成计算“体检报告”（如召回率 Hit Rate、准确性 Faithfulness 等指标）。
-    - 拒绝“凭感觉”调优，建立基于数据的迭代反馈回路，确保每一次策略调整（如修改 Chunk Size 或更换 Reranker）都有量化的分数支撑。
+### 鍙娴嬫€с€佸彲瑙嗗寲绠＄悊涓庤瘎浼颁綋绯?(Observability, Visual Management & Evaluation)
+閽堝 RAG 绯荤粺甯歌鐨勨€滈粦鐩掆€濋棶棰橈紝鏈」鐩嚧鍔涗簬璁╂瘡涓€娆＄敓鎴愯繃绋嬮兘**閫忔槑鍙**涓?*鍙噺鍖?*锛屽苟鎻愪緵瀹屾暣鐨?*鏈湴鍙鍖栫鐞嗗钩鍙?*锛?
+- **鍏ㄩ摼璺櫧鐩掑寲 (White-box Tracing)**锛?
+    - 璁板綍骞跺彲瑙嗗寲 RAG 娴佹按绾跨殑姣忎竴涓腑闂寸姸鎬侊細瑕嗙洊 Ingestion锛堝姞杞解啋鍒囧垎鈫掑寮衡啋缂栫爜鈫掑瓨鍌級涓?Query锛堟煡璇㈤澶勭悊鈫扗ense/Sparse 鍙洖鈫掕瀺鍚堚啋閲嶆帓鈫掑搷搴旀瀯寤猴級涓ゆ潯瀹屾暣閾捐矾銆?
+    - 寮€鍙戣€呭彲浠ユ竻鏅扮湅鍒扳€滅郴缁熶负浠€涔堥€変簡杩欎釜鏂囨。鈥濅互鍙娾€淩erank 璧蜂簡浠€涔堜綔鐢ㄢ€濓紝浠庤€岀簿鍑嗗畾浣嶅潖 Case銆?
+- **鍙鍖栫鐞嗗钩鍙?(Visual Management Dashboard)**锛?
+    - 鍩轰簬 Streamlit 鐨勬湰鍦?Web 绠＄悊闈㈡澘锛屾彁渚涘叚澶у姛鑳介〉闈細
+        - **绯荤粺鎬昏**锛氬睍绀哄綋鍓嶅彲鎻掓嫈缁勪欢閰嶇疆锛圠LM/Embedding/Splitter/Reranker锛変笌鏁版嵁璧勪骇缁熻銆?
+        - **鏁版嵁娴忚鍣?*锛氭煡鐪嬪凡绱㈠紩鐨勬枃妗ｅ垪琛ㄣ€丆hunk 璇︽儏锛堝師鏂囥€乵etadata 鍚勫瓧娈点€佸叧鑱斿浘鐗囷級锛屾敮鎸佹悳绱㈣繃婊ゃ€?
+        - **Ingestion 绠＄悊**锛氶€氳繃鐣岄潰閫夋嫨鏂囦欢瑙﹀彂鎽勫彇銆佸疄鏃跺睍绀哄悇闃舵杩涘害銆佹敮鎸佸垹闄ゅ凡鎽勫叆鏂囨。锛堣法 4 涓瓨鍌ㄧ殑鍗忚皟鍒犻櫎锛夈€?
+        - **Query 杩借釜**锛氭煡璇㈠巻鍙插垪琛紝鑰楁椂鐎戝竷鍥撅紝Dense/Sparse 鍙洖瀵规瘮锛孯erank 鍓嶅悗鎺掑悕鍙樺寲銆?
+        - **Ingestion 杩借釜**锛氭憚鍙栧巻鍙插垪琛紝鍚勯樁娈佃€楁椂涓庡鐞嗚鎯呫€?
+        - **璇勪及闈㈡澘**锛氳繍琛岃瘎浼颁换鍔°€佹煡鐪嬪悇椤规寚鏍囥€佸巻鍙茶秼鍔垮姣斻€?
+    - 鎵€鏈夐〉闈㈠熀浜?Trace 涓殑 `method`/`provider` 瀛楁**鍔ㄦ€佹覆鏌?*锛屾洿鎹㈠彲鎻掓嫈缁勪欢鍚?Dashboard 鑷姩閫傞厤锛屾棤闇€淇敼浠ｇ爜銆?
+- **鑷姩鍖栬瘎浼伴棴鐜?(Automated Evaluation)**锛?
+    - 闆嗘垚 Ragas 绛夎瘎浼版鏋讹紙鍙彃鎷旓級锛屼负姣忎竴娆℃绱㈠拰鐢熸垚璁＄畻鈥滀綋妫€鎶ュ憡鈥濓紙濡傚彫鍥炵巼 Hit Rate銆佸噯纭€?Faithfulness 绛夋寚鏍囷級銆?
+    - 鎷掔粷鈥滃嚟鎰熻鈥濊皟浼橈紝寤虹珛鍩轰簬鏁版嵁鐨勮凯浠ｅ弽棣堝洖璺紝纭繚姣忎竴娆＄瓥鐣ヨ皟鏁达紙濡備慨鏀?Chunk Size 鎴栨洿鎹?Reranker锛夐兘鏈夐噺鍖栫殑鍒嗘暟鏀拺銆?
 
-### 业务可扩展性 (Extensibility for Your Own Projects)
-本项目采用**通用化架构设计**，不仅是一个开箱即用的知识问答系统，更是一个可以快速适配各类业务场景的**扩展基座**：
+### 涓氬姟鍙墿灞曟€?(Extensibility for Your Own Projects)
+鏈」鐩噰鐢?*閫氱敤鍖栨灦鏋勮璁?*锛屼笉浠呮槸涓€涓紑绠卞嵆鐢ㄧ殑鐭ヨ瘑闂瓟绯荤粺锛屾洿鏄竴涓彲浠ュ揩閫熼€傞厤鍚勭被涓氬姟鍦烘櫙鐨?*鎵╁睍鍩哄骇**锛?
 
-- **Agent 客户端扩展 (Build Your Own Agent Client)**：
-    - 本项目的 MCP Server 天然支持被各类 Agent 调用，你可以基于此构建属于自己的 Agent 客户端：
-        - **学习 Agent 开发**：通过实现一个调用本 Server 的 Agent，深入理解 Agent 的核心概念（Tool Calling、Chain of Thought、ReAct 模式等）；
-        - **定制业务 Agent**：结合你的具体业务需求，开发专属的智能助手（如代码审查 Agent、文档写作 Agent、客服问答 Agent）；
-        - **多 Agent 协作**：将本 Server 作为知识检索 Agent，与其他功能 Agent（如代码生成、任务规划）组合，构建复杂的 Multi-Agent 系统。
+- **Agent 瀹㈡埛绔墿灞?(Build Your Own Agent Client)**锛?
+    - 鏈」鐩殑 MCP Server 澶╃劧鏀寔琚悇绫?Agent 璋冪敤锛屼綘鍙互鍩轰簬姝ゆ瀯寤哄睘浜庤嚜宸辩殑 Agent 瀹㈡埛绔細
+        - **瀛︿範 Agent 寮€鍙?*锛氶€氳繃瀹炵幇涓€涓皟鐢ㄦ湰 Server 鐨?Agent锛屾繁鍏ョ悊瑙?Agent 鐨勬牳蹇冩蹇碉紙Tool Calling銆丆hain of Thought銆丷eAct 妯″紡绛夛級锛?
+        - **瀹氬埗涓氬姟 Agent**锛氱粨鍚堜綘鐨勫叿浣撲笟鍔￠渶姹傦紝寮€鍙戜笓灞炵殑鏅鸿兘鍔╂墜锛堝浠ｇ爜瀹℃煡 Agent銆佹枃妗ｅ啓浣?Agent銆佸鏈嶉棶绛?Agent锛夛紱
+        - **澶?Agent 鍗忎綔**锛氬皢鏈?Server 浣滀负鐭ヨ瘑妫€绱?Agent锛屼笌鍏朵粬鍔熻兘 Agent锛堝浠ｇ爜鐢熸垚銆佷换鍔¤鍒掞級缁勫悎锛屾瀯寤哄鏉傜殑 Multi-Agent 绯荤粺銆?
 
-- **业务场景快速适配 (Adapt to Your Domain)**：
-    - **数据层扩展**：只需替换数据源（接入你自己的文档、数据库、API），即可将本系统改造为你的私有知识库；
-    - **检索逻辑定制**：基于可插拔架构，轻松调整检索策略以适配不同业务特点（如电商搜索偏重关键词、法律文档偏重语义）；
-    - **Prompt 模板定制**：修改系统 Prompt 和输出格式，使其符合你的业务风格与专业术语。
+- **涓氬姟鍦烘櫙蹇€熼€傞厤 (Adapt to Your Domain)**锛?
+    - **鏁版嵁灞傛墿灞?*锛氬彧闇€鏇挎崲鏁版嵁婧愶紙鎺ュ叆浣犺嚜宸辩殑鏂囨。銆佹暟鎹簱銆丄PI锛夛紝鍗冲彲灏嗘湰绯荤粺鏀归€犱负浣犵殑绉佹湁鐭ヨ瘑搴擄紱
+    - **妫€绱㈤€昏緫瀹氬埗**锛氬熀浜庡彲鎻掓嫈鏋舵瀯锛岃交鏉捐皟鏁存绱㈢瓥鐣ヤ互閫傞厤涓嶅悓涓氬姟鐗圭偣锛堝鐢靛晢鎼滅储鍋忛噸鍏抽敭璇嶃€佹硶寰嬫枃妗ｅ亸閲嶈涔夛級锛?
+    - **Prompt 妯℃澘瀹氬埗**锛氫慨鏀圭郴缁?Prompt 鍜岃緭鍑烘牸寮忥紝浣垮叾绗﹀悎浣犵殑涓氬姟椋庢牸涓庝笓涓氭湳璇€?
 
-- **学习与实战并重 (Learn While Building)**：
-    - 通过扩展本项目，你将同步掌握：
-        - **Agent 架构设计**：Function Calling、Tool Use、Memory 管理等核心概念；
-        - **LLM 应用工程化**：Prompt Engineering、Token 优化、流式输出等实战技能；
-        - **系统集成能力**：如何将 AI 能力嵌入现有业务系统，构建端到端的智能应用。
+- **瀛︿範涓庡疄鎴樺苟閲?(Learn While Building)**锛?
+    - 閫氳繃鎵╁睍鏈」鐩紝浣犲皢鍚屾鎺屾彙锛?
+        - **Agent 鏋舵瀯璁捐**锛欶unction Calling銆乀ool Use銆丮emory 绠＄悊绛夋牳蹇冩蹇碉紱
+        - **LLM 搴旂敤宸ョ▼鍖?*锛歅rompt Engineering銆乀oken 浼樺寲銆佹祦寮忚緭鍑虹瓑瀹炴垬鎶€鑳斤紱
+        - **绯荤粺闆嗘垚鑳藉姏**锛氬浣曞皢 AI 鑳藉姏宓屽叆鐜版湁涓氬姟绯荤粺锛屾瀯寤虹鍒扮鐨勬櫤鑳藉簲鐢ㄣ€?
 
-这种设计让本项目不仅是"学完即弃"的 Demo，而是可以**持续迭代、真正落地**的工程化模板，帮助你将学到的知识转化为实际项目经验。
-
-
-## 3. 技术选型
-
-### 3.1 RAG 核心流水线设计 
-
-#### 3.1.1 数据摄取流水线 
-
-**目标：** 构建统一、可配置且可观测的数据摄取流水线，覆盖文档加载、格式解析、语义切分、多模态增强、嵌入计算、去重与批量上载到向量存储。该能力应是可重用的库模块，便于在 `ingest.py`、Dashboard 管理面板、离线批处理和测试中调用。
-
-- **自研 Pipeline 框架（设计灵感参考 LlamaIndex 分层思想，但不依赖 LlamaIndex 库）：**
-	- 采用自定义抽象接口（`BaseLoader`/`BaseSplitter`/`BaseTransform`/`BaseEmbedding`/`BaseVectorStore`），实现完全可控的可插拔架构。
-	- 支持可组合的 Loader -> Splitter -> Transform -> Embed -> Upsert 流程，便于实现可观测的流水线。
-	- 与主流 embedding provider 有良好适配，架构中统一使用 Chroma 作为向量存储。
+杩欑璁捐璁╂湰椤圭洰涓嶄粎鏄?瀛﹀畬鍗冲純"鐨?Demo锛岃€屾槸鍙互**鎸佺画杩唬銆佺湡姝ｈ惤鍦?*鐨勫伐绋嬪寲妯℃澘锛屽府鍔╀綘灏嗗鍒扮殑鐭ヨ瘑杞寲涓哄疄闄呴」鐩粡楠屻€?
 
 
-设计要点：
-- **明确分层职责**：
-  - Loader：负责把原始文件解析为统一的 `Document` 对象（`text` + `metadata`；类型定义集中在 `src/core/types.py`）。**在当前阶段，仅实现 PDF 格式的 Loader。**
-		- 统一输出格式采用规范化 Markdown作为 `Document.text`：这样可以更好的配合后面的Splitte（Langchain RecursiveCharacterTextSplitte））方法产出高质量切块。
-		- Loader 同时抽取/补齐基础 metadata（如 `source_path`, `doc_type=pdf`, `page`, `title/heading_outline`, `images` 引用列表等），为定位、回溯与后续 Transform 提供依据。
-	- Splitter：基于 Markdown 结构（标题/段落/代码块等）与参数配置把 `Document` 切为若干 Chunk，保留原始位置与上下文引用。
-	- Transform：可插入的处理步骤（ImageCaptioning、OCR、code-block normalization、html-to-text cleanup 等），Transform 可以选择把额外信息追加到 chunk.text 或放入 chunk.metadata（推荐默认追加到 text 以保证检索覆盖）。
-	- Embed & Upsert：按批次计算 embedding，并上载到向量存储；支持向量 + metadata 上载，并提供幂等 upsert 策略（基于 id/hash）。
-	- Dedup & Normalize：在上载前运行向量/文本去重与哈希过滤，避免重复索引。
+## 3. 鎶€鏈€夊瀷
 
-关键实现要素：
+### 3.1 RAG 鏍稿績娴佹按绾胯璁?
 
-- Loader（统一格式与元数据）
-	- **前置去重 (Early Exit / File Integrity Check)**：
-		- 机制：在解析文件前，计算原始文件的 SHA256 哈希指纹。
-		- 动作：检索 `ingestion_history` 表，若发现相同 Hash 且状态为 `success` 的记录，则认定该文件未发生变更，直接跳过后续所有处理（解析、切分、LLM重写），实现**零成本 (Zero-Cost)** 的增量更新。
-		- **存储方案**（初期实现，可插拔）：
-			- **默认选择：SQLite**，存储于 `data/db/ingestion_history.db`
-			- **表结构**：
+#### 3.1.1 鏁版嵁鎽勫彇娴佹按绾?
+
+**鐩爣锛?* 鏋勫缓缁熶竴銆佸彲閰嶇疆涓斿彲瑙傛祴鐨勬暟鎹憚鍙栨祦姘寸嚎锛岃鐩栨枃妗ｅ姞杞姐€佹牸寮忚В鏋愩€佽涔夊垏鍒嗐€佸妯℃€佸寮恒€佸祵鍏ヨ绠椼€佸幓閲嶄笌鎵归噺涓婅浇鍒板悜閲忓瓨鍌ㄣ€傝鑳藉姏搴旀槸鍙噸鐢ㄧ殑搴撴ā鍧楋紝渚夸簬鍦?`ingest.py`銆丏ashboard 绠＄悊闈㈡澘銆佺绾挎壒澶勭悊鍜屾祴璇曚腑璋冪敤銆?
+
+- **鑷爺 Pipeline 妗嗘灦锛堣璁＄伒鎰熷弬鑰?LlamaIndex 鍒嗗眰鎬濇兂锛屼絾涓嶄緷璧?LlamaIndex 搴擄級锛?*
+	- 閲囩敤鑷畾涔夋娊璞℃帴鍙ｏ紙`BaseLoader`/`BaseSplitter`/`BaseTransform`/`BaseEmbedding`/`BaseVectorStore`锛夛紝瀹炵幇瀹屽叏鍙帶鐨勫彲鎻掓嫈鏋舵瀯銆?
+	- 鏀寔鍙粍鍚堢殑 Loader -> Splitter -> Transform -> Embed -> Upsert 娴佺▼锛屼究浜庡疄鐜板彲瑙傛祴鐨勬祦姘寸嚎銆?
+	- 涓庝富娴?embedding provider 鏈夎壇濂介€傞厤锛屾灦鏋勪腑缁熶竴浣跨敤 Chroma 浣滀负鍚戦噺瀛樺偍銆?
+
+
+璁捐瑕佺偣锛?
+- **鏄庣‘鍒嗗眰鑱岃矗**锛?
+  - Loader锛氳礋璐ｆ妸鍘熷鏂囦欢瑙ｆ瀽涓虹粺涓€鐨?`Document` 瀵硅薄锛坄text` + `metadata`锛涚被鍨嬪畾涔夐泦涓湪 `src/core/types.py`锛夈€?*鍦ㄥ綋鍓嶉樁娈碉紝浠呭疄鐜?PDF 鏍煎紡鐨?Loader銆?*
+		- 缁熶竴杈撳嚭鏍煎紡閲囩敤瑙勮寖鍖?Markdown浣滀负 `Document.text`锛氳繖鏍峰彲浠ユ洿濂界殑閰嶅悎鍚庨潰鐨凷plitte锛圠angchain RecursiveCharacterTextSplitte锛夛級鏂规硶浜у嚭楂樿川閲忓垏鍧椼€?
+		- Loader 鍚屾椂鎶藉彇/琛ラ綈鍩虹 metadata锛堝 `source_path`, `doc_type=pdf`, `page`, `title/heading_outline`, `images` 寮曠敤鍒楄〃绛夛級锛屼负瀹氫綅銆佸洖婧笌鍚庣画 Transform 鎻愪緵渚濇嵁銆?
+	- Splitter锛氬熀浜?Markdown 缁撴瀯锛堟爣棰?娈佃惤/浠ｇ爜鍧楃瓑锛変笌鍙傛暟閰嶇疆鎶?`Document` 鍒囦负鑻ュ共 Chunk锛屼繚鐣欏師濮嬩綅缃笌涓婁笅鏂囧紩鐢ㄣ€?
+	- Transform锛氬彲鎻掑叆鐨勫鐞嗘楠わ紙ImageCaptioning銆丱CR銆乧ode-block normalization銆乭tml-to-text cleanup 绛夛級锛孴ransform 鍙互閫夋嫨鎶婇澶栦俊鎭拷鍔犲埌 chunk.text 鎴栨斁鍏?chunk.metadata锛堟帹鑽愰粯璁よ拷鍔犲埌 text 浠ヤ繚璇佹绱㈣鐩栵級銆?
+	- Embed & Upsert锛氭寜鎵规璁＄畻 embedding锛屽苟涓婅浇鍒板悜閲忓瓨鍌紱鏀寔鍚戦噺 + metadata 涓婅浇锛屽苟鎻愪緵骞傜瓑 upsert 绛栫暐锛堝熀浜?id/hash锛夈€?
+	- Dedup & Normalize锛氬湪涓婅浇鍓嶈繍琛屽悜閲?鏂囨湰鍘婚噸涓庡搱甯岃繃婊わ紝閬垮厤閲嶅绱㈠紩銆?
+
+鍏抽敭瀹炵幇瑕佺礌锛?
+
+- Loader锛堢粺涓€鏍煎紡涓庡厓鏁版嵁锛?
+	- **鍓嶇疆鍘婚噸 (Early Exit / File Integrity Check)**锛?
+		- 鏈哄埗锛氬湪瑙ｆ瀽鏂囦欢鍓嶏紝璁＄畻鍘熷鏂囦欢鐨?SHA256 鍝堝笇鎸囩汗銆?
+		- 鍔ㄤ綔锛氭绱?`ingestion_history` 琛紝鑻ュ彂鐜扮浉鍚?Hash 涓旂姸鎬佷负 `success` 鐨勮褰曪紝鍒欒瀹氳鏂囦欢鏈彂鐢熷彉鏇达紝鐩存帴璺宠繃鍚庣画鎵€鏈夊鐞嗭紙瑙ｆ瀽銆佸垏鍒嗐€丩LM閲嶅啓锛夛紝瀹炵幇**闆舵垚鏈?(Zero-Cost)** 鐨勫閲忔洿鏂般€?
+		- **瀛樺偍鏂规**锛堝垵鏈熷疄鐜帮紝鍙彃鎷旓級锛?
+			- **榛樿閫夋嫨锛歋QLite**锛屽瓨鍌ㄤ簬 `data/db/ingestion_history.db`
+			- **琛ㄧ粨鏋?*锛?
 				```sql
 				CREATE TABLE ingestion_history (
 				    file_hash TEXT PRIMARY KEY,
@@ -212,387 +212,387 @@
 				CREATE INDEX idx_status ON ingestion_history(status);
 				CREATE INDEX idx_processed_at ON ingestion_history(processed_at);
 				```
-			- **查询逻辑**：`SELECT status FROM ingestion_history WHERE file_hash = ? AND status = 'success'`
-			- **替换路径**：后续可升级为 Redis（分布式缓存）或 PostgreSQL（企业级中心化存储）
+			- **鏌ヨ閫昏緫**锛歚SELECT status FROM ingestion_history WHERE file_hash = ? AND status = 'success'`
+			- **鏇挎崲璺緞**锛氬悗缁彲鍗囩骇涓?Redis锛堝垎甯冨紡缂撳瓨锛夋垨 PostgreSQL锛堜紒涓氱骇涓績鍖栧瓨鍌級
 	
-	> **📌 持久化存储架构统一说明**
+	> **馃搶 鎸佷箙鍖栧瓨鍌ㄦ灦鏋勭粺涓€璇存槑**
 	> 
-	> 本项目在多个核心模块中采用 **SQLite** 作为轻量级持久化存储方案，避免引入重量级数据库依赖，保持本地优先（Local-First）的设计理念：
+	> 鏈」鐩湪澶氫釜鏍稿績妯″潡涓噰鐢?**SQLite** 浣滀负杞婚噺绾ф寔涔呭寲瀛樺偍鏂规锛岄伩鍏嶅紩鍏ラ噸閲忕骇鏁版嵁搴撲緷璧栵紝淇濇寔鏈湴浼樺厛锛圠ocal-First锛夌殑璁捐鐞嗗康锛?
 	> 
-	> | 存储模块 | 数据库文件 | 用途 | 表结构关键字段 |
+	> | 瀛樺偍妯″潡 | 鏁版嵁搴撴枃浠?| 鐢ㄩ€?| 琛ㄧ粨鏋勫叧閿瓧娈?|
 	> |---------|-----------|------|---------------|
-	> | **文件完整性检查** | `data/db/ingestion_history.db` | 记录已处理文件的 SHA256 哈希，实现增量摄取 | `file_hash`, `status`, `processed_at` |
-	> | **图片索引映射** | `data/db/image_index.db` | 记录 image_id → 文件路径映射，支持图片检索与引用 | `image_id`, `file_path`, `collection` |
-	> | **BM25 索引元数据** | `data/db/bm25/` | 存储倒排索引和 IDF 统计信息（未来可扩展用 SQLite） | 当前使用 pickle，可迁移至 SQLite |
+	> | **鏂囦欢瀹屾暣鎬ф鏌?* | `data/db/ingestion_history.db` | 璁板綍宸插鐞嗘枃浠剁殑 SHA256 鍝堝笇锛屽疄鐜板閲忔憚鍙?| `file_hash`, `status`, `processed_at` |
+	> | **鍥剧墖绱㈠紩鏄犲皠** | `data/db/image_index.db` | 璁板綍 image_id 鈫?鏂囦欢璺緞鏄犲皠锛屾敮鎸佸浘鐗囨绱笌寮曠敤 | `image_id`, `file_path`, `collection` |
+	> | **BM25 绱㈠紩鍏冩暟鎹?* | `data/db/bm25/` | 瀛樺偍鍊掓帓绱㈠紩鍜?IDF 缁熻淇℃伅锛堟湭鏉ュ彲鎵╁睍鐢?SQLite锛?| 褰撳墠浣跨敤 pickle锛屽彲杩佺Щ鑷?SQLite |
 	> 
-	> **设计优势**：
-	> - **零依赖部署**：无需安装 MySQL/PostgreSQL 等数据库服务，`pip install` 即可运行
-	> - **并发安全**：WAL (Write-Ahead Logging) 模式支持多进程安全读写
-	> - **持久化保证**：摄取历史和索引映射在进程重启后自动恢复，避免重复计算
-	> - **架构一致性**：所有 SQLite 模块遵循相同的初始化、查询与错误处理模式，便于维护与扩展
+	> **璁捐浼樺娍**锛?
+	> - **闆朵緷璧栭儴缃?*锛氭棤闇€瀹夎 MySQL/PostgreSQL 绛夋暟鎹簱鏈嶅姟锛宍pip install` 鍗冲彲杩愯
+	> - **骞跺彂瀹夊叏**锛歐AL (Write-Ahead Logging) 妯″紡鏀寔澶氳繘绋嬪畨鍏ㄨ鍐?
+	> - **鎸佷箙鍖栦繚璇?*锛氭憚鍙栧巻鍙插拰绱㈠紩鏄犲皠鍦ㄨ繘绋嬮噸鍚悗鑷姩鎭㈠锛岄伩鍏嶉噸澶嶈绠?
+	> - **鏋舵瀯涓€鑷存€?*锛氭墍鏈?SQLite 妯″潡閬靛惊鐩稿悓鐨勫垵濮嬪寲銆佹煡璇笌閿欒澶勭悊妯″紡锛屼究浜庣淮鎶や笌鎵╁睍
 	> 
-	> **升级路径**：当系统规模扩展至分布式场景时，可通过统一的抽象接口将 SQLite 替换为 PostgreSQL 或 Redis，无需修改上层业务逻辑。
+	> **鍗囩骇璺緞**锛氬綋绯荤粺瑙勬ā鎵╁睍鑷冲垎甯冨紡鍦烘櫙鏃讹紝鍙€氳繃缁熶竴鐨勬娊璞℃帴鍙ｅ皢 SQLite 鏇挎崲涓?PostgreSQL 鎴?Redis锛屾棤闇€淇敼涓婂眰涓氬姟閫昏緫銆?
 	
-	- **解析与标准化**：
-		- 当前范围：**仅实现 PDF -> canonical Markdown 子集** 的转换。
-	- 技术选型（Python PDF -> Markdown）：
-		- **首选：MarkItDown**（作为默认 PDF 解析/转换引擎）。优点是直接产出 Markdown 形态文本，便于与后续 `RecursiveCharacterTextSplitter` 的 separators 配合。
-	- 输出标准 `Document`：`id|source|text(markdown)|metadata`。metadata 至少包含 `source_path`, `doc_type`, `title/heading_outline`, `page/slide`（如适用）, `images`（图片引用列表）。
-	- Loader 不负责切分：只做“格式统一 + 结构抽取 + 引用收集”，确保切分策略可独立迭代与度量。
+	- **瑙ｆ瀽涓庢爣鍑嗗寲**锛?
+		- 褰撳墠鑼冨洿锛?*浠呭疄鐜?PDF -> canonical Markdown 瀛愰泦** 鐨勮浆鎹€?
+	- 鎶€鏈€夊瀷锛圥ython PDF -> Markdown锛夛細
+		- **棣栭€夛細MarkItDown**锛堜綔涓洪粯璁?PDF 瑙ｆ瀽/杞崲寮曟搸锛夈€備紭鐐规槸鐩存帴浜у嚭 Markdown 褰㈡€佹枃鏈紝渚夸簬涓庡悗缁?`RecursiveCharacterTextSplitter` 鐨?separators 閰嶅悎銆?
+	- 杈撳嚭鏍囧噯 `Document`锛歚id|source|text(markdown)|metadata`銆俶etadata 鑷冲皯鍖呭惈 `source_path`, `doc_type`, `title/heading_outline`, `page/slide`锛堝閫傜敤锛? `images`锛堝浘鐗囧紩鐢ㄥ垪琛級銆?
+	- Loader 涓嶈礋璐ｅ垏鍒嗭細鍙仛鈥滄牸寮忕粺涓€ + 缁撴瀯鎶藉彇 + 寮曠敤鏀堕泦鈥濓紝纭繚鍒囧垎绛栫暐鍙嫭绔嬭凯浠ｄ笌搴﹂噺銆?
 
-- Splitter（LangChain 负责切分；独立、可控）
-	- **实现方案：使用 LangChain 的 `RecursiveCharacterTextSplitter` 进行切分。**
-		- 优势：该方法对 Markdown 文档的结构（标题、段落、列表、代码块）有天然的适配性，能够通过配置语义断点（Separators）实现高质量、语义完整的切块。
-	- Splitter 输入：Loader 产出的 Markdown `Document`。
-	- Splitter 输出：若干 `Chunk`（或 Document-like chunks），每个 chunk 必须携带稳定的定位信息与来源信息：`source`, `chunk_index`, `start_offset/end_offset`（或等价定位字段）。
+- Splitter锛圠angChain 璐熻矗鍒囧垎锛涚嫭绔嬨€佸彲鎺э級
+	- **瀹炵幇鏂规锛氫娇鐢?LangChain 鐨?`RecursiveCharacterTextSplitter` 杩涜鍒囧垎銆?*
+		- 浼樺娍锛氳鏂规硶瀵?Markdown 鏂囨。鐨勭粨鏋勶紙鏍囬銆佹钀姐€佸垪琛ㄣ€佷唬鐮佸潡锛夋湁澶╃劧鐨勯€傞厤鎬э紝鑳藉閫氳繃閰嶇疆璇箟鏂偣锛圫eparators锛夊疄鐜伴珮璐ㄩ噺銆佽涔夊畬鏁寸殑鍒囧潡銆?
+	- Splitter 杈撳叆锛歀oader 浜у嚭鐨?Markdown `Document`銆?
+	- Splitter 杈撳嚭锛氳嫢骞?`Chunk`锛堟垨 Document-like chunks锛夛紝姣忎釜 chunk 蹇呴』鎼哄甫绋冲畾鐨勫畾浣嶄俊鎭笌鏉ユ簮淇℃伅锛歚source`, `chunk_index`, `start_offset/end_offset`锛堟垨绛変环瀹氫綅瀛楁锛夈€?
 
-- Transform & Enrichment（结构转换与深度增强）
-	本阶段是 ETL 管道的核心“智力”环节，负责将 Splitter 产出的非结构化文本块转化为结构化、富语义的智能切片（Smart Chunk）。
-	- **结构转换 (Structure Transformation)**：将原始的 `String` 类型数据转化为强类型的 `Record/Object`，为下游检索提供字段级支持。
-	- **核心增强策略**：
-		1. **智能重组 (Smart Chunking & Refinement)**：
-			- 策略：利用 LLM 的语义理解能力，对上一阶段“粗切分”的片段进行二次加工。
-			- 动作：合并在逻辑上紧密相关但被物理切断的段落，剔除无意义的页眉页脚或乱码（去噪），确保每个 Chunk 是自包含（Self-contained）的语义单元。
-		2. **语义元数据注入 (Semantic Metadata Enrichment)**：
-			- 策略：在基础元数据（路径、页码）之上，利用 LLM 提取高维语义特征。
-			- 产出：为每个 Chunk 自动生成 `Title`（精准小标题）、`Summary`（内容摘要）和 `Tags`（主题标签），并将其注入到 Metadata 字段中，支持后续的混合检索与精确过滤。
-		3. **多模态增强 (Multimodal Enrichment / Image Captioning)**：
-			- 策略：扫描文档片段中的图像引用，调用 Vision LLM（如 GPT-4o）进行视觉理解。
-			- 动作：生成高保真的文本描述（Caption），描述图表逻辑或提取截图文字。
-			- 存储：将 Caption 文本“缝合”进 Chunk 的正文或 Metadata 中，打通模态隔阂，实现“搜文出图”。
-	- **工程特性**：Transform 步骤设计为原子化与幂等操作，支持针对特定 Chunk 的独立重试与增量更新，避免因 LLM 调用失败导致整个文档处理中断。
+- Transform & Enrichment锛堢粨鏋勮浆鎹笌娣卞害澧炲己锛?
+	鏈樁娈垫槸 ETL 绠￠亾鐨勬牳蹇冣€滄櫤鍔涒€濈幆鑺傦紝璐熻矗灏?Splitter 浜у嚭鐨勯潪缁撴瀯鍖栨枃鏈潡杞寲涓虹粨鏋勫寲銆佸瘜璇箟鐨勬櫤鑳藉垏鐗囷紙Smart Chunk锛夈€?
+	- **缁撴瀯杞崲 (Structure Transformation)**锛氬皢鍘熷鐨?`String` 绫诲瀷鏁版嵁杞寲涓哄己绫诲瀷鐨?`Record/Object`锛屼负涓嬫父妫€绱㈡彁渚涘瓧娈电骇鏀寔銆?
+	- **鏍稿績澧炲己绛栫暐**锛?
+		1. **鏅鸿兘閲嶇粍 (Smart Chunking & Refinement)**锛?
+			- 绛栫暐锛氬埄鐢?LLM 鐨勮涔夌悊瑙ｈ兘鍔涳紝瀵逛笂涓€闃舵鈥滅矖鍒囧垎鈥濈殑鐗囨杩涜浜屾鍔犲伐銆?
+			- 鍔ㄤ綔锛氬悎骞跺湪閫昏緫涓婄揣瀵嗙浉鍏充絾琚墿鐞嗗垏鏂殑娈佃惤锛屽墧闄ゆ棤鎰忎箟鐨勯〉鐪夐〉鑴氭垨涔辩爜锛堝幓鍣級锛岀‘淇濇瘡涓?Chunk 鏄嚜鍖呭惈锛圫elf-contained锛夌殑璇箟鍗曞厓銆?
+		2. **璇箟鍏冩暟鎹敞鍏?(Semantic Metadata Enrichment)**锛?
+			- 绛栫暐锛氬湪鍩虹鍏冩暟鎹紙璺緞銆侀〉鐮侊級涔嬩笂锛屽埄鐢?LLM 鎻愬彇楂樼淮璇箟鐗瑰緛銆?
+			- 浜у嚭锛氫负姣忎釜 Chunk 鑷姩鐢熸垚 `Title`锛堢簿鍑嗗皬鏍囬锛夈€乣Summary`锛堝唴瀹规憳瑕侊級鍜?`Tags`锛堜富棰樻爣绛撅級锛屽苟灏嗗叾娉ㄥ叆鍒?Metadata 瀛楁涓紝鏀寔鍚庣画鐨勬贩鍚堟绱笌绮剧‘杩囨护銆?
+		3. **澶氭ā鎬佸寮?(Multimodal Enrichment / Image Captioning)**锛?
+			- 绛栫暐锛氭壂鎻忔枃妗ｇ墖娈典腑鐨勫浘鍍忓紩鐢紝璋冪敤 Vision LLM锛堝 GPT-4o锛夎繘琛岃瑙夌悊瑙ｃ€?
+			- 鍔ㄤ綔锛氱敓鎴愰珮淇濈湡鐨勬枃鏈弿杩帮紙Caption锛夛紝鎻忚堪鍥捐〃閫昏緫鎴栨彁鍙栨埅鍥炬枃瀛椼€?
+			- 瀛樺偍锛氬皢 Caption 鏂囨湰鈥滅紳鍚堚€濊繘 Chunk 鐨勬鏂囨垨 Metadata 涓紝鎵撻€氭ā鎬侀殧闃傦紝瀹炵幇鈥滄悳鏂囧嚭鍥锯€濄€?
+	- **宸ョ▼鐗规€?*锛歍ransform 姝ラ璁捐涓哄師瀛愬寲涓庡箓绛夋搷浣滐紝鏀寔閽堝鐗瑰畾 Chunk 鐨勭嫭绔嬮噸璇曚笌澧為噺鏇存柊锛岄伩鍏嶅洜 LLM 璋冪敤澶辫触瀵艰嚧鏁翠釜鏂囨。澶勭悊涓柇銆?
 
-- **Embedding (双路向量化)**
-	- **差量计算 (Incremental Embedding / Cost Optimization)**：
-		- 策略：在调用昂贵的 Embedding API 之前，计算 Chunk 的内容哈希（Content Hash）。仅针对数据库中不存在的新内容哈希执行向量化计算，对于文件名变更但内容未变的片段，直接复用已有向量，显著降低 API 调用成本。
-	- **核心策略**：为了支持高精度的混合检索（Hybrid Search），系统对每个 Chunk 并行执行双路编码计算。
-		- **Dense Embeddings（语义向量）**：调用 Embedding 模型（如 OpenAI text-embedding-3 或 BGE）生成高维浮点向量，捕捉文本的深层语义关联，解决“词不同意同”的检索难题。
-		- **Sparse Embeddings（稀疏向量）**：利用 BM25 编码器或 SPLADE 模型生成稀疏向量（Keyword Weights），捕捉精确的关键词匹配信息，解决专有名词查找问题。
-	- **批处理优化**：所有计算均采用 `batch_size` 驱动的批处理模式，最大化 CPU 利用率并减少网络 RTT。
+- **Embedding (鍙岃矾鍚戦噺鍖?**
+	- **宸噺璁＄畻 (Incremental Embedding / Cost Optimization)**锛?
+		- 绛栫暐锛氬湪璋冪敤鏄傝吹鐨?Embedding API 涔嬪墠锛岃绠?Chunk 鐨勫唴瀹瑰搱甯岋紙Content Hash锛夈€備粎閽堝鏁版嵁搴撲腑涓嶅瓨鍦ㄧ殑鏂板唴瀹瑰搱甯屾墽琛屽悜閲忓寲璁＄畻锛屽浜庢枃浠跺悕鍙樻洿浣嗗唴瀹规湭鍙樼殑鐗囨锛岀洿鎺ュ鐢ㄥ凡鏈夊悜閲忥紝鏄捐憲闄嶄綆 API 璋冪敤鎴愭湰銆?
+	- **鏍稿績绛栫暐**锛氫负浜嗘敮鎸侀珮绮惧害鐨勬贩鍚堟绱紙Hybrid Search锛夛紝绯荤粺瀵规瘡涓?Chunk 骞惰鎵ц鍙岃矾缂栫爜璁＄畻銆?
+		- **Dense Embeddings锛堣涔夊悜閲忥級**锛氳皟鐢?Embedding 妯″瀷锛堝 OpenAI text-embedding-3 鎴?BGE锛夌敓鎴愰珮缁存诞鐐瑰悜閲忥紝鎹曟崏鏂囨湰鐨勬繁灞傝涔夊叧鑱旓紝瑙ｅ喅鈥滆瘝涓嶅悓鎰忓悓鈥濈殑妫€绱㈤毦棰樸€?
+		- **Sparse Embeddings锛堢█鐤忓悜閲忥級**锛氬埄鐢?BM25 缂栫爜鍣ㄦ垨 SPLADE 妯″瀷鐢熸垚绋€鐤忓悜閲忥紙Keyword Weights锛夛紝鎹曟崏绮剧‘鐨勫叧閿瘝鍖归厤淇℃伅锛岃В鍐充笓鏈夊悕璇嶆煡鎵鹃棶棰樸€?
+	- **鎵瑰鐞嗕紭鍖?*锛氭墍鏈夎绠楀潎閲囩敤 `batch_size` 椹卞姩鐨勬壒澶勭悊妯″紡锛屾渶澶у寲 CPU 鍒╃敤鐜囧苟鍑忓皯缃戠粶 RTT銆?
 
-- **Upsert & Storage (索引存储)**
-	- **存储后端**：统一使用向量数据库（如 Chroma/Qdrant）作为存储引擎，同时持久化存储 Dense Vector、Sparse Vector 以及 Transform 阶段生成的富 Metadata。
-	- **All-in-One 存储策略**：执行原子化存储，每条记录同时包含：
-		1. **Index Data**: 用于计算相似度的 Dense Vector 和 Sparse Vector。
-		2. **Payload Data**: 完整的 Chunk 原始文本 (Content) 及 Metadata。
-		**机制优势**：确保检索命中 ID 后能立即取回对应的正文内容，无需额外的查库操作 (Lookup)，保障了 Retrieve 阶段的毫秒级响应。
-- **幂等性设计 (Idempotency)**：
-		- 为每个 Chunk 生成全局唯一的 `chunk_id`，生成算法采用确定的哈希组合：`hash(source_path + section_path + content_hash)`。
-		- 写入时采用 "Upsert"（更新或插入）语义，确保同一文档即使被多次处理，数据库中也永远只有一份最新副本，彻底避免重复索引问题。
-	- **原子性保证**：以 Batch 为单位进行事务性写入，确保索引状态的一致性。
+- **Upsert & Storage (绱㈠紩瀛樺偍)**
+	- **瀛樺偍鍚庣**锛氱粺涓€浣跨敤鍚戦噺鏁版嵁搴擄紙濡?Chroma/Qdrant锛変綔涓哄瓨鍌ㄥ紩鎿庯紝鍚屾椂鎸佷箙鍖栧瓨鍌?Dense Vector銆丼parse Vector 浠ュ強 Transform 闃舵鐢熸垚鐨勫瘜 Metadata銆?
+	- **All-in-One 瀛樺偍绛栫暐**锛氭墽琛屽師瀛愬寲瀛樺偍锛屾瘡鏉¤褰曞悓鏃跺寘鍚細
+		1. **Index Data**: 鐢ㄤ簬璁＄畻鐩镐技搴︾殑 Dense Vector 鍜?Sparse Vector銆?
+		2. **Payload Data**: 瀹屾暣鐨?Chunk 鍘熷鏂囨湰 (Content) 鍙?Metadata銆?
+		**鏈哄埗浼樺娍**锛氱‘淇濇绱㈠懡涓?ID 鍚庤兘绔嬪嵆鍙栧洖瀵瑰簲鐨勬鏂囧唴瀹癸紝鏃犻渶棰濆鐨勬煡搴撴搷浣?(Lookup)锛屼繚闅滀簡 Retrieve 闃舵鐨勬绉掔骇鍝嶅簲銆?
+- **骞傜瓑鎬ц璁?(Idempotency)**锛?
+		- 涓烘瘡涓?Chunk 鐢熸垚鍏ㄥ眬鍞竴鐨?`chunk_id`锛岀敓鎴愮畻娉曢噰鐢ㄧ‘瀹氱殑鍝堝笇缁勫悎锛歚hash(source_path + section_path + content_hash)`銆?
+		- 鍐欏叆鏃堕噰鐢?"Upsert"锛堟洿鏂版垨鎻掑叆锛夎涔夛紝纭繚鍚屼竴鏂囨。鍗充娇琚娆″鐞嗭紝鏁版嵁搴撲腑涔熸案杩滃彧鏈変竴浠芥渶鏂板壇鏈紝褰诲簳閬垮厤閲嶅绱㈠紩闂銆?
+	- **鍘熷瓙鎬т繚璇?*锛氫互 Batch 涓哄崟浣嶈繘琛屼簨鍔℃€у啓鍏ワ紝纭繚绱㈠紩鐘舵€佺殑涓€鑷存€с€?
 
-- **文档生命周期管理 (Document Lifecycle Management)**
+- **鏂囨。鐢熷懡鍛ㄦ湡绠＄悊 (Document Lifecycle Management)**
 
-	为支持 Dashboard 管理面板中的文档浏览与删除功能，Ingestion 层需要提供完整的文档生命周期管理能力：
+	涓烘敮鎸?Dashboard 绠＄悊闈㈡澘涓殑鏂囨。娴忚涓庡垹闄ゅ姛鑳斤紝Ingestion 灞傞渶瑕佹彁渚涘畬鏁寸殑鏂囨。鐢熷懡鍛ㄦ湡绠＄悊鑳藉姏锛?
 
-	- **DocumentManager（文档管理器）**：独立于 Pipeline 的文档管理模块（`src/ingestion/document_manager.py`），负责跨存储的协调操作：
-		- `list_documents(collection?) -> List[DocumentInfo]`：列出已摄入文档及其统计信息（chunk 数、图片数、摄入时间）。
-		- `get_document_detail(doc_id) -> DocumentDetail`：获取单个文档的详细信息（所有 chunk 内容、metadata、关联图片）。
-		- `delete_document(source_path, collection) -> DeleteResult`：协调删除跨 4 个存储的关联数据：
-			1. **Chroma** — 按 `metadata.source` 删除所有 chunk 向量
-			2. **BM25 Indexer** — 移除对应文档的倒排索引条目
-			3. **ImageStorage** — 删除该文档关联的所有图片文件
-			4. **FileIntegrity** — 移除处理记录，使文件可重新摄入
-		- `get_collection_stats(collection?) -> CollectionStats`：返回集合级统计（文档数、chunk 数、存储大小等）。
+	- **DocumentManager锛堟枃妗ｇ鐞嗗櫒锛?*锛氱嫭绔嬩簬 Pipeline 鐨勬枃妗ｇ鐞嗘ā鍧楋紙`src/ingestion/document_manager.py`锛夛紝璐熻矗璺ㄥ瓨鍌ㄧ殑鍗忚皟鎿嶄綔锛?
+		- `list_documents(collection?) -> List[DocumentInfo]`锛氬垪鍑哄凡鎽勫叆鏂囨。鍙婂叾缁熻淇℃伅锛坈hunk 鏁般€佸浘鐗囨暟銆佹憚鍏ユ椂闂达級銆?
+		- `get_document_detail(doc_id) -> DocumentDetail`锛氳幏鍙栧崟涓枃妗ｇ殑璇︾粏淇℃伅锛堟墍鏈?chunk 鍐呭銆乵etadata銆佸叧鑱斿浘鐗囷級銆?
+		- `delete_document(source_path, collection) -> DeleteResult`锛氬崗璋冨垹闄よ法 4 涓瓨鍌ㄧ殑鍏宠仈鏁版嵁锛?
+			1. **Chroma** 鈥?鎸?`metadata.source` 鍒犻櫎鎵€鏈?chunk 鍚戦噺
+			2. **BM25 Indexer** 鈥?绉婚櫎瀵瑰簲鏂囨。鐨勫€掓帓绱㈠紩鏉＄洰
+			3. **ImageStorage** 鈥?鍒犻櫎璇ユ枃妗ｅ叧鑱旂殑鎵€鏈夊浘鐗囨枃浠?
+			4. **FileIntegrity** 鈥?绉婚櫎澶勭悊璁板綍锛屼娇鏂囦欢鍙噸鏂版憚鍏?
+		- `get_collection_stats(collection?) -> CollectionStats`锛氳繑鍥為泦鍚堢骇缁熻锛堟枃妗ｆ暟銆乧hunk 鏁般€佸瓨鍌ㄥぇ灏忕瓑锛夈€?
 
-	- **Pipeline 进度回调 (Progress Callback)**：在 `IngestionPipeline.run()` 方法中新增可选 `on_progress` 参数：
+	- **Pipeline 杩涘害鍥炶皟 (Progress Callback)**锛氬湪 `IngestionPipeline.run()` 鏂规硶涓柊澧炲彲閫?`on_progress` 鍙傛暟锛?
 		```python
 		def run(self, source_path: str, collection: str = "default",
 		        on_progress: Callable[[str, int, int], None] | None = None) -> IngestionResult:
 		```
-		- 回调签名：`on_progress(stage_name: str, current: int, total: int)`
-		- 各阶段（load / split / transform / embed / upsert）在处理每个 batch 时调用回调，Dashboard 据此展示实时进度条。
-		- `on_progress` 为 `None` 时行为与当前完全一致，不影响 CLI 和测试场景。
+		- 鍥炶皟绛惧悕锛歚on_progress(stage_name: str, current: int, total: int)`
+		- 鍚勯樁娈碉紙load / split / transform / embed / upsert锛夊湪澶勭悊姣忎釜 batch 鏃惰皟鐢ㄥ洖璋冿紝Dashboard 鎹灞曠ず瀹炴椂杩涘害鏉°€?
+		- `on_progress` 涓?`None` 鏃惰涓轰笌褰撳墠瀹屽叏涓€鑷达紝涓嶅奖鍝?CLI 鍜屾祴璇曞満鏅€?
 
-	- **存储层接口扩展**：为支持 DocumentManager 的删除操作，需扩展以下存储接口：
-		- `BaseVectorStore` 新增 `delete_by_metadata(filter: dict) -> int` — 按 metadata 条件批量删除
-		- `BM25Indexer` 新增 `remove_document(source: str) -> None` — 移除指定文档的索引条目
-		- `FileIntegrityChecker` 新增 `remove_record(file_hash: str) -> None` 和 `list_processed() -> List[dict]`
+	- **瀛樺偍灞傛帴鍙ｆ墿灞?*锛氫负鏀寔 DocumentManager 鐨勫垹闄ゆ搷浣滐紝闇€鎵╁睍浠ヤ笅瀛樺偍鎺ュ彛锛?
+		- `BaseVectorStore` 鏂板 `delete_by_metadata(filter: dict) -> int` 鈥?鎸?metadata 鏉′欢鎵归噺鍒犻櫎
+		- `BM25Indexer` 鏂板 `remove_document(source: str) -> None` 鈥?绉婚櫎鎸囧畾鏂囨。鐨勭储寮曟潯鐩?
+		- `FileIntegrityChecker` 鏂板 `remove_record(file_hash: str) -> None` 鍜?`list_processed() -> List[dict]`
 
-#### 3.1.2 检索流水线
+#### 3.1.2 妫€绱㈡祦姘寸嚎
 
 
-本模块实现核心的 RAG 检索引擎，采用 **“多阶段过滤 (Multi-stage Filtering)”** 架构，负责接收已消歧的独立查询（Standalone Query），并精准召回 Top-K 最相关片段。
+鏈ā鍧楀疄鐜版牳蹇冪殑 RAG 妫€绱㈠紩鎿庯紝閲囩敤 **鈥滃闃舵杩囨护 (Multi-stage Filtering)鈥?* 鏋舵瀯锛岃礋璐ｆ帴鏀跺凡娑堟鐨勭嫭绔嬫煡璇紙Standalone Query锛夛紝骞剁簿鍑嗗彫鍥?Top-K 鏈€鐩稿叧鐗囨銆?
 
-- **Query Processing (查询预处理)**
-	- **核心假设**：输入 Query 已由上游（Client/MCP Host）完成会话上下文补全（De-referencing），不仅如此，还进行了指代消歧。
-	- **查询转换 (Transformation) 与扩张策略 (Expansion Strategy)**：
-		- **Keyword Extraction**：利用 NLP 工具提取 Query 中的关键实体与动词（去停用词），生成用于稀疏检索的 Token 列表。
-		- **Query Expansion **：
-			- 系统可做 Synonym/Alias Expansion（同义词/别名/缩写扩展），默认策略采用“**扩展融入稀疏检索、稠密检索保持单次**”以控制成本与复杂度。
-			- **Sparse Route (BM25)**：将“关键词 + 同义词/别名”合并为一个查询表达式（逻辑上按 `OR` 扩展），**只执行一次稀疏检索**。原始关键词可赋予更高权重以抑制语义漂移。
-			- **Dense Route (Embedding)**：使用原始 query（或轻度改写后的语义 query）生成 embedding，**只执行一次稠密检索**；默认不为每个同义词单独触发额外的向量检索请求。
+- **Query Processing (鏌ヨ棰勫鐞?**
+	- **鏍稿績鍋囪**锛氳緭鍏?Query 宸茬敱涓婃父锛圕lient/MCP Host锛夊畬鎴愪細璇濅笂涓嬫枃琛ュ叏锛圖e-referencing锛夛紝涓嶄粎濡傛锛岃繕杩涜浜嗘寚浠ｆ秷姝с€?
+	- **鏌ヨ杞崲 (Transformation) 涓庢墿寮犵瓥鐣?(Expansion Strategy)**锛?
+		- **Keyword Extraction**锛氬埄鐢?NLP 宸ュ叿鎻愬彇 Query 涓殑鍏抽敭瀹炰綋涓庡姩璇嶏紙鍘诲仠鐢ㄨ瘝锛夛紝鐢熸垚鐢ㄤ簬绋€鐤忔绱㈢殑 Token 鍒楄〃銆?
+		- **Query Expansion **锛?
+			- 绯荤粺鍙仛 Synonym/Alias Expansion锛堝悓涔夎瘝/鍒悕/缂╁啓鎵╁睍锛夛紝榛樿绛栫暐閲囩敤鈥?*鎵╁睍铻嶅叆绋€鐤忔绱€佺瀵嗘绱繚鎸佸崟娆?*鈥濅互鎺у埗鎴愭湰涓庡鏉傚害銆?
+			- **Sparse Route (BM25)**锛氬皢鈥滃叧閿瘝 + 鍚屼箟璇?鍒悕鈥濆悎骞朵负涓€涓煡璇㈣〃杈惧紡锛堥€昏緫涓婃寜 `OR` 鎵╁睍锛夛紝**鍙墽琛屼竴娆＄█鐤忔绱?*銆傚師濮嬪叧閿瘝鍙祴浜堟洿楂樻潈閲嶄互鎶戝埗璇箟婕傜Щ銆?
+			- **Dense Route (Embedding)**锛氫娇鐢ㄥ師濮?query锛堟垨杞诲害鏀瑰啓鍚庣殑璇箟 query锛夌敓鎴?embedding锛?*鍙墽琛屼竴娆＄瀵嗘绱?*锛涢粯璁や笉涓烘瘡涓悓涔夎瘝鍗曠嫭瑙﹀彂棰濆鐨勫悜閲忔绱㈣姹傘€?
 
-- **Hybrid Search Execution (双路混合检索)**
-	- **并行召回 (Parallel Execution)**：
-		- **Dense Route**：计算 Query Embedding -> 检索向量库（Cosine Similarity）-> 返回 Top-N 语义候选。
-		- **Sparse Route**：使用 BM25 算法 -> 检索倒排索引 -> 返回 Top-N 关键词候选。
-	- **结果融合 (Fusion)**：
-		- 采用 **RRF (Reciprocal Rank Fusion)** 算法，不依赖各路分数的绝对值，而是基于排名的倒数进行加权融合。
-		- 公式策略：`Score = 1 / (k + Rank_Dense) + 1 / (k + Rank_Sparse)`，平滑因单一模态缺陷导致的漏召回。
+- **Hybrid Search Execution (鍙岃矾娣峰悎妫€绱?**
+	- **骞惰鍙洖 (Parallel Execution)**锛?
+		- **Dense Route**锛氳绠?Query Embedding -> 妫€绱㈠悜閲忓簱锛圕osine Similarity锛?> 杩斿洖 Top-N 璇箟鍊欓€夈€?
+		- **Sparse Route**锛氫娇鐢?BM25 绠楁硶 -> 妫€绱㈠€掓帓绱㈠紩 -> 杩斿洖 Top-N 鍏抽敭璇嶅€欓€夈€?
+	- **缁撴灉铻嶅悎 (Fusion)**锛?
+		- 閲囩敤 **RRF (Reciprocal Rank Fusion)** 绠楁硶锛屼笉渚濊禆鍚勮矾鍒嗘暟鐨勭粷瀵瑰€硷紝鑰屾槸鍩轰簬鎺掑悕鐨勫€掓暟杩涜鍔犳潈铻嶅悎銆?
+		- 鍏紡绛栫暐锛歚Score = 1 / (k + Rank_Dense) + 1 / (k + Rank_Sparse)`锛屽钩婊戝洜鍗曚竴妯℃€佺己闄峰鑷寸殑婕忓彫鍥炪€?
 
-- **Filtering & Reranking (精确过滤与重排)**
-	- **Metadata Filtering Strategy (通用过滤策略)**：
-		- **原则：先解析、能前置则前置、无法前置则后置兜底。**
-		- Query Processing 阶段应将结构化约束解析为通用 `filters`（例如 `collection`/`doc_type`/`language`/`time_range`/`access_level` 等）。
-		- 若底层索引支持且属于硬约束（Hard Filter），则在 Dense/Sparse 检索阶段做 Pre-filter 以缩小候选集、降低成本。
-		- 无法前置的过滤（索引不支持或字段缺失/质量不稳）在 Rerank 前统一做 Post-filter 作为 safety net；对缺失字段默认采取“宽松包含”(missing->include) 以避免误杀召回。
-		- 软偏好（Soft Preference，例如“更近期更好”）不应硬过滤，而应作为排序信号在融合/重排阶段加权。
-	- **Rerank Backend (可插拔精排后端)**：
-		- **目标**：在 Top-M 候选上进行高精度排序/过滤；该模块必须可关闭，并提供稳定回退策略。
-		- **后端选项**：
-			1. **None (关闭精排)**：直接返回融合后的 Top-K（RRF 排名作为最终结果）。
-			2. **Cross-Encoder Rerank (本地/托管模型)**：输入为 `[Query, Chunk]` 对，输出相关性分数并排序；适合稳定、结构化输出。CPU 环境下建议默认仅对较小的 Top-M 执行（例如 M=10~30），并提供超时回退。
-			3. **LLM Rerank (可选)**：使用 LLM 对候选集排序/选择；适合需要更强指令理解或无本地模型环境时。为控制成本与稳定性，候选数应更小（例如 M<=20），并要求输出严格结构化格式（如 JSON 的 ranked ids）。
-		- **默认与回退 (Fallback)**：
-			- 默认策略面向通用框架与 CPU 环境：优先保证“可用与可控”，Cross-Encoder/LLM 均为可选增强。
-			- 当精排不可用/超时/失败时，必须回退到融合阶段的排序（RRF Top-K），确保系统可用性与结果稳定性。
+- **Filtering & Reranking (绮剧‘杩囨护涓庨噸鎺?**
+	- **Metadata Filtering Strategy (閫氱敤杩囨护绛栫暐)**锛?
+		- **鍘熷垯锛氬厛瑙ｆ瀽銆佽兘鍓嶇疆鍒欏墠缃€佹棤娉曞墠缃垯鍚庣疆鍏滃簳銆?*
+		- Query Processing 闃舵搴斿皢缁撴瀯鍖栫害鏉熻В鏋愪负閫氱敤 `filters`锛堜緥濡?`collection`/`doc_type`/`language`/`time_range`/`access_level` 绛夛級銆?
+		- 鑻ュ簳灞傜储寮曟敮鎸佷笖灞炰簬纭害鏉燂紙Hard Filter锛夛紝鍒欏湪 Dense/Sparse 妫€绱㈤樁娈靛仛 Pre-filter 浠ョ缉灏忓€欓€夐泦銆侀檷浣庢垚鏈€?
+		- 鏃犳硶鍓嶇疆鐨勮繃婊わ紙绱㈠紩涓嶆敮鎸佹垨瀛楁缂哄け/璐ㄩ噺涓嶇ǔ锛夊湪 Rerank 鍓嶇粺涓€鍋?Post-filter 浣滀负 safety net锛涘缂哄け瀛楁榛樿閲囧彇鈥滃鏉惧寘鍚€?missing->include) 浠ラ伩鍏嶈鏉€鍙洖銆?
+		- 杞亸濂斤紙Soft Preference锛屼緥濡傗€滄洿杩戞湡鏇村ソ鈥濓級涓嶅簲纭繃婊わ紝鑰屽簲浣滀负鎺掑簭淇″彿鍦ㄨ瀺鍚?閲嶆帓闃舵鍔犳潈銆?
+	- **Rerank Backend (鍙彃鎷旂簿鎺掑悗绔?**锛?
+		- **鐩爣**锛氬湪 Top-M 鍊欓€変笂杩涜楂樼簿搴︽帓搴?杩囨护锛涜妯″潡蹇呴』鍙叧闂紝骞舵彁渚涚ǔ瀹氬洖閫€绛栫暐銆?
+		- **鍚庣閫夐」**锛?
+			1. **None (鍏抽棴绮炬帓)**锛氱洿鎺ヨ繑鍥炶瀺鍚堝悗鐨?Top-K锛圧RF 鎺掑悕浣滀负鏈€缁堢粨鏋滐級銆?
+			2. **Cross-Encoder Rerank (鏈湴/鎵樼妯″瀷)**锛氳緭鍏ヤ负 `[Query, Chunk]` 瀵癸紝杈撳嚭鐩稿叧鎬у垎鏁板苟鎺掑簭锛涢€傚悎绋冲畾銆佺粨鏋勫寲杈撳嚭銆侰PU 鐜涓嬪缓璁粯璁や粎瀵硅緝灏忕殑 Top-M 鎵ц锛堜緥濡?M=10~30锛夛紝骞舵彁渚涜秴鏃跺洖閫€銆?
+			3. **LLM Rerank (鍙€?**锛氫娇鐢?LLM 瀵瑰€欓€夐泦鎺掑簭/閫夋嫨锛涢€傚悎闇€瑕佹洿寮烘寚浠ょ悊瑙ｆ垨鏃犳湰鍦版ā鍨嬬幆澧冩椂銆備负鎺у埗鎴愭湰涓庣ǔ瀹氭€э紝鍊欓€夋暟搴旀洿灏忥紙渚嬪 M<=20锛夛紝骞惰姹傝緭鍑轰弗鏍肩粨鏋勫寲鏍煎紡锛堝 JSON 鐨?ranked ids锛夈€?
+		- **榛樿涓庡洖閫€ (Fallback)**锛?
+			- 榛樿绛栫暐闈㈠悜閫氱敤妗嗘灦涓?CPU 鐜锛氫紭鍏堜繚璇佲€滃彲鐢ㄤ笌鍙帶鈥濓紝Cross-Encoder/LLM 鍧囦负鍙€夊寮恒€?
+			- 褰撶簿鎺掍笉鍙敤/瓒呮椂/澶辫触鏃讹紝蹇呴』鍥為€€鍒拌瀺鍚堥樁娈电殑鎺掑簭锛圧RF Top-K锛夛紝纭繚绯荤粺鍙敤鎬т笌缁撴灉绋冲畾鎬с€?
 
-### 3.2 MCP 服务设计 (MCP Service Design)
+### 3.2 MCP 鏈嶅姟璁捐 (MCP Service Design)
 
-**目标：** 设计并实现一个符合 Model Context Protocol (MCP) 规范的 Server，使其能够作为知识上下文提供者，无缝对接主流 MCP Clients（如 GitHub Copilot、Claude Desktop 等），让用户通过现有 AI 助手即可查询私有知识库。
+**鐩爣锛?* 璁捐骞跺疄鐜颁竴涓鍚?Model Context Protocol (MCP) 瑙勮寖鐨?Server锛屼娇鍏惰兘澶熶綔涓虹煡璇嗕笂涓嬫枃鎻愪緵鑰咃紝鏃犵紳瀵规帴涓绘祦 MCP Clients锛堝 GitHub Copilot銆丆laude Desktop 绛夛級锛岃鐢ㄦ埛閫氳繃鐜版湁 AI 鍔╂墜鍗冲彲鏌ヨ绉佹湁鐭ヨ瘑搴撱€?
 
-#### 3.2.1 核心设计理念
+#### 3.2.1 鏍稿績璁捐鐞嗗康
 
-- **协议优先 (Protocol-First)**：严格遵循 MCP 官方规范（JSON-RPC 2.0），确保与任何合规 Client 的互操作性。
-- **开箱即用 (Zero-Config for Clients)**：Client 端无需任何特殊配置，只需在配置文件中添加 Server 连接信息即可使用全部功能。
-- **引用透明 (Citation Transparency)**：所有检索结果必须携带完整的来源信息，支持 Client 端展示"回答依据"，增强用户对 AI 输出的信任。
-- **多模态友好 (Multimodal-Ready)**：返回格式应支持文本与图像等多种内容类型，为未来的富媒体展示预留扩展空间。
+- **鍗忚浼樺厛 (Protocol-First)**锛氫弗鏍奸伒寰?MCP 瀹樻柟瑙勮寖锛圝SON-RPC 2.0锛夛紝纭繚涓庝换浣曞悎瑙?Client 鐨勪簰鎿嶄綔鎬с€?
+- **寮€绠卞嵆鐢?(Zero-Config for Clients)**锛欳lient 绔棤闇€浠讳綍鐗规畩閰嶇疆锛屽彧闇€鍦ㄩ厤缃枃浠朵腑娣诲姞 Server 杩炴帴淇℃伅鍗冲彲浣跨敤鍏ㄩ儴鍔熻兘銆?
+- **寮曠敤閫忔槑 (Citation Transparency)**锛氭墍鏈夋绱㈢粨鏋滃繀椤绘惡甯﹀畬鏁寸殑鏉ユ簮淇℃伅锛屾敮鎸?Client 绔睍绀?鍥炵瓟渚濇嵁"锛屽寮虹敤鎴峰 AI 杈撳嚭鐨勪俊浠汇€?
+- **澶氭ā鎬佸弸濂?(Multimodal-Ready)**锛氳繑鍥炴牸寮忓簲鏀寔鏂囨湰涓庡浘鍍忕瓑澶氱鍐呭绫诲瀷锛屼负鏈潵鐨勫瘜濯掍綋灞曠ず棰勭暀鎵╁睍绌洪棿銆?
 
-#### 3.2.2 传输协议：Stdio 本地通信
+#### 3.2.2 浼犺緭鍗忚锛歋tdio 鏈湴閫氫俊
 
-本项目采用 **Stdio Transport** 作为唯一通信模式。
+鏈」鐩噰鐢?**Stdio Transport** 浣滀负鍞竴閫氫俊妯″紡銆?
 
-- **工作方式**：Client（VS Code Copilot、Claude Desktop）以子进程方式启动我们的 Server，双方通过标准输入/输出交换 JSON-RPC 消息。
-- **选型理由**：
-	- **零配置**：无需网络端口、无需鉴权，用户只需在 Client 配置文件中指定启动命令即可使用。
-	- **隐私安全**：数据不经过网络，天然适合处理私有知识库与敏感业务数据。
-	- **契合定位**：Stdio 完美适配开发者本地工作流，满足私有知识管理与快速原型验证需求。
-- **实现约束**：
-	- `stdout` 仅输出合法 MCP 消息，禁止混入任何日志或调试信息。
-	- 日志统一输出至 `stderr`，避免污染通信通道。
+- **宸ヤ綔鏂瑰紡**锛欳lient锛圴S Code Copilot銆丆laude Desktop锛変互瀛愯繘绋嬫柟寮忓惎鍔ㄦ垜浠殑 Server锛屽弻鏂归€氳繃鏍囧噯杈撳叆/杈撳嚭浜ゆ崲 JSON-RPC 娑堟伅銆?
+- **閫夊瀷鐞嗙敱**锛?
+	- **闆堕厤缃?*锛氭棤闇€缃戠粶绔彛銆佹棤闇€閴存潈锛岀敤鎴峰彧闇€鍦?Client 閰嶇疆鏂囦欢涓寚瀹氬惎鍔ㄥ懡浠ゅ嵆鍙娇鐢ㄣ€?
+	- **闅愮瀹夊叏**锛氭暟鎹笉缁忚繃缃戠粶锛屽ぉ鐒堕€傚悎澶勭悊绉佹湁鐭ヨ瘑搴撲笌鏁忔劅涓氬姟鏁版嵁銆?
+	- **濂戝悎瀹氫綅**锛歋tdio 瀹岀編閫傞厤寮€鍙戣€呮湰鍦板伐浣滄祦锛屾弧瓒崇鏈夌煡璇嗙鐞嗕笌蹇€熷師鍨嬮獙璇侀渶姹傘€?
+- **瀹炵幇绾︽潫**锛?
+	- `stdout` 浠呰緭鍑哄悎娉?MCP 娑堟伅锛岀姝㈡贩鍏ヤ换浣曟棩蹇楁垨璋冭瘯淇℃伅銆?
+	- 鏃ュ織缁熶竴杈撳嚭鑷?`stderr`锛岄伩鍏嶆薄鏌撻€氫俊閫氶亾銆?
 
-#### 3.2.3 SDK 与实现库选型
+#### 3.2.3 SDK 涓庡疄鐜板簱閫夊瀷
 
-- **首选：Python 官方 MCP SDK (`mcp`)**
-	- **优势**：
-		- 官方维护，与协议规范同步更新，保证最新特性支持（如 `outputSchema`、`annotations` 等）。
-		- 提供 `@server.tool()` 等装饰器，声明式定义 Tools/Resources/Prompts，代码简洁。
-		- 内置 Stdio 与 HTTP Transport 支持，无需手动处理 JSON-RPC 序列化与生命周期管理。
-	- **适用**：本项目的默认实现方案。
+- **棣栭€夛細Python 瀹樻柟 MCP SDK (`mcp`)**
+	- **浼樺娍**锛?
+		- 瀹樻柟缁存姢锛屼笌鍗忚瑙勮寖鍚屾鏇存柊锛屼繚璇佹渶鏂扮壒鎬ф敮鎸侊紙濡?`outputSchema`銆乣annotations` 绛夛級銆?
+		- 鎻愪緵 `@server.tool()` 绛夎楗板櫒锛屽０鏄庡紡瀹氫箟 Tools/Resources/Prompts锛屼唬鐮佺畝娲併€?
+		- 鍐呯疆 Stdio 涓?HTTP Transport 鏀寔锛屾棤闇€鎵嬪姩澶勭悊 JSON-RPC 搴忓垪鍖栦笌鐢熷懡鍛ㄦ湡绠＄悊銆?
+	- **閫傜敤**锛氭湰椤圭洰鐨勯粯璁ゅ疄鐜版柟妗堛€?
 
-- **备选：FastAPI + 自定义协议层**
-	- **场景**：需要深度定制 HTTP 行为（如自定义中间件、复杂鉴权流程）或希望学习 MCP 协议底层细节时可考虑。
-	- **权衡**：开发成本更高，需自行实现能力协商 (Capability Negotiation)、错误码映射等，且需持续跟进协议版本更新。
+- **澶囬€夛細FastAPI + 鑷畾涔夊崗璁眰**
+	- **鍦烘櫙**锛氶渶瑕佹繁搴﹀畾鍒?HTTP 琛屼负锛堝鑷畾涔変腑闂翠欢銆佸鏉傞壌鏉冩祦绋嬶級鎴栧笇鏈涘涔?MCP 鍗忚搴曞眰缁嗚妭鏃跺彲鑰冭檻銆?
+	- **鏉冭　**锛氬紑鍙戞垚鏈洿楂橈紝闇€鑷瀹炵幇鑳藉姏鍗忓晢 (Capability Negotiation)銆侀敊璇爜鏄犲皠绛夛紝涓旈渶鎸佺画璺熻繘鍗忚鐗堟湰鏇存柊銆?
 
-- **协议版本**：跟踪 MCP 最新稳定版本（如 `2025-06-18`），在 `initialize` 阶段进行版本协商，确保 Client/Server 兼容性。
+- **鍗忚鐗堟湰**锛氳窡韪?MCP 鏈€鏂扮ǔ瀹氱増鏈紙濡?`2025-06-18`锛夛紝鍦?`initialize` 闃舵杩涜鐗堟湰鍗忓晢锛岀‘淇?Client/Server 鍏煎鎬с€?
 
-#### 3.2.4 对外暴露的工具函数设计 (Tools Design)
+#### 3.2.4 瀵瑰鏆撮湶鐨勫伐鍏峰嚱鏁拌璁?(Tools Design)
 
-Server 通过 `tools/list` 向 Client 注册可调用的工具函数。工具设计应遵循"单一职责、参数明确、输出丰富"原则。
+Server 閫氳繃 `tools/list` 鍚?Client 娉ㄥ唽鍙皟鐢ㄧ殑宸ュ叿鍑芥暟銆傚伐鍏疯璁″簲閬靛惊"鍗曚竴鑱岃矗銆佸弬鏁版槑纭€佽緭鍑轰赴瀵?鍘熷垯銆?
 
-- **核心工具集**：
+- **鏍稿績宸ュ叿闆?*锛?
 
-| 工具名称 | 功能描述 | 典型输入参数 | 输出特点 |
+| 宸ュ叿鍚嶇О | 鍔熻兘鎻忚堪 | 鍏稿瀷杈撳叆鍙傛暟 | 杈撳嚭鐗圭偣 |
 |---------|---------|-------------|---------|
-| `query_knowledge_hub` | 主检索入口，执行混合检索 + Rerank，返回最相关片段 | `query: string`, `top_k?: int`, `collection?: string` | 返回带引用的结构化结果 |
-| `list_collections` | 列举知识库中可用的文档集合 | 无 | 集合名称、描述、文档数量 |
-| `get_document_summary` | 获取指定文档的摘要与元信息 | `doc_id: string` | 标题、摘要、创建时间、标签 |
+| `query_knowledge_hub` | 涓绘绱㈠叆鍙ｏ紝鎵ц娣峰悎妫€绱?+ Rerank锛岃繑鍥炴渶鐩稿叧鐗囨 | `query: string`, `top_k?: int`, `collection?: string` | 杩斿洖甯﹀紩鐢ㄧ殑缁撴瀯鍖栫粨鏋?|
+| `list_collections` | 鍒椾妇鐭ヨ瘑搴撲腑鍙敤鐨勬枃妗ｉ泦鍚?| 鏃?| 闆嗗悎鍚嶇О銆佹弿杩般€佹枃妗ｆ暟閲?|
+| `get_document_summary` | 鑾峰彇鎸囧畾鏂囨。鐨勬憳瑕佷笌鍏冧俊鎭?| `doc_id: string` | 鏍囬銆佹憳瑕併€佸垱寤烘椂闂淬€佹爣绛?|
 
-- **扩展工具（Agentic 演进方向）**：
-	- `search_by_keyword` / `search_by_semantic`：拆分独立的检索策略，供 Agent 自主选择。
-	- `verify_answer`：事实核查工具，检测生成内容是否有依据支撑。
-	- `list_document_sections`：浏览文档目录结构，支持多步导航式检索。
+- **鎵╁睍宸ュ叿锛圓gentic 婕旇繘鏂瑰悜锛?*锛?
+	- `search_by_keyword` / `search_by_semantic`锛氭媶鍒嗙嫭绔嬬殑妫€绱㈢瓥鐣ワ紝渚?Agent 鑷富閫夋嫨銆?
+	- `verify_answer`锛氫簨瀹炴牳鏌ュ伐鍏凤紝妫€娴嬬敓鎴愬唴瀹规槸鍚︽湁渚濇嵁鏀拺銆?
+	- `list_document_sections`锛氭祻瑙堟枃妗ｇ洰褰曠粨鏋勶紝鏀寔澶氭瀵艰埅寮忔绱€?
 
-#### 3.2.5 返回内容与引用透明设计 (Response & Citation Design)
+#### 3.2.5 杩斿洖鍐呭涓庡紩鐢ㄩ€忔槑璁捐 (Response & Citation Design)
 
-MCP 协议的 Tool 返回格式支持多种内容类型（`content` 数组），本项目将充分利用这一特性实现"可溯源"的回答：
+MCP 鍗忚鐨?Tool 杩斿洖鏍煎紡鏀寔澶氱鍐呭绫诲瀷锛坄content` 鏁扮粍锛夛紝鏈」鐩皢鍏呭垎鍒╃敤杩欎竴鐗规€у疄鐜?鍙函婧?鐨勫洖绛旓細
 
-- **结构化引用设计**：
-	- 每个检索结果片段应包含完整的定位信息：`source_file`（文件名/路径）、`page`（页码，如适用）、`chunk_id`（片段标识）、`score`（相关性分数）。
-	- 推荐在返回的 `structuredContent` 中采用统一的 Citation 格式：
+- **缁撴瀯鍖栧紩鐢ㄨ璁?*锛?
+	- 姣忎釜妫€绱㈢粨鏋滅墖娈靛簲鍖呭惈瀹屾暣鐨勫畾浣嶄俊鎭細`source_file`锛堟枃浠跺悕/璺緞锛夈€乣page`锛堥〉鐮侊紝濡傞€傜敤锛夈€乣chunk_id`锛堢墖娈垫爣璇嗭級銆乣score`锛堢浉鍏虫€у垎鏁帮級銆?
+	- 鎺ㄨ崘鍦ㄨ繑鍥炵殑 `structuredContent` 涓噰鐢ㄧ粺涓€鐨?Citation 鏍煎紡锛?
 		```
 		{
 		  "answer": "...",
 		  "citations": [
-		    { "id": 1, "source": "xxx.pdf", "page": 5, "text": "原文片段...", "score": 0.92 },
+		    { "id": 1, "source": "xxx.pdf", "page": 5, "text": "鍘熸枃鐗囨...", "score": 0.92 },
 		    ...
 		  ]
 		}
 		```
-	- 同时在 `content` 数组中以 Markdown 格式呈现人类可读的带引用回答（`[1]` 标注），保证 Client 无论是否解析结构化内容都能展示引用。
+	- 鍚屾椂鍦?`content` 鏁扮粍涓互 Markdown 鏍煎紡鍛堢幇浜虹被鍙鐨勫甫寮曠敤鍥炵瓟锛坄[1]` 鏍囨敞锛夛紝淇濊瘉 Client 鏃犺鏄惁瑙ｆ瀽缁撴瀯鍖栧唴瀹归兘鑳藉睍绀哄紩鐢ㄣ€?
 
-- **多模态内容返回**：
-	- **文本内容 (TextContent)**：默认返回类型，Markdown 格式，支持代码块、列表等富文本。
-	- **图像内容 (ImageContent)**：当检索结果关联图像时，Server 读取本地图片文件并编码为 Base64 返回。
-		- **格式**：`{ "type": "image", "data": "<base64>", "mimeType": "image/png" }`
-		- **工作流程**：数据摄取阶段存储图片本地路径 → 检索命中后 Server 动态读取 → 编码为 Base64 → 嵌入返回消息。
-		- **Client 兼容性**：图像展示能力取决于 Client 实现，GitHub Copilot 可能降级处理，Claude Desktop 支持完整渲染。Server 端统一返回 Base64 格式，由 Client 决定如何渲染。
+- **澶氭ā鎬佸唴瀹硅繑鍥?*锛?
+	- **鏂囨湰鍐呭 (TextContent)**锛氶粯璁よ繑鍥炵被鍨嬶紝Markdown 鏍煎紡锛屾敮鎸佷唬鐮佸潡銆佸垪琛ㄧ瓑瀵屾枃鏈€?
+	- **鍥惧儚鍐呭 (ImageContent)**锛氬綋妫€绱㈢粨鏋滃叧鑱斿浘鍍忔椂锛孲erver 璇诲彇鏈湴鍥剧墖鏂囦欢骞剁紪鐮佷负 Base64 杩斿洖銆?
+		- **鏍煎紡**锛歚{ "type": "image", "data": "<base64>", "mimeType": "image/png" }`
+		- **宸ヤ綔娴佺▼**锛氭暟鎹憚鍙栭樁娈靛瓨鍌ㄥ浘鐗囨湰鍦拌矾寰?鈫?妫€绱㈠懡涓悗 Server 鍔ㄦ€佽鍙?鈫?缂栫爜涓?Base64 鈫?宓屽叆杩斿洖娑堟伅銆?
+		- **Client 鍏煎鎬?*锛氬浘鍍忓睍绀鸿兘鍔涘彇鍐充簬 Client 瀹炵幇锛孏itHub Copilot 鍙兘闄嶇骇澶勭悊锛孋laude Desktop 鏀寔瀹屾暣娓叉煋銆係erver 绔粺涓€杩斿洖 Base64 鏍煎紡锛岀敱 Client 鍐冲畾濡備綍娓叉煋銆?
 
-- **Client 适配策略**：
-	- **GitHub Copilot (VS Code)**：当前对 MCP 的支持集中在 Tools 调用，返回的 `content` 中的文本会展示给用户。建议以清晰的 Markdown 文本（含引用标注）为主，图像作为补充。
-	- **Claude Desktop**：对 MCP Tools/Resources 有完整支持，图像与资源链接可直接渲染。可更激进地使用多模态返回。
-	- **通用兼容原则**：始终在 `content` 数组第一项提供纯文本/Markdown 版本的答案，确保最低兼容性；将结构化数据、图像等放在后续项或 `structuredContent` 中，供高级 Client 解析。
+- **Client 閫傞厤绛栫暐**锛?
+	- **GitHub Copilot (VS Code)**锛氬綋鍓嶅 MCP 鐨勬敮鎸侀泦涓湪 Tools 璋冪敤锛岃繑鍥炵殑 `content` 涓殑鏂囨湰浼氬睍绀虹粰鐢ㄦ埛銆傚缓璁互娓呮櫚鐨?Markdown 鏂囨湰锛堝惈寮曠敤鏍囨敞锛変负涓伙紝鍥惧儚浣滀负琛ュ厖銆?
+	- **Claude Desktop**锛氬 MCP Tools/Resources 鏈夊畬鏁存敮鎸侊紝鍥惧儚涓庤祫婧愰摼鎺ュ彲鐩存帴娓叉煋銆傚彲鏇存縺杩涘湴浣跨敤澶氭ā鎬佽繑鍥炪€?
+	- **閫氱敤鍏煎鍘熷垯**锛氬缁堝湪 `content` 鏁扮粍绗竴椤规彁渚涚函鏂囨湰/Markdown 鐗堟湰鐨勭瓟妗堬紝纭繚鏈€浣庡吋瀹规€э紱灏嗙粨鏋勫寲鏁版嵁銆佸浘鍍忕瓑鏀惧湪鍚庣画椤规垨 `structuredContent` 涓紝渚涢珮绾?Client 瑙ｆ瀽銆?
 
-### 3.3 可插拔架构设计 (Pluggable Architecture Design)
+### 3.3 鍙彃鎷旀灦鏋勮璁?(Pluggable Architecture Design)
 
-**目标：** 定义清晰的抽象层与接口契约，使 RAG 链路的每个核心组件都能够独立替换与升级，避免技术锁定，支持低成本的 A/B 测试与环境迁移。
+**鐩爣锛?* 瀹氫箟娓呮櫚鐨勬娊璞″眰涓庢帴鍙ｅ绾︼紝浣?RAG 閾捐矾鐨勬瘡涓牳蹇冪粍浠堕兘鑳藉鐙珛鏇挎崲涓庡崌绾э紝閬垮厤鎶€鏈攣瀹氾紝鏀寔浣庢垚鏈殑 A/B 娴嬭瘯涓庣幆澧冭縼绉汇€?
 
-> **术语说明**：本节中的"提供者 (Provider)"、"实现 (Implementation)"指的是完成某项功能的**具体技术方案**，而非传统 Web 架构中的"后端服务器"。例如，LLM 提供者可以是远程的 Azure OpenAI API，也可以是本地运行的 Ollama；向量存储可以是本地嵌入式的 Chroma，也可以是云端托管的 Pinecone。本项目作为本地 MCP Server，通过统一接口对接这些不同的提供者，实现灵活切换。
+> **鏈璇存槑**锛氭湰鑺備腑鐨?鎻愪緵鑰?(Provider)"銆?瀹炵幇 (Implementation)"鎸囩殑鏄畬鎴愭煇椤瑰姛鑳界殑**鍏蜂綋鎶€鏈柟妗?*锛岃€岄潪浼犵粺 Web 鏋舵瀯涓殑"鍚庣鏈嶅姟鍣?銆備緥濡傦紝LLM 鎻愪緵鑰呭彲浠ユ槸杩滅▼鐨?Azure OpenAI API锛屼篃鍙互鏄湰鍦拌繍琛岀殑 Ollama锛涘悜閲忓瓨鍌ㄥ彲浠ユ槸鏈湴宓屽叆寮忕殑 Chroma锛屼篃鍙互鏄簯绔墭绠＄殑 Pinecone銆傛湰椤圭洰浣滀负鏈湴 MCP Server锛岄€氳繃缁熶竴鎺ュ彛瀵规帴杩欎簺涓嶅悓鐨勬彁渚涜€咃紝瀹炵幇鐏垫椿鍒囨崲銆?
 
-#### 3.3.1 设计原则
+#### 3.3.1 璁捐鍘熷垯
 
-- **接口隔离 (Interface Segregation)**：为每类组件定义最小化的抽象接口，上层业务逻辑仅依赖接口而非具体实现。
-- **配置驱动 (Configuration-Driven)**：通过统一配置文件（如 `settings.yaml`）指定各组件的具体后端，代码无需修改即可切换实现。
-- **工厂模式 (Factory Pattern)**：使用工厂函数根据配置动态实例化对应的实现类，实现"一处配置，处处生效"。
-- **优雅降级 (Graceful Fallback)**：当首选后端不可用时，系统应自动回退到备选方案或安全默认值，保障可用性。
+- **鎺ュ彛闅旂 (Interface Segregation)**锛氫负姣忕被缁勪欢瀹氫箟鏈€灏忓寲鐨勬娊璞℃帴鍙ｏ紝涓婂眰涓氬姟閫昏緫浠呬緷璧栨帴鍙ｈ€岄潪鍏蜂綋瀹炵幇銆?
+- **閰嶇疆椹卞姩 (Configuration-Driven)**锛氶€氳繃缁熶竴閰嶇疆鏂囦欢锛堝 `settings.yaml`锛夋寚瀹氬悇缁勪欢鐨勫叿浣撳悗绔紝浠ｇ爜鏃犻渶淇敼鍗冲彲鍒囨崲瀹炵幇銆?
+- **宸ュ巶妯″紡 (Factory Pattern)**锛氫娇鐢ㄥ伐鍘傚嚱鏁版牴鎹厤缃姩鎬佸疄渚嬪寲瀵瑰簲鐨勫疄鐜扮被锛屽疄鐜?涓€澶勯厤缃紝澶勫鐢熸晥"銆?
+- **浼橀泤闄嶇骇 (Graceful Fallback)**锛氬綋棣栭€夊悗绔笉鍙敤鏃讹紝绯荤粺搴旇嚜鍔ㄥ洖閫€鍒板閫夋柟妗堟垨瀹夊叏榛樿鍊硷紝淇濋殰鍙敤鎬с€?
 
-**通用结构示意（适用于 3.3.2 / 3.3.3 / 3.3.4 等可插拔组件）**：
+**閫氱敤缁撴瀯绀烘剰锛堥€傜敤浜?3.3.2 / 3.3.3 / 3.3.4 绛夊彲鎻掓嫈缁勪欢锛?*锛?
 
 ```
-业务代码
-  │
-  ▼
-<Component>Factory.get_xxx()  ← 读取配置，决定用哪个实现
-  │
-  ├─→ ImplementationA()
-  ├─→ ImplementationB()  
-  └─→ ImplementationC()
-      │
-      ▼
-    都实现了统一的抽象接口
+涓氬姟浠ｇ爜
+  鈹?
+  鈻?
+<Component>Factory.get_xxx()  鈫?璇诲彇閰嶇疆锛屽喅瀹氱敤鍝釜瀹炵幇
+  鈹?
+  鈹溾攢鈫?ImplementationA()
+  鈹溾攢鈫?ImplementationB()  
+  鈹斺攢鈫?ImplementationC()
+      鈹?
+      鈻?
+    閮藉疄鐜颁簡缁熶竴鐨勬娊璞℃帴鍙?
 ```
 
-#### 3.3.2 LLM 与 Embedding 提供者抽象
+#### 3.3.2 LLM 涓?Embedding 鎻愪緵鑰呮娊璞?
 
-这是可插拔设计的核心环节，因为模型提供者的选择直接影响成本、性能与隐私合规。
+杩欐槸鍙彃鎷旇璁＄殑鏍稿績鐜妭锛屽洜涓烘ā鍨嬫彁渚涜€呯殑閫夋嫨鐩存帴褰卞搷鎴愭湰銆佹€ц兘涓庨殣绉佸悎瑙勩€?
 
-- **统一接口层 (Unified API Abstraction)**：
-	- **设计思路**：无论底层使用 Azure OpenAI、OpenAI 原生 API、DeepSeek 还是本地 Ollama，上层调用代码应保持一致。
-	- **关键抽象**：
-		- `LLMClient`：暴露 `chat(messages) -> response` 方法，屏蔽不同 Provider 的认证方式与请求格式差异。
-		- `EmbeddingClient`：暴露 `embed(texts) -> vectors` 方法，统一处理批量请求与维度归一化。
+- **缁熶竴鎺ュ彛灞?(Unified API Abstraction)**锛?
+	- **璁捐鎬濊矾**锛氭棤璁哄簳灞備娇鐢?Azure OpenAI銆丱penAI 鍘熺敓 API銆丏eepSeek 杩樻槸鏈湴 Ollama锛屼笂灞傝皟鐢ㄤ唬鐮佸簲淇濇寔涓€鑷淬€?
+	- **鍏抽敭鎶借薄**锛?
+		- `LLMClient`锛氭毚闇?`chat(messages) -> response` 鏂规硶锛屽睆钄戒笉鍚?Provider 鐨勮璇佹柟寮忎笌璇锋眰鏍煎紡宸紓銆?
+		- `EmbeddingClient`锛氭毚闇?`embed(texts) -> vectors` 鏂规硶锛岀粺涓€澶勭悊鎵归噺璇锋眰涓庣淮搴﹀綊涓€鍖栥€?
 
-- **提供者选项与切换场景**：
+- **鎻愪緵鑰呴€夐」涓庡垏鎹㈠満鏅?*锛?
 
-| 提供者类型 | 典型场景 | 配置切换点 |
+| 鎻愪緵鑰呯被鍨?| 鍏稿瀷鍦烘櫙 | 閰嶇疆鍒囨崲鐐?|
 |---------|---------|-----------|
-| **Azure OpenAI** | 企业合规、私有云部署、区域数据驻留 | `provider: azure`, `endpoint`, `api_key`, `deployment_name` |
-| **OpenAI 原生** | 通用开发、最新模型尝鲜 | `provider: openai`, `api_key`, `model` |
-| **DeepSeek / 其他云端** | 成本优化、特定语言优化 | `provider: deepseek`, `api_key`, `model` |
-| **Ollama / vLLM (本地)** | 完全离线、隐私敏感、无 API 成本 | `provider: ollama`, `base_url`, `model` |
+| **Azure OpenAI** | 浼佷笟鍚堣銆佺鏈変簯閮ㄧ讲銆佸尯鍩熸暟鎹┗鐣?| `provider: azure`, `endpoint`, `api_key`, `deployment_name` |
+| **OpenAI 鍘熺敓** | 閫氱敤寮€鍙戙€佹渶鏂版ā鍨嬪皾椴?| `provider: openai`, `api_key`, `model` |
+| **DeepSeek / 鍏朵粬浜戠** | 鎴愭湰浼樺寲銆佺壒瀹氳瑷€浼樺寲 | `provider: deepseek`, `api_key`, `model` |
+| **Ollama / vLLM (鏈湴)** | 瀹屽叏绂荤嚎銆侀殣绉佹晱鎰熴€佹棤 API 鎴愭湰 | `provider: ollama`, `base_url`, `model` |
 
-- **技术选型建议**：
-	- 本项目采用自研的 `BaseLLM` / `BaseEmbedding` 抽象基类，配合工厂模式（`llm_factory.py` / `embedding_factory.py`）实现统一调用接口。已内置 Azure OpenAI、OpenAI、Ollama、DeepSeek 四种 Provider 适配。
-	- 对于其他 Provider，可通过 **OpenAI-Compatible 模式**接入（设置自定义 `api_base`），或实现 `BaseLLM` 接口并在工厂中注册。
+- **鎶€鏈€夊瀷寤鸿**锛?
+	- 鏈」鐩噰鐢ㄨ嚜鐮旂殑 `BaseLLM` / `BaseEmbedding` 鎶借薄鍩虹被锛岄厤鍚堝伐鍘傛ā寮忥紙`llm_factory.py` / `embedding_factory.py`锛夊疄鐜扮粺涓€璋冪敤鎺ュ彛銆傚凡鍐呯疆 Azure OpenAI銆丱penAI銆丱llama銆丏eepSeek 鍥涚 Provider 閫傞厤銆?
+	- 瀵逛簬鍏朵粬 Provider锛屽彲閫氳繃 **OpenAI-Compatible 妯″紡**鎺ュ叆锛堣缃嚜瀹氫箟 `api_base`锛夛紝鎴栧疄鐜?`BaseLLM` 鎺ュ彛骞跺湪宸ュ巶涓敞鍐屻€?
 
-	- 对于企业级需求，可在其基础上增加统一的 **重试、限流、日志** 中间层，提升生产可靠性，但本项目暂不实现，这里仅提供思路。
-	- **Vision LLM 扩展**：针对图像描述生成（Image Captioning）需求，系统扩展了 `BaseVisionLLM` 接口，支持文本+图片的多模态输入。当前实现：
-		- **Azure OpenAI Vision**（GPT-4o/GPT-4-Vision）：企业级合规部署，支持复杂图表解析，与 Azure 生态深度集成。
+	- 瀵逛簬浼佷笟绾ч渶姹傦紝鍙湪鍏跺熀纭€涓婂鍔犵粺涓€鐨?**閲嶈瘯銆侀檺娴併€佹棩蹇?* 涓棿灞傦紝鎻愬崌鐢熶骇鍙潬鎬э紝浣嗘湰椤圭洰鏆備笉瀹炵幇锛岃繖閲屼粎鎻愪緵鎬濊矾銆?
+	- **Vision LLM 鎵╁睍**锛氶拡瀵瑰浘鍍忔弿杩扮敓鎴愶紙Image Captioning锛夐渶姹傦紝绯荤粺鎵╁睍浜?`BaseVisionLLM` 鎺ュ彛锛屾敮鎸佹枃鏈?鍥剧墖鐨勫妯℃€佽緭鍏ャ€傚綋鍓嶅疄鐜帮細
+		- **Azure OpenAI Vision**锛圙PT-4o/GPT-4-Vision锛夛細浼佷笟绾у悎瑙勯儴缃诧紝鏀寔澶嶆潅鍥捐〃瑙ｆ瀽锛屼笌 Azure 鐢熸€佹繁搴﹂泦鎴愩€?
 
-#### 3.3.3 检索策略抽象
+#### 3.3.3 妫€绱㈢瓥鐣ユ娊璞?
 
-检索层的可插拔性决定了系统在不同数据规模与查询模式下的适应能力。
+妫€绱㈠眰鐨勫彲鎻掓嫈鎬у喅瀹氫簡绯荤粺鍦ㄤ笉鍚屾暟鎹妯′笌鏌ヨ妯″紡涓嬬殑閫傚簲鑳藉姏銆?
 
-**设计模式：抽象工厂模式**
+**璁捐妯″紡锛氭娊璞″伐鍘傛ā寮?*
 
-与 3.3.2 节的 LLM 抽象类似，检索层各组件的可插拔性同样依赖两层设计：
+涓?3.3.2 鑺傜殑 LLM 鎶借薄绫讳技锛屾绱㈠眰鍚勭粍浠剁殑鍙彃鎷旀€у悓鏍蜂緷璧栦袱灞傝璁★細
 
-1. **自研的统一抽象接口**：本项目为向量数据库（`BaseVectorStore`）、Embedding（`BaseEmbedding`）、分块（`BaseSplitter`）等核心组件定义了统一的抽象基类，不同实现只需遵循相同接口即可无缝替换。
+1. **鑷爺鐨勭粺涓€鎶借薄鎺ュ彛**锛氭湰椤圭洰涓哄悜閲忔暟鎹簱锛坄BaseVectorStore`锛夈€丒mbedding锛坄BaseEmbedding`锛夈€佸垎鍧楋紙`BaseSplitter`锛夌瓑鏍稿績缁勪欢瀹氫箟浜嗙粺涓€鐨勬娊璞″熀绫伙紝涓嶅悓瀹炵幇鍙渶閬靛惊鐩稿悓鎺ュ彛鍗冲彲鏃犵紳鏇挎崲銆?
 
-2. **工厂函数路由**：每个抽象层配套工厂函数（如 `embedding_factory.py`、`splitter_factory.py`），根据 `settings.yaml` 中的配置字段自动实例化对应实现，实现"改配置不改代码"的切换体验。
+2. **宸ュ巶鍑芥暟璺敱**锛氭瘡涓娊璞″眰閰嶅宸ュ巶鍑芥暟锛堝 `embedding_factory.py`銆乣splitter_factory.py`锛夛紝鏍规嵁 `settings.yaml` 涓殑閰嶇疆瀛楁鑷姩瀹炰緥鍖栧搴斿疄鐜帮紝瀹炵幇"鏀归厤缃笉鏀逛唬鐮?鐨勫垏鎹綋楠屻€?
 
 
-通用的“配置驱动 + 工厂路由”结构示意见 3.3.1 节。
+閫氱敤鐨勨€滈厤缃┍鍔?+ 宸ュ巶璺敱鈥濈粨鏋勭ず鎰忚 3.3.1 鑺傘€?
 
-下面分别说明各组件如何应用这一模式：
-
----
-
-**1. 分块策略 (Chunking Strategy)**
-
-分块是 Ingestion Pipeline 的核心环节之一，决定了文档如何被切分为适合检索的语义单元。本项目的 Splitter 层采用可插拔设计（BaseSplitter 抽象接口 + SplitterFactory 工厂），不同分块实现只需遵循相同接口即可无缝替换。
-
-常见的分块策略包括：
-- **固定长度切分**：按字符数或 Token 数切分，简单但可能破坏语义完整性。
-- **递归字符切分**：按层级分隔符（段落→句子→字符）递归切分，在长度限制内尽量保持语义边界。
-- **语义切分**：利用 Embedding 相似度检测语义断点，确保每个 Chunk 是自包含的语义单元。
-- **结构感知切分**：根据文档结构（Markdown 标题、代码块、列表等）进行切分。
-
-本项目当前采用 **LangChain 的 `RecursiveCharacterTextSplitter`** 进行切分，该方法对 Markdown 文档的结构（标题、段落、列表、代码块）有天然的适配性，能够通过配置语义断点（Separators）实现高质量、语义完整的切块。
-
-> **当前实现说明**：目前系统使用 LangChain RecursiveCharacterTextSplitter。架构设计上预留了切换能力，如需切换为 SentenceSplitter、SemanticSplitter 或自定义切分器，只需实现 BaseSplitter 接口并在配置中指定即可。
+涓嬮潰鍒嗗埆璇存槑鍚勭粍浠跺浣曞簲鐢ㄨ繖涓€妯″紡锛?
 
 ---
 
-**2. 向量数据库 (Vector Store)**
+**1. 鍒嗗潡绛栫暐 (Chunking Strategy)**
 
-本项目自定义了统一的 BaseVectorStore 抽象接口，暴露 .add()、.query()、.delete() 等方法。所有向量数据库后端（Chroma、Qdrant、Pinecone 等）只需实现该接口即可插拔替换，通过 VectorStoreFactory 根据配置自动选择具体实现。
+鍒嗗潡鏄?Ingestion Pipeline 鐨勬牳蹇冪幆鑺備箣涓€锛屽喅瀹氫簡鏂囨。濡備綍琚垏鍒嗕负閫傚悎妫€绱㈢殑璇箟鍗曞厓銆傛湰椤圭洰鐨?Splitter 灞傞噰鐢ㄥ彲鎻掓嫈璁捐锛圔aseSplitter 鎶借薄鎺ュ彛 + SplitterFactory 宸ュ巶锛夛紝涓嶅悓鍒嗗潡瀹炵幇鍙渶閬靛惊鐩稿悓鎺ュ彛鍗冲彲鏃犵紳鏇挎崲銆?
 
-本项目选用 **Chroma** 作为向量数据库。相比 Qdrant、Milvus、Weaviate 等需要 Docker 容器或分布式架构支撑的方案，Chroma 采用嵌入式设计，`pip install chromadb` 即可使用，无需额外部署数据库服务，非常适合本地开发与快速原型验证。同时 ChromaStore 适配器（src/libs/vector_store/chroma_store.py），与 Pipeline 无缝集成。
+甯歌鐨勫垎鍧楃瓥鐣ュ寘鎷細
+- **鍥哄畾闀垮害鍒囧垎**锛氭寜瀛楃鏁版垨 Token 鏁板垏鍒嗭紝绠€鍗曚絾鍙兘鐮村潖璇箟瀹屾暣鎬с€?
+- **閫掑綊瀛楃鍒囧垎**锛氭寜灞傜骇鍒嗛殧绗︼紙娈佃惤鈫掑彞瀛愨啋瀛楃锛夐€掑綊鍒囧垎锛屽湪闀垮害闄愬埗鍐呭敖閲忎繚鎸佽涔夎竟鐣屻€?
+- **璇箟鍒囧垎**锛氬埄鐢?Embedding 鐩镐技搴︽娴嬭涔夋柇鐐癸紝纭繚姣忎釜 Chunk 鏄嚜鍖呭惈鐨勮涔夊崟鍏冦€?
+- **缁撴瀯鎰熺煡鍒囧垎**锛氭牴鎹枃妗ｇ粨鏋勶紙Markdown 鏍囬銆佷唬鐮佸潡銆佸垪琛ㄧ瓑锛夎繘琛屽垏鍒嗐€?
 
-> **当前实现说明**：目前系统仅实现了 Chroma 后端。虽然架构设计上预留了工厂模式以支持未来扩展，但当前版本尚未实现其他向量数据库的适配器。
+鏈」鐩綋鍓嶉噰鐢?**LangChain 鐨?`RecursiveCharacterTextSplitter`** 杩涜鍒囧垎锛岃鏂规硶瀵?Markdown 鏂囨。鐨勭粨鏋勶紙鏍囬銆佹钀姐€佸垪琛ㄣ€佷唬鐮佸潡锛夋湁澶╃劧鐨勯€傞厤鎬э紝鑳藉閫氳繃閰嶇疆璇箟鏂偣锛圫eparators锛夊疄鐜伴珮璐ㄩ噺銆佽涔夊畬鏁寸殑鍒囧潡銆?
 
----
-
-**3. 向量编码策略 (Embedding Strategy)**
-
-向量编码是 Ingestion Pipeline 的关键环节，决定了 Chunk 如何被转换为可检索的向量表示。本项目自定义了 BaseEmbedding 抽象接口（src/libs/embedding/base.py），支持不同 Embedding 模型的可插拔替换。
-
-常见的编码策略包括：
-- **纯稠密编码（Dense Only）**：仅生成语义向量，适合通用场景。
-- **纯稀疏编码（Sparse Only）**：仅生成关键词权重向量，适合精确匹配场景。
-- **双路编码（Dense + Sparse）**：同时生成稠密向量和稀疏向量，为混合检索提供数据基础。
-
-本项目当前采用 **双路编码（Dense + Sparse）** 策略：
-- **Dense Embeddings（语义向量）**：调用 Embedding 模型（如 OpenAI text-embedding-3）生成高维浮点向量，捕捉文本的深层语义关联。
-- **Sparse Embeddings（稀疏向量）**：利用 BM25 编码器生成稀疏向量（Keyword Weights），捕捉精确的关键词匹配信息。
-
-存储时，Dense Vector 和 Sparse Vector 与 Chunk 原文、Metadata 一起原子化写入向量数据库，确保检索时可同时利用两种向量。
-
-> **当前实现说明**：目前系统实现了 Dense + Sparse 双路编码。架构设计上预留了切换能力，如需使用其他 Embedding 模型（如 BGE、Ollama 本地模型）或调整编码策略，可在 Pipeline 中替换相应组件。
+> **褰撳墠瀹炵幇璇存槑**锛氱洰鍓嶇郴缁熶娇鐢?LangChain RecursiveCharacterTextSplitter銆傛灦鏋勮璁′笂棰勭暀浜嗗垏鎹㈣兘鍔涳紝濡傞渶鍒囨崲涓?SentenceSplitter銆丼emanticSplitter 鎴栬嚜瀹氫箟鍒囧垎鍣紝鍙渶瀹炵幇 BaseSplitter 鎺ュ彛骞跺湪閰嶇疆涓寚瀹氬嵆鍙€?
 
 ---
 
-**4. 召回策略 (Retrieval Strategy)**
+**2. 鍚戦噺鏁版嵁搴?(Vector Store)**
 
-召回策略决定了查询阶段如何从知识库中检索相关内容。基于 Ingestion 阶段存储的向量类型，可采用不同的召回方案：
-- **纯稠密召回（Dense Only）**：仅使用语义向量进行相似度匹配。
-- **纯稀疏召回（Sparse Only）**：仅使用 BM25 进行关键词匹配。
-- **混合召回（Hybrid）**：并行执行稠密和稀疏两路召回，再通过融合算法合并结果。
-- **混合召回 + 精排（Hybrid + Rerank）**：在混合召回基础上，增加精排步骤进一步提升相关性。
+鏈」鐩嚜瀹氫箟浜嗙粺涓€鐨?BaseVectorStore 鎶借薄鎺ュ彛锛屾毚闇?.add()銆?query()銆?delete() 绛夋柟娉曘€傛墍鏈夊悜閲忔暟鎹簱鍚庣锛圕hroma銆丵drant銆丳inecone 绛夛級鍙渶瀹炵幇璇ユ帴鍙ｅ嵆鍙彃鎷旀浛鎹紝閫氳繃 VectorStoreFactory 鏍规嵁閰嶇疆鑷姩閫夋嫨鍏蜂綋瀹炵幇銆?
 
-本项目当前采用 **混合召回 + 精排（Hybrid + Rerank）** 策略：
-- **稠密召回（Dense Route）**：计算 Query Embedding，在向量库中进行 Cosine Similarity 检索，返回 Top-N 语义候选。
-- **稀疏召回（Sparse Route）**：使用 BM25 算法检索倒排索引，返回 Top-N 关键词候选。
-- **融合（Fusion）**：使用 RRF (Reciprocal Rank Fusion) 算法将两路结果合并排序。
-- **精排（Rerank）**：对融合后的候选集进行重排序，支持 None / Cross-Encoder / LLM Rerank 三种模式。
+鏈」鐩€夌敤 **Chroma** 浣滀负鍚戦噺鏁版嵁搴撱€傜浉姣?Qdrant銆丮ilvus銆乄eaviate 绛夐渶瑕?Docker 瀹瑰櫒鎴栧垎甯冨紡鏋舵瀯鏀拺鐨勬柟妗堬紝Chroma 閲囩敤宓屽叆寮忚璁★紝`pip install chromadb` 鍗冲彲浣跨敤锛屾棤闇€棰濆閮ㄧ讲鏁版嵁搴撴湇鍔★紝闈炲父閫傚悎鏈湴寮€鍙戜笌蹇€熷師鍨嬮獙璇併€傚悓鏃?ChromaStore 閫傞厤鍣紙src/libs/vector_store/chroma_store.py锛夛紝涓?Pipeline 鏃犵紳闆嗘垚銆?
 
-> **当前实现说明**：目前系统实现了 Hybrid + Rerank 策略。架构设计上预留了策略切换能力，如需使用纯稠密或纯稀疏召回，可通过配置切换；融合算法和 Reranker 同样支持替换。
+> **褰撳墠瀹炵幇璇存槑**锛氱洰鍓嶇郴缁熶粎瀹炵幇浜?Chroma 鍚庣銆傝櫧鐒舵灦鏋勮璁′笂棰勭暀浜嗗伐鍘傛ā寮忎互鏀寔鏈潵鎵╁睍锛屼絾褰撳墠鐗堟湰灏氭湭瀹炵幇鍏朵粬鍚戦噺鏁版嵁搴撶殑閫傞厤鍣ㄣ€?
 
-#### 3.3.4 评估框架抽象
+---
 
-评估体系的可插拔性确保团队可以根据业务目标灵活选择或组合不同的质量度量维度。
+**3. 鍚戦噺缂栫爜绛栫暐 (Embedding Strategy)**
 
-- **设计思路**：
-	- 定义统一的 `Evaluator` 接口，暴露 `evaluate(query, retrieved_chunks, generated_answer, ground_truth) -> metrics` 方法。
-	- 各评估框架实现该接口，输出标准化的指标字典。
+鍚戦噺缂栫爜鏄?Ingestion Pipeline 鐨勫叧閿幆鑺傦紝鍐冲畾浜?Chunk 濡備綍琚浆鎹负鍙绱㈢殑鍚戦噺琛ㄧず銆傛湰椤圭洰鑷畾涔変簡 BaseEmbedding 鎶借薄鎺ュ彛锛坰rc/libs/embedding/base.py锛夛紝鏀寔涓嶅悓 Embedding 妯″瀷鐨勫彲鎻掓嫈鏇挎崲銆?
 
-- **可选评估框架**：
+甯歌鐨勭紪鐮佺瓥鐣ュ寘鎷細
+- **绾瀵嗙紪鐮侊紙Dense Only锛?*锛氫粎鐢熸垚璇箟鍚戦噺锛岄€傚悎閫氱敤鍦烘櫙銆?
+- **绾█鐤忕紪鐮侊紙Sparse Only锛?*锛氫粎鐢熸垚鍏抽敭璇嶆潈閲嶅悜閲忥紝閫傚悎绮剧‘鍖归厤鍦烘櫙銆?
+- **鍙岃矾缂栫爜锛圖ense + Sparse锛?*锛氬悓鏃剁敓鎴愮瀵嗗悜閲忓拰绋€鐤忓悜閲忥紝涓烘贩鍚堟绱㈡彁渚涙暟鎹熀纭€銆?
 
-| 框架 | 特点 | 适用场景 |
+鏈」鐩綋鍓嶉噰鐢?**鍙岃矾缂栫爜锛圖ense + Sparse锛?* 绛栫暐锛?
+- **Dense Embeddings锛堣涔夊悜閲忥級**锛氳皟鐢?Embedding 妯″瀷锛堝 OpenAI text-embedding-3锛夌敓鎴愰珮缁存诞鐐瑰悜閲忥紝鎹曟崏鏂囨湰鐨勬繁灞傝涔夊叧鑱斻€?
+- **Sparse Embeddings锛堢█鐤忓悜閲忥級**锛氬埄鐢?BM25 缂栫爜鍣ㄧ敓鎴愮█鐤忓悜閲忥紙Keyword Weights锛夛紝鎹曟崏绮剧‘鐨勫叧閿瘝鍖归厤淇℃伅銆?
+
+瀛樺偍鏃讹紝Dense Vector 鍜?Sparse Vector 涓?Chunk 鍘熸枃銆丮etadata 涓€璧峰師瀛愬寲鍐欏叆鍚戦噺鏁版嵁搴擄紝纭繚妫€绱㈡椂鍙悓鏃跺埄鐢ㄤ袱绉嶅悜閲忋€?
+
+> **褰撳墠瀹炵幇璇存槑**锛氱洰鍓嶇郴缁熷疄鐜颁簡 Dense + Sparse 鍙岃矾缂栫爜銆傛灦鏋勮璁′笂棰勭暀浜嗗垏鎹㈣兘鍔涳紝濡傞渶浣跨敤鍏朵粬 Embedding 妯″瀷锛堝 BGE銆丱llama 鏈湴妯″瀷锛夋垨璋冩暣缂栫爜绛栫暐锛屽彲鍦?Pipeline 涓浛鎹㈢浉搴旂粍浠躲€?
+
+---
+
+**4. 鍙洖绛栫暐 (Retrieval Strategy)**
+
+鍙洖绛栫暐鍐冲畾浜嗘煡璇㈤樁娈靛浣曚粠鐭ヨ瘑搴撲腑妫€绱㈢浉鍏冲唴瀹广€傚熀浜?Ingestion 闃舵瀛樺偍鐨勫悜閲忕被鍨嬶紝鍙噰鐢ㄤ笉鍚岀殑鍙洖鏂规锛?
+- **绾瀵嗗彫鍥烇紙Dense Only锛?*锛氫粎浣跨敤璇箟鍚戦噺杩涜鐩镐技搴﹀尮閰嶃€?
+- **绾█鐤忓彫鍥烇紙Sparse Only锛?*锛氫粎浣跨敤 BM25 杩涜鍏抽敭璇嶅尮閰嶃€?
+- **娣峰悎鍙洖锛圚ybrid锛?*锛氬苟琛屾墽琛岀瀵嗗拰绋€鐤忎袱璺彫鍥烇紝鍐嶉€氳繃铻嶅悎绠楁硶鍚堝苟缁撴灉銆?
+- **娣峰悎鍙洖 + 绮炬帓锛圚ybrid + Rerank锛?*锛氬湪娣峰悎鍙洖鍩虹涓婏紝澧炲姞绮炬帓姝ラ杩涗竴姝ユ彁鍗囩浉鍏虫€с€?
+
+鏈」鐩綋鍓嶉噰鐢?**娣峰悎鍙洖 + 绮炬帓锛圚ybrid + Rerank锛?* 绛栫暐锛?
+- **绋犲瘑鍙洖锛圖ense Route锛?*锛氳绠?Query Embedding锛屽湪鍚戦噺搴撲腑杩涜 Cosine Similarity 妫€绱紝杩斿洖 Top-N 璇箟鍊欓€夈€?
+- **绋€鐤忓彫鍥烇紙Sparse Route锛?*锛氫娇鐢?BM25 绠楁硶妫€绱㈠€掓帓绱㈠紩锛岃繑鍥?Top-N 鍏抽敭璇嶅€欓€夈€?
+- **铻嶅悎锛團usion锛?*锛氫娇鐢?RRF (Reciprocal Rank Fusion) 绠楁硶灏嗕袱璺粨鏋滃悎骞舵帓搴忋€?
+- **绮炬帓锛圧erank锛?*锛氬铻嶅悎鍚庣殑鍊欓€夐泦杩涜閲嶆帓搴忥紝鏀寔 None / Cross-Encoder / LLM Rerank 涓夌妯″紡銆?
+
+> **褰撳墠瀹炵幇璇存槑**锛氱洰鍓嶇郴缁熷疄鐜颁簡 Hybrid + Rerank 绛栫暐銆傛灦鏋勮璁′笂棰勭暀浜嗙瓥鐣ュ垏鎹㈣兘鍔涳紝濡傞渶浣跨敤绾瀵嗘垨绾█鐤忓彫鍥烇紝鍙€氳繃閰嶇疆鍒囨崲锛涜瀺鍚堢畻娉曞拰 Reranker 鍚屾牱鏀寔鏇挎崲銆?
+
+#### 3.3.4 璇勪及妗嗘灦鎶借薄
+
+璇勪及浣撶郴鐨勫彲鎻掓嫈鎬х‘淇濆洟闃熷彲浠ユ牴鎹笟鍔＄洰鏍囩伒娲婚€夋嫨鎴栫粍鍚堜笉鍚岀殑璐ㄩ噺搴﹂噺缁村害銆?
+
+- **璁捐鎬濊矾**锛?
+	- 瀹氫箟缁熶竴鐨?`Evaluator` 鎺ュ彛锛屾毚闇?`evaluate(query, retrieved_chunks, generated_answer, ground_truth) -> metrics` 鏂规硶銆?
+	- 鍚勮瘎浼版鏋跺疄鐜拌鎺ュ彛锛岃緭鍑烘爣鍑嗗寲鐨勬寚鏍囧瓧鍏搞€?
+
+- **鍙€夎瘎浼版鏋?*锛?
+
+| 妗嗘灦 | 鐗圭偣 | 閫傜敤鍦烘櫙 |
 |-----|------|---------|
-| **Ragas** | RAG 专用、指标丰富（Faithfulness, Answer Relevancy, Context Precision 等） | 全面评估 RAG 质量、学术对比 |
-| **DeepEval** | LLM-as-Judge 模式、支持自定义评估标准 | 需要主观质量判断、复杂业务规则 |
-| **自定义指标** | Hit Rate, MRR, Latency P99 等基础工程指标 | 快速回归测试、上线前 Sanity Check |
+| **Ragas** | RAG 涓撶敤銆佹寚鏍囦赴瀵岋紙Faithfulness, Answer Relevancy, Context Precision 绛夛級 | 鍏ㄩ潰璇勪及 RAG 璐ㄩ噺銆佸鏈姣?|
+| **DeepEval** | LLM-as-Judge 妯″紡銆佹敮鎸佽嚜瀹氫箟璇勪及鏍囧噯 | 闇€瑕佷富瑙傝川閲忓垽鏂€佸鏉備笟鍔¤鍒?|
+| **鑷畾涔夋寚鏍?* | Hit Rate, MRR, Latency P99 绛夊熀纭€宸ョ▼鎸囨爣 | 蹇€熷洖褰掓祴璇曘€佷笂绾垮墠 Sanity Check |
 
-- **组合与扩展**：
-	- 评估模块设计为**组合模式**，可同时挂载多个 Evaluator，生成综合报告。
-	- 配置示例：`evaluation.backends: [ragas, custom_metrics]`，系统并行执行并汇总结果。
+- **缁勫悎涓庢墿灞?*锛?
+	- 璇勪及妯″潡璁捐涓?*缁勫悎妯″紡**锛屽彲鍚屾椂鎸傝浇澶氫釜 Evaluator锛岀敓鎴愮患鍚堟姤鍛娿€?
+	- 閰嶇疆绀轰緥锛歚evaluation.backends: [ragas, custom_metrics]`锛岀郴缁熷苟琛屾墽琛屽苟姹囨€荤粨鏋溿€?
 
-#### 3.3.5 配置管理与切换流程
+#### 3.3.5 閰嶇疆绠＄悊涓庡垏鎹㈡祦绋?
 
-- **配置文件结构示例** (`config/settings.yaml`)：
+- **閰嶇疆鏂囦欢缁撴瀯绀轰緥** (`config/settings.yaml`)锛?
 	```yaml
 	llm:
 	  provider: azure  # azure | openai | ollama | deepseek
@@ -620,435 +620,435 @@ MCP 协议的 Tool 返回格式支持多种内容类型（`content` 数组），
 	  traces_dir: ./logs
 	```
 
-- **切换流程**：
+- **鍒囨崲娴佺▼**锛?
 
-	1. 修改 `settings.yaml` 中对应组件的 `backend` / `provider` 字段。
-	2. 确保新后端的依赖已安装、凭据已配置。
-	3. 重启服务，工厂函数自动加载新实现，无需修改业务代码。
+	1. 淇敼 `settings.yaml` 涓搴旂粍浠剁殑 `backend` / `provider` 瀛楁銆?
+	2. 纭繚鏂板悗绔殑渚濊禆宸插畨瑁呫€佸嚟鎹凡閰嶇疆銆?
+	3. 閲嶅惎鏈嶅姟锛屽伐鍘傚嚱鏁拌嚜鍔ㄥ姞杞芥柊瀹炵幇锛屾棤闇€淇敼涓氬姟浠ｇ爜銆?
 
-### 3.4 可观测性与可视化管理平台设计 (Observability & Visual Management Platform Design)
+### 3.4 鍙娴嬫€т笌鍙鍖栫鐞嗗钩鍙拌璁?(Observability & Visual Management Platform Design)
 
-**目标：** 针对 RAG 系统常见的"黑盒"问题，设计全链路可观测的追踪体系与完整的可视化管理平台。覆盖 **Ingestion（摄取链路）** 与 **Query（查询链路）** 两条完整流水线的追踪记录，同时提供数据浏览、文档管理、组件概览等管理功能，使整个系统**透明可见**、**可管理**且**可量化**。
+**鐩爣锛?* 閽堝 RAG 绯荤粺甯歌鐨?榛戠洅"闂锛岃璁″叏閾捐矾鍙娴嬬殑杩借釜浣撶郴涓庡畬鏁寸殑鍙鍖栫鐞嗗钩鍙般€傝鐩?**Ingestion锛堟憚鍙栭摼璺級** 涓?**Query锛堟煡璇㈤摼璺級** 涓ゆ潯瀹屾暣娴佹按绾跨殑杩借釜璁板綍锛屽悓鏃舵彁渚涙暟鎹祻瑙堛€佹枃妗ｇ鐞嗐€佺粍浠舵瑙堢瓑绠＄悊鍔熻兘锛屼娇鏁翠釜绯荤粺**閫忔槑鍙**銆?*鍙鐞?*涓?*鍙噺鍖?*銆?
 
-#### 3.4.1 设计理念
+#### 3.4.1 璁捐鐞嗗康
 
-- **双链路全覆盖追踪 (Dual-Pipeline Tracing)**：
-    - **Ingestion Trace**：以 `trace_id` 为核心，记录一次摄取从文件加载到存储完成的全过程（load → split → transform → embed → upsert），包含各阶段耗时、处理的 chunk 数量、跳过/失败详情。
-    - **Query Trace**：以 `trace_id` 为核心，记录一次查询从 Query 输入到 Response 输出的全过程（query_processing → dense → sparse → fusion → rerank），包含各阶段候选数量、分数分布与耗时。
-- **透明可回溯 (Transparent & Traceable)**：每个阶段的中间状态都被记录，开发者可以清晰看到"系统为什么召回了这些文档"、"Rerank 前后排名如何变化"，从而精准定位问题。
-- **低侵入性 (Low Intrusiveness)**：追踪逻辑与业务逻辑解耦，通过 `TraceContext` 显式调用模式注入，避免污染核心代码。
-- **轻量本地化 (Lightweight & Local)**：采用结构化日志 + 本地 Dashboard 的方案，零外部依赖，开箱即用。
-- **动态组件感知 (Dynamic Component Awareness)**：Dashboard 基于 Trace 中的 `method`/`provider`/`details` 字段动态渲染，更换可插拔组件后自动适配展示内容，无需修改 Dashboard 代码。
+- **鍙岄摼璺叏瑕嗙洊杩借釜 (Dual-Pipeline Tracing)**锛?
+    - **Ingestion Trace**锛氫互 `trace_id` 涓烘牳蹇冿紝璁板綍涓€娆℃憚鍙栦粠鏂囦欢鍔犺浇鍒板瓨鍌ㄥ畬鎴愮殑鍏ㄨ繃绋嬶紙load 鈫?split 鈫?transform 鈫?embed 鈫?upsert锛夛紝鍖呭惈鍚勯樁娈佃€楁椂銆佸鐞嗙殑 chunk 鏁伴噺銆佽烦杩?澶辫触璇︽儏銆?
+    - **Query Trace**锛氫互 `trace_id` 涓烘牳蹇冿紝璁板綍涓€娆℃煡璇粠 Query 杈撳叆鍒?Response 杈撳嚭鐨勫叏杩囩▼锛坬uery_processing 鈫?dense 鈫?sparse 鈫?fusion 鈫?rerank锛夛紝鍖呭惈鍚勯樁娈靛€欓€夋暟閲忋€佸垎鏁板垎甯冧笌鑰楁椂銆?
+- **閫忔槑鍙洖婧?(Transparent & Traceable)**锛氭瘡涓樁娈电殑涓棿鐘舵€侀兘琚褰曪紝寮€鍙戣€呭彲浠ユ竻鏅扮湅鍒?绯荤粺涓轰粈涔堝彫鍥炰簡杩欎簺鏂囨。"銆?Rerank 鍓嶅悗鎺掑悕濡備綍鍙樺寲"锛屼粠鑰岀簿鍑嗗畾浣嶉棶棰樸€?
+- **浣庝镜鍏ユ€?(Low Intrusiveness)**锛氳拷韪€昏緫涓庝笟鍔￠€昏緫瑙ｈ€︼紝閫氳繃 `TraceContext` 鏄惧紡璋冪敤妯″紡娉ㄥ叆锛岄伩鍏嶆薄鏌撴牳蹇冧唬鐮併€?
+- **杞婚噺鏈湴鍖?(Lightweight & Local)**锛氶噰鐢ㄧ粨鏋勫寲鏃ュ織 + 鏈湴 Dashboard 鐨勬柟妗堬紝闆跺閮ㄤ緷璧栵紝寮€绠卞嵆鐢ㄣ€?
+- **鍔ㄦ€佺粍浠舵劅鐭?(Dynamic Component Awareness)**锛欴ashboard 鍩轰簬 Trace 涓殑 `method`/`provider`/`details` 瀛楁鍔ㄦ€佹覆鏌擄紝鏇存崲鍙彃鎷旂粍浠跺悗鑷姩閫傞厤灞曠ず鍐呭锛屾棤闇€淇敼 Dashboard 浠ｇ爜銆?
 
 
-#### 3.4.2 追踪数据结构
+#### 3.4.2 杩借釜鏁版嵁缁撴瀯
 
-系统定义两类 Trace 记录，分别覆盖查询与摄取两条链路：
+绯荤粺瀹氫箟涓ょ被 Trace 璁板綍锛屽垎鍒鐩栨煡璇笌鎽勫彇涓ゆ潯閾捐矾锛?
 
-**A. Query Trace（查询追踪）**
+**A. Query Trace锛堟煡璇㈣拷韪級**
 
-每次查询请求生成唯一的 `trace_id`，记录从 Query 输入到 Response 输出的全过程：
+姣忔鏌ヨ璇锋眰鐢熸垚鍞竴鐨?`trace_id`锛岃褰曚粠 Query 杈撳叆鍒?Response 杈撳嚭鐨勫叏杩囩▼锛?
 
-**基础信息**：
-- `trace_id`：请求唯一标识
-- `trace_type`：`"query"`
-- `timestamp`：请求时间戳
-- `user_query`：用户原始查询
-- `collection`：检索的知识库集合
+**鍩虹淇℃伅**锛?
+- `trace_id`锛氳姹傚敮涓€鏍囪瘑
+- `trace_type`锛歚"query"`
+- `timestamp`锛氳姹傛椂闂存埑
+- `user_query`锛氱敤鎴峰師濮嬫煡璇?
+- `collection`锛氭绱㈢殑鐭ヨ瘑搴撻泦鍚?
 
-**各阶段详情 (Stages)**：
+**鍚勯樁娈佃鎯?(Stages)**锛?
 
-| 阶段 | 记录内容 |
+| 闃舵 | 璁板綍鍐呭 |
 |-----|---------|
-| **Query Processing** | 原始 Query、改写后 Query（若有）、提取的关键词、method、耗时 |
-| **Dense Retrieval** | 返回的 Top-N 候选及相似度分数、provider、耗时 |
-| **Sparse Retrieval** | 返回的 Top-N 候选及 BM25 分数、method、耗时 |
-| **Fusion** | 融合后的统一排名、algorithm、耗时 |
-| **Rerank** | 重排后的最终排名及分数、backend、是否触发 Fallback、耗时 |
+| **Query Processing** | 鍘熷 Query銆佹敼鍐欏悗 Query锛堣嫢鏈夛級銆佹彁鍙栫殑鍏抽敭璇嶃€乵ethod銆佽€楁椂 |
+| **Dense Retrieval** | 杩斿洖鐨?Top-N 鍊欓€夊強鐩镐技搴﹀垎鏁般€乸rovider銆佽€楁椂 |
+| **Sparse Retrieval** | 杩斿洖鐨?Top-N 鍊欓€夊強 BM25 鍒嗘暟銆乵ethod銆佽€楁椂 |
+| **Fusion** | 铻嶅悎鍚庣殑缁熶竴鎺掑悕銆乤lgorithm銆佽€楁椂 |
+| **Rerank** | 閲嶆帓鍚庣殑鏈€缁堟帓鍚嶅強鍒嗘暟銆乥ackend銆佹槸鍚﹁Е鍙?Fallback銆佽€楁椂 |
 
-**汇总指标**：
-- `total_latency`：端到端总耗时
-- `top_k_results`：最终返回的 Top-K 文档 ID
-- `error`：异常信息（若有）
+**姹囨€绘寚鏍?*锛?
+- `total_latency`锛氱鍒扮鎬昏€楁椂
+- `top_k_results`锛氭渶缁堣繑鍥炵殑 Top-K 鏂囨。 ID
+- `error`锛氬紓甯镐俊鎭紙鑻ユ湁锛?
 
-**评估指标 (Evaluation Metrics)**：
-- `context_relevance`：召回文档与 Query 的相关性分数
-- `answer_faithfulness`：生成答案与召回文档的一致性分数（若有生成环节）
+**璇勪及鎸囨爣 (Evaluation Metrics)**锛?
+- `context_relevance`锛氬彫鍥炴枃妗ｄ笌 Query 鐨勭浉鍏虫€у垎鏁?
+- `answer_faithfulness`锛氱敓鎴愮瓟妗堜笌鍙洖鏂囨。鐨勪竴鑷存€у垎鏁帮紙鑻ユ湁鐢熸垚鐜妭锛?
 
-**B. Ingestion Trace（摄取追踪）**
+**B. Ingestion Trace锛堟憚鍙栬拷韪級**
 
-每次文档摄取生成唯一的 `trace_id`，记录从文件加载到存储完成的全过程：
+姣忔鏂囨。鎽勫彇鐢熸垚鍞竴鐨?`trace_id`锛岃褰曚粠鏂囦欢鍔犺浇鍒板瓨鍌ㄥ畬鎴愮殑鍏ㄨ繃绋嬶細
 
-**基础信息**：
-- `trace_id`：摄取唯一标识
-- `trace_type`：`"ingestion"`
-- `timestamp`：摄取开始时间
-- `source_path`：源文件路径
-- `collection`：目标集合名称
+**鍩虹淇℃伅**锛?
+- `trace_id`锛氭憚鍙栧敮涓€鏍囪瘑
+- `trace_type`锛歚"ingestion"`
+- `timestamp`锛氭憚鍙栧紑濮嬫椂闂?
+- `source_path`锛氭簮鏂囦欢璺緞
+- `collection`锛氱洰鏍囬泦鍚堝悕绉?
 
-**各阶段详情 (Stages)**：
+**鍚勯樁娈佃鎯?(Stages)**锛?
 
-| 阶段 | 记录内容 |
+| 闃舵 | 璁板綍鍐呭 |
 |-----|---------|
-| **Load** | 文件大小、解析器（method: markitdown）、提取的图片数、耗时 |
-| **Split** | splitter 类型（method）、产出 chunk 数、平均 chunk 长度、耗时 |
-| **Transform** | 各 transform 名称与处理详情（refined/enriched/captioned 数量）、LLM provider、耗时 |
-| **Embed** | embedding provider、batch 数、向量维度、dense + sparse 编码耗时 |
-| **Upsert** | 存储后端（method: chroma）、upsert 数量、BM25 索引更新、图片存储、耗时 |
+| **Load** | 鏂囦欢澶у皬銆佽В鏋愬櫒锛坢ethod: markitdown锛夈€佹彁鍙栫殑鍥剧墖鏁般€佽€楁椂 |
+| **Split** | splitter 绫诲瀷锛坢ethod锛夈€佷骇鍑?chunk 鏁般€佸钩鍧?chunk 闀垮害銆佽€楁椂 |
+| **Transform** | 鍚?transform 鍚嶇О涓庡鐞嗚鎯咃紙refined/enriched/captioned 鏁伴噺锛夈€丩LM provider銆佽€楁椂 |
+| **Embed** | embedding provider銆乥atch 鏁般€佸悜閲忕淮搴︺€乨ense + sparse 缂栫爜鑰楁椂 |
+| **Upsert** | 瀛樺偍鍚庣锛坢ethod: chroma锛夈€乽psert 鏁伴噺銆丅M25 绱㈠紩鏇存柊銆佸浘鐗囧瓨鍌ㄣ€佽€楁椂 |
 
-**汇总指标**：
-- `total_latency`：端到端总耗时
-- `total_chunks`：最终存储的 chunk 数量
-- `total_images`：处理的图片数量
-- `skipped`：跳过的文件/chunk 数（已存在、未变更等）
-- `error`：异常信息（若有）
+**姹囨€绘寚鏍?*锛?
+- `total_latency`锛氱鍒扮鎬昏€楁椂
+- `total_chunks`锛氭渶缁堝瓨鍌ㄧ殑 chunk 鏁伴噺
+- `total_images`锛氬鐞嗙殑鍥剧墖鏁伴噺
+- `skipped`锛氳烦杩囩殑鏂囦欢/chunk 鏁帮紙宸插瓨鍦ㄣ€佹湭鍙樻洿绛夛級
+- `error`锛氬紓甯镐俊鎭紙鑻ユ湁锛?
 
 
-#### 3.4.3 技术方案：结构化日志 + 本地 Web Dashboard
+#### 3.4.3 鎶€鏈柟妗堬細缁撴瀯鍖栨棩蹇?+ 鏈湴 Web Dashboard
 
-本项目采用 **"结构化日志 + 本地 Web Dashboard"** 作为可观测性的实现方案。
+鏈」鐩噰鐢?**"缁撴瀯鍖栨棩蹇?+ 鏈湴 Web Dashboard"** 浣滀负鍙娴嬫€х殑瀹炵幇鏂规銆?
 
-**选型理由**：
-- **零外部依赖**：不依赖 LangSmith、LangFuse 等第三方平台，无需网络连接与账号注册，完全本地化运行。
-- **轻量易部署**：仅需 Python 标准库 + 一个轻量 Web 框架（如 Streamlit），`pip install` 即可使用，无需 Docker 或数据库服务。
-- **学习成本低**：结构化日志是通用技能，调试时可直接用 `jq`、`grep` 等命令行工具查询；Dashboard 代码简单直观，便于理解与二次开发。
-- **契合项目定位**：本项目面向本地 MCP Server 场景，单用户、单机运行，无需分布式追踪或多租户隔离等企业级能力。
+**閫夊瀷鐞嗙敱**锛?
+- **闆跺閮ㄤ緷璧?*锛氫笉渚濊禆 LangSmith銆丩angFuse 绛夌涓夋柟骞冲彴锛屾棤闇€缃戠粶杩炴帴涓庤处鍙锋敞鍐岋紝瀹屽叏鏈湴鍖栬繍琛屻€?
+- **杞婚噺鏄撻儴缃?*锛氫粎闇€ Python 鏍囧噯搴?+ 涓€涓交閲?Web 妗嗘灦锛堝 Streamlit锛夛紝`pip install` 鍗冲彲浣跨敤锛屾棤闇€ Docker 鎴栨暟鎹簱鏈嶅姟銆?
+- **瀛︿範鎴愭湰浣?*锛氱粨鏋勫寲鏃ュ織鏄€氱敤鎶€鑳斤紝璋冭瘯鏃跺彲鐩存帴鐢?`jq`銆乣grep` 绛夊懡浠よ宸ュ叿鏌ヨ锛汥ashboard 浠ｇ爜绠€鍗曠洿瑙傦紝渚夸簬鐞嗚В涓庝簩娆″紑鍙戙€?
+- **濂戝悎椤圭洰瀹氫綅**锛氭湰椤圭洰闈㈠悜鏈湴 MCP Server 鍦烘櫙锛屽崟鐢ㄦ埛銆佸崟鏈鸿繍琛岋紝鏃犻渶鍒嗗竷寮忚拷韪垨澶氱鎴烽殧绂荤瓑浼佷笟绾ц兘鍔涖€?
 
-**实现架构**：
+**瀹炵幇鏋舵瀯**锛?
 
 ```
 RAG Pipeline
-    │
-    ▼
-Trace Collector (装饰器/回调)
-    │
-    ▼
-JSON Lines 日志文件 (logs/traces.jsonl)
-    │
-    ▼
-本地 Web Dashboard (Streamlit)
-    │
-    ▼
-按 trace_id 查看各阶段详情与性能指标
+    鈹?
+    鈻?
+Trace Collector (瑁呴グ鍣?鍥炶皟)
+    鈹?
+    鈻?
+JSON Lines 鏃ュ織鏂囦欢 (logs/traces.jsonl)
+    鈹?
+    鈻?
+鏈湴 Web Dashboard (Streamlit)
+    鈹?
+    鈻?
+鎸?trace_id 鏌ョ湅鍚勯樁娈佃鎯呬笌鎬ц兘鎸囨爣
 ```
 
-**核心组件**：
-- **结构化日志层**：基于 Python `logging` + JSON Formatter，将每次请求的 Trace 数据以 JSON Lines 格式追加写入本地文件。每行一条完整的请求记录，包含 `trace_id`、各阶段详情与耗时。
-- **本地 Web Dashboard**：基于 Streamlit 构建的轻量级 Web UI，读取日志文件并提供交互式可视化。核心功能是按 `trace_id` 检索并展示单次请求的完整追踪链路。
+**鏍稿績缁勪欢**锛?
+- **缁撴瀯鍖栨棩蹇楀眰**锛氬熀浜?Python `logging` + JSON Formatter锛屽皢姣忔璇锋眰鐨?Trace 鏁版嵁浠?JSON Lines 鏍煎紡杩藉姞鍐欏叆鏈湴鏂囦欢銆傛瘡琛屼竴鏉″畬鏁寸殑璇锋眰璁板綍锛屽寘鍚?`trace_id`銆佸悇闃舵璇︽儏涓庤€楁椂銆?
+- **鏈湴 Web Dashboard**锛氬熀浜?Streamlit 鏋勫缓鐨勮交閲忕骇 Web UI锛岃鍙栨棩蹇楁枃浠跺苟鎻愪緵浜や簰寮忓彲瑙嗗寲銆傛牳蹇冨姛鑳芥槸鎸?`trace_id` 妫€绱㈠苟灞曠ず鍗曟璇锋眰鐨勫畬鏁磋拷韪摼璺€?
 
-#### 3.4.4 追踪机制实现
+#### 3.4.4 杩借釜鏈哄埗瀹炵幇
 
-为确保各 RAG 阶段（可替换、可自定义）都能输出统一格式的追踪日志，系统采用 **TraceContext（追踪上下文）** 作为核心机制。
+涓虹‘淇濆悇 RAG 闃舵锛堝彲鏇挎崲銆佸彲鑷畾涔夛級閮借兘杈撳嚭缁熶竴鏍煎紡鐨勮拷韪棩蹇楋紝绯荤粺閲囩敤 **TraceContext锛堣拷韪笂涓嬫枃锛?* 浣滀负鏍稿績鏈哄埗銆?
 
-**工作原理**：
+**宸ヤ綔鍘熺悊**锛?
 
-1. **请求开始**：Pipeline 入口创建一个 `TraceContext` 实例，生成唯一 `trace_id`，记录请求基础信息（Query、Collection 等）。
+1. **璇锋眰寮€濮?*锛歅ipeline 鍏ュ彛鍒涘缓涓€涓?`TraceContext` 瀹炰緥锛岀敓鎴愬敮涓€ `trace_id`锛岃褰曡姹傚熀纭€淇℃伅锛圦uery銆丆ollection 绛夛級銆?
 
-2. **阶段记录**：`TraceContext` 提供 `record_stage()` 方法，各阶段执行完毕后调用该方法，传入阶段名称、耗时、输入输出等数据。
+2. **闃舵璁板綍**锛歚TraceContext` 鎻愪緵 `record_stage()` 鏂规硶锛屽悇闃舵鎵ц瀹屾瘯鍚庤皟鐢ㄨ鏂规硶锛屼紶鍏ラ樁娈靛悕绉般€佽€楁椂銆佽緭鍏ヨ緭鍑虹瓑鏁版嵁銆?
 
-3. **请求结束**：调用 `trace.finish()`，`TraceContext` 将收集的完整数据序列化为 JSON，追加写入日志文件。
+3. **璇锋眰缁撴潫**锛氳皟鐢?`trace.finish()`锛宍TraceContext` 灏嗘敹闆嗙殑瀹屾暣鏁版嵁搴忓垪鍖栦负 JSON锛岃拷鍔犲啓鍏ユ棩蹇楁枃浠躲€?
 
-**与可插拔组件的配合**：
-- 各阶段组件（Retriever、Reranker 等）的接口约定中包含 `TraceContext` 参数。
-- 组件实现者在执行核心逻辑后，调用 `trace.record_stage()` 记录本阶段的关键信息。
-- 这是**显式调用**模式：不强制、不会因未调用而报错，但依赖开发者主动记录。好处是代码透明，开发者清楚知道哪些数据被记录；代价是需要开发者自觉遵守约定。
+**涓庡彲鎻掓嫈缁勪欢鐨勯厤鍚?*锛?
+- 鍚勯樁娈电粍浠讹紙Retriever銆丷eranker 绛夛級鐨勬帴鍙ｇ害瀹氫腑鍖呭惈 `TraceContext` 鍙傛暟銆?
+- 缁勪欢瀹炵幇鑰呭湪鎵ц鏍稿績閫昏緫鍚庯紝璋冪敤 `trace.record_stage()` 璁板綍鏈樁娈电殑鍏抽敭淇℃伅銆?
+- 杩欐槸**鏄惧紡璋冪敤**妯″紡锛氫笉寮哄埗銆佷笉浼氬洜鏈皟鐢ㄨ€屾姤閿欙紝浣嗕緷璧栧紑鍙戣€呬富鍔ㄨ褰曘€傚ソ澶勬槸浠ｇ爜閫忔槑锛屽紑鍙戣€呮竻妤氱煡閬撳摢浜涙暟鎹璁板綍锛涗唬浠锋槸闇€瑕佸紑鍙戣€呰嚜瑙夐伒瀹堢害瀹氥€?
 
-**阶段划分原则**：
-- **Stage 是固定的通用大类**：`retrieval`（检索）、`rerank`（重排）、`generation`（生成）等，不随具体实现方案变化。
-- **具体实现是阶段内部的细节**：在 `record_stage()` 中通过 `method` 字段记录采用的具体方法（如 `bm25`、`hybrid`），通过 `details` 字段记录方法相关的细节数据。
-- 这样无论底层方案怎么替换，阶段结构保持稳定，Dashboard 展示逻辑无需调整。
+**闃舵鍒掑垎鍘熷垯**锛?
+- **Stage 鏄浐瀹氱殑閫氱敤澶х被**锛歚retrieval`锛堟绱級銆乣rerank`锛堥噸鎺掞級銆乣generation`锛堢敓鎴愶級绛夛紝涓嶉殢鍏蜂綋瀹炵幇鏂规鍙樺寲銆?
+- **鍏蜂綋瀹炵幇鏄樁娈靛唴閮ㄧ殑缁嗚妭**锛氬湪 `record_stage()` 涓€氳繃 `method` 瀛楁璁板綍閲囩敤鐨勫叿浣撴柟娉曪紙濡?`bm25`銆乣hybrid`锛夛紝閫氳繃 `details` 瀛楁璁板綍鏂规硶鐩稿叧鐨勭粏鑺傛暟鎹€?
+- 杩欐牱鏃犺搴曞眰鏂规鎬庝箞鏇挎崲锛岄樁娈电粨鏋勪繚鎸佺ǔ瀹氾紝Dashboard 灞曠ず閫昏緫鏃犻渶璋冩暣銆?
 
-#### 3.4.5 Dashboard 功能设计（六页面架构）
+#### 3.4.5 Dashboard 鍔熻兘璁捐锛堝叚椤甸潰鏋舵瀯锛?
 
-Dashboard 基于 Streamlit 构建多页面应用（`st.navigation`），提供六大功能页面：
+Dashboard 鍩轰簬 Streamlit 鏋勫缓澶氶〉闈㈠簲鐢紙`st.navigation`锛夛紝鎻愪緵鍏ぇ鍔熻兘椤甸潰锛?
 
-**页面 1：系统总览 (Overview)**
-- **组件配置卡片**：读取 `Settings`，展示当前可插拔组件的配置状态：
-    - LLM：provider + model（如 `azure / gpt-4o`）
-    - Embedding：provider + model + 维度
-    - Splitter：类型 + chunk_size + overlap
-    - Reranker：backend + model（或 None）
-    - Evaluator：已启用的 backends 列表
-- **数据资产统计**：调用 `DocumentManager.get_collection_stats()` 展示各集合的文档数、chunk 数、图片数。
-- **系统健康指标**：最近一次 Ingestion/Query trace 的时间与耗时。
+**椤甸潰 1锛氱郴缁熸€昏 (Overview)**
+- **缁勪欢閰嶇疆鍗＄墖**锛氳鍙?`Settings`锛屽睍绀哄綋鍓嶅彲鎻掓嫈缁勪欢鐨勯厤缃姸鎬侊細
+    - LLM锛歱rovider + model锛堝 `azure / gpt-4o`锛?
+    - Embedding锛歱rovider + model + 缁村害
+    - Splitter锛氱被鍨?+ chunk_size + overlap
+    - Reranker锛歜ackend + model锛堟垨 None锛?
+    - Evaluator锛氬凡鍚敤鐨?backends 鍒楄〃
+- **鏁版嵁璧勪骇缁熻**锛氳皟鐢?`DocumentManager.get_collection_stats()` 灞曠ず鍚勯泦鍚堢殑鏂囨。鏁般€乧hunk 鏁般€佸浘鐗囨暟銆?
+- **绯荤粺鍋ュ悍鎸囨爣**锛氭渶杩戜竴娆?Ingestion/Query trace 鐨勬椂闂翠笌鑰楁椂銆?
 
-**页面 2：数据浏览器 (Data Browser)**
-- **文档列表视图**：展示已摄入的文档（source_path、集合、chunk 数、摄入时间），支持按集合筛选与关键词搜索。
-- **Chunk 详情视图**：点击文档展开其所有 chunk，每个 chunk 显示：
-    - 原文内容（可折叠长文本）
-    - Metadata 各字段（title、summary、tags、page、image_refs 等）
-    - 关联图片预览（从 ImageStorage 读取并展示缩略图）
-- **数据来源**：通过 `ChromaStore.get_all()` 或 `get_by_metadata()` 读取 chunk 数据。
+**椤甸潰 2锛氭暟鎹祻瑙堝櫒 (Data Browser)**
+- **鏂囨。鍒楄〃瑙嗗浘**锛氬睍绀哄凡鎽勫叆鐨勬枃妗ｏ紙source_path銆侀泦鍚堛€乧hunk 鏁般€佹憚鍏ユ椂闂达級锛屾敮鎸佹寜闆嗗悎绛涢€変笌鍏抽敭璇嶆悳绱€?
+- **Chunk 璇︽儏瑙嗗浘**锛氱偣鍑绘枃妗ｅ睍寮€鍏舵墍鏈?chunk锛屾瘡涓?chunk 鏄剧ず锛?
+    - 鍘熸枃鍐呭锛堝彲鎶樺彔闀挎枃鏈級
+    - Metadata 鍚勫瓧娈碉紙title銆乻ummary銆乼ags銆乸age銆乮mage_refs 绛夛級
+    - 鍏宠仈鍥剧墖棰勮锛堜粠 ImageStorage 璇诲彇骞跺睍绀虹缉鐣ュ浘锛?
+- **鏁版嵁鏉ユ簮**锛氶€氳繃 `ChromaStore.get_all()` 鎴?`get_by_metadata()` 璇诲彇 chunk 鏁版嵁銆?
 
-**页面 3：Ingestion 管理 (Ingestion Manager)**
-- **文件选择与摄取触发**：
-    - 文件上传组件（`st.file_uploader`）或目录路径输入
-    - 选择目标集合（下拉选择或新建）
-    - 点击"开始摄取"按钮触发 `IngestionPipeline.run()`
-    - 利用 `on_progress` 回调驱动 Streamlit 进度条（`st.progress`），实时显示当前阶段与处理进度
-- **文档删除**：
-    - 在文档列表中提供"删除"按钮
-    - 调用 `DocumentManager.delete_document()` 协调跨存储删除
-    - 删除完成后刷新列表
-- **注意**：Pipeline 执行为同步阻塞操作，Streamlit 的 rerun 机制天然支持（进度条在同一 request 中更新）。
+**椤甸潰 3锛欼ngestion 绠＄悊 (Ingestion Manager)**
+- **鏂囦欢閫夋嫨涓庢憚鍙栬Е鍙?*锛?
+    - 鏂囦欢涓婁紶缁勪欢锛坄st.file_uploader`锛夋垨鐩綍璺緞杈撳叆
+    - 閫夋嫨鐩爣闆嗗悎锛堜笅鎷夐€夋嫨鎴栨柊寤猴級
+    - 鐐瑰嚮"寮€濮嬫憚鍙?鎸夐挳瑙﹀彂 `IngestionPipeline.run()`
+    - 鍒╃敤 `on_progress` 鍥炶皟椹卞姩 Streamlit 杩涘害鏉★紙`st.progress`锛夛紝瀹炴椂鏄剧ず褰撳墠闃舵涓庡鐞嗚繘搴?
+- **鏂囨。鍒犻櫎**锛?
+    - 鍦ㄦ枃妗ｅ垪琛ㄤ腑鎻愪緵"鍒犻櫎"鎸夐挳
+    - 璋冪敤 `DocumentManager.delete_document()` 鍗忚皟璺ㄥ瓨鍌ㄥ垹闄?
+    - 鍒犻櫎瀹屾垚鍚庡埛鏂板垪琛?
+- **娉ㄦ剰**锛歅ipeline 鎵ц涓哄悓姝ラ樆濉炴搷浣滐紝Streamlit 鐨?rerun 鏈哄埗澶╃劧鏀寔锛堣繘搴︽潯鍦ㄥ悓涓€ request 涓洿鏂帮級銆?
 
-**页面 4：Ingestion 追踪 (Ingestion Traces)**
-- **摄取历史列表**：按时间倒序展示 `trace_type == "ingestion"` 的历史记录，显示文件名、集合、总耗时、状态（成功/失败）。
-- **单次摄取详情**：
-    - **阶段耗时瀑布图**：横向条形图展示 load/split/transform/embed/upsert 各阶段时间分布。
-    - **处理统计**：chunk 数、图片数、跳过数、失败数。
-    - **各阶段详情展开**：点击查看 method/provider、输入输出样本。
+**椤甸潰 4锛欼ngestion 杩借釜 (Ingestion Traces)**
+- **鎽勫彇鍘嗗彶鍒楄〃**锛氭寜鏃堕棿鍊掑簭灞曠ず `trace_type == "ingestion"` 鐨勫巻鍙茶褰曪紝鏄剧ず鏂囦欢鍚嶃€侀泦鍚堛€佹€昏€楁椂銆佺姸鎬侊紙鎴愬姛/澶辫触锛夈€?
+- **鍗曟鎽勫彇璇︽儏**锛?
+    - **闃舵鑰楁椂鐎戝竷鍥?*锛氭í鍚戞潯褰㈠浘灞曠ず load/split/transform/embed/upsert 鍚勯樁娈垫椂闂村垎甯冦€?
+    - **澶勭悊缁熻**锛歝hunk 鏁般€佸浘鐗囨暟銆佽烦杩囨暟銆佸け璐ユ暟銆?
+    - **鍚勯樁娈佃鎯呭睍寮€**锛氱偣鍑绘煡鐪?method/provider銆佽緭鍏ヨ緭鍑烘牱鏈€?
 
-**页面 5：Query 追踪 (Query Traces)**
-- **查询历史列表**：按时间倒序展示 `trace_type == "query"` 的历史记录，支持按 Query 关键词筛选。
-- **单次查询详情**：
-    - **耗时瀑布图**：展示 query_processing/dense/sparse/fusion/rerank 各阶段时间分布。
-    - **Dense vs Sparse 对比**：并列展示两路召回结果的 Top-N 文档 ID 与分数。
-    - **Rerank 前后对比**：展示融合排名与精排后排名的变化（排名跃升/下降标记）。
-    - **最终结果表**：展示 Top-K 候选文档的标题、分数、来源。
+**椤甸潰 5锛歈uery 杩借釜 (Query Traces)**
+- **鏌ヨ鍘嗗彶鍒楄〃**锛氭寜鏃堕棿鍊掑簭灞曠ず `trace_type == "query"` 鐨勫巻鍙茶褰曪紝鏀寔鎸?Query 鍏抽敭璇嶇瓫閫夈€?
+- **鍗曟鏌ヨ璇︽儏**锛?
+    - **鑰楁椂鐎戝竷鍥?*锛氬睍绀?query_processing/dense/sparse/fusion/rerank 鍚勯樁娈垫椂闂村垎甯冦€?
+    - **Dense vs Sparse 瀵规瘮**锛氬苟鍒楀睍绀轰袱璺彫鍥炵粨鏋滅殑 Top-N 鏂囨。 ID 涓庡垎鏁般€?
+    - **Rerank 鍓嶅悗瀵规瘮**锛氬睍绀鸿瀺鍚堟帓鍚嶄笌绮炬帓鍚庢帓鍚嶇殑鍙樺寲锛堟帓鍚嶈穬鍗?涓嬮檷鏍囪锛夈€?
+    - **鏈€缁堢粨鏋滆〃**锛氬睍绀?Top-K 鍊欓€夋枃妗ｇ殑鏍囬銆佸垎鏁般€佹潵婧愩€?
 
-**页面 6：评估面板 (Evaluation Panel)**
-- **评估运行**：选择评估后端（Ragas / Custom / All）与 golden test set，点击运行。
-- **指标展示**：以表格和图表展示 hit_rate、mrr、faithfulness 等指标。
-- **历史趋势**：对比不同时间的评估结果，观察策略调整的效果。
-- **注意**：评估面板在 Phase H 实现，Phase G 完成后该页面显示"评估模块尚未启用"的占位提示。
+**椤甸潰 6锛氳瘎浼伴潰鏉?(Evaluation Panel)**
+- **璇勪及杩愯**锛氶€夋嫨璇勪及鍚庣锛圧agas / Custom / All锛変笌 golden test set锛岀偣鍑昏繍琛屻€?
+- **鎸囨爣灞曠ず**锛氫互琛ㄦ牸鍜屽浘琛ㄥ睍绀?hit_rate銆乵rr銆乫aithfulness 绛夋寚鏍囥€?
+- **鍘嗗彶瓒嬪娍**锛氬姣斾笉鍚屾椂闂寸殑璇勪及缁撴灉锛岃瀵熺瓥鐣ヨ皟鏁寸殑鏁堟灉銆?
+- **娉ㄦ剰**锛氳瘎浼伴潰鏉垮湪 Phase H 瀹炵幇锛孭hase G 瀹屾垚鍚庤椤甸潰鏄剧ず"璇勪及妯″潡灏氭湭鍚敤"鐨勫崰浣嶆彁绀恒€?
 
-**Dashboard 技术架构**：
+**Dashboard 鎶€鏈灦鏋?*锛?
 
 ```
 src/observability/dashboard/
-├── app.py                    # Streamlit 入口，页面导航注册
-├── pages/
-│   ├── overview.py           # 页面 1：系统总览
-│   ├── data_browser.py       # 页面 2：数据浏览器
-│   ├── ingestion_manager.py  # 页面 3：Ingestion 管理
-│   ├── ingestion_traces.py   # 页面 4：Ingestion 追踪
-│   ├── query_traces.py       # 页面 5：Query 追踪
-│   └── evaluation_panel.py   # 页面 6：评估面板
-└── services/
-    ├── trace_service.py      # Trace 数据读取服务（解析 traces.jsonl）
-    ├── data_service.py       # 数据浏览服务（封装 ChromaStore/ImageStorage 读取）
-    └── config_service.py     # 配置读取服务（封装 Settings 读取与展示）
+鈹溾攢鈹€ app.py                    # Streamlit 鍏ュ彛锛岄〉闈㈠鑸敞鍐?
+鈹溾攢鈹€ pages/
+鈹?  鈹溾攢鈹€ overview.py           # 椤甸潰 1锛氱郴缁熸€昏
+鈹?  鈹溾攢鈹€ data_browser.py       # 椤甸潰 2锛氭暟鎹祻瑙堝櫒
+鈹?  鈹溾攢鈹€ ingestion_manager.py  # 椤甸潰 3锛欼ngestion 绠＄悊
+鈹?  鈹溾攢鈹€ ingestion_traces.py   # 椤甸潰 4锛欼ngestion 杩借釜
+鈹?  鈹溾攢鈹€ query_traces.py       # 椤甸潰 5锛歈uery 杩借釜
+鈹?  鈹斺攢鈹€ evaluation_panel.py   # 椤甸潰 6锛氳瘎浼伴潰鏉?
+鈹斺攢鈹€ services/
+    鈹溾攢鈹€ trace_service.py      # Trace 鏁版嵁璇诲彇鏈嶅姟锛堣В鏋?traces.jsonl锛?
+    鈹溾攢鈹€ data_service.py       # 鏁版嵁娴忚鏈嶅姟锛堝皝瑁?ChromaStore/ImageStorage 璇诲彇锛?
+    鈹斺攢鈹€ config_service.py     # 閰嶇疆璇诲彇鏈嶅姟锛堝皝瑁?Settings 璇诲彇涓庡睍绀猴級
 ```
 
-**Dashboard 与 Trace 的数据关系**：
-- Dashboard 页面 4/5 读取 `logs/traces.jsonl`（通过 `TraceService`），按 `trace_type` 分类展示。
-- Dashboard 页面 1/2/3 直接读取存储层（通过 `DataService` 封装 ChromaStore/ImageStorage/FileIntegrity），不依赖 Trace。
-- 所有页面基于 Trace 中 `method`/`provider` 字段动态渲染标签，更换组件后自动适配。
+**Dashboard 涓?Trace 鐨勬暟鎹叧绯?*锛?
+- Dashboard 椤甸潰 4/5 璇诲彇 `logs/traces.jsonl`锛堥€氳繃 `TraceService`锛夛紝鎸?`trace_type` 鍒嗙被灞曠ず銆?
+- Dashboard 椤甸潰 1/2/3 鐩存帴璇诲彇瀛樺偍灞傦紙閫氳繃 `DataService` 灏佽 ChromaStore/ImageStorage/FileIntegrity锛夛紝涓嶄緷璧?Trace銆?
+- 鎵€鏈夐〉闈㈠熀浜?Trace 涓?`method`/`provider` 瀛楁鍔ㄦ€佹覆鏌撴爣绛撅紝鏇存崲缁勪欢鍚庤嚜鍔ㄩ€傞厤銆?
 
 
-#### 3.4.6 配置示例
+#### 3.4.6 閰嶇疆绀轰緥
 
 ```yaml
 observability:
   enabled: true
   
-  # 日志配置
+  # 鏃ュ織閰嶇疆
   logging:
-    log_file: logs/traces.jsonl  # JSON Lines 格式日志文件
+    log_file: logs/traces.jsonl  # JSON Lines 鏍煎紡鏃ュ織鏂囦欢
     log_level: INFO  # DEBUG | INFO | WARNING
   
-  # 追踪粒度控制
+  # 杩借釜绮掑害鎺у埗
   detail_level: standard  # minimal | standard | verbose
 
-# Dashboard 管理平台配置
+# Dashboard 绠＄悊骞冲彴閰嶇疆
 dashboard:
   enabled: true
-  port: 8501                     # Streamlit 服务端口
-  traces_dir: ./logs             # Trace 日志文件目录
-  auto_refresh: true             # 是否自动刷新（轮询新 trace）
-  refresh_interval: 5            # 自动刷新间隔（秒）
+  port: 8501                     # Streamlit 鏈嶅姟绔彛
+  traces_dir: ./logs             # Trace 鏃ュ織鏂囦欢鐩綍
+  auto_refresh: true             # 鏄惁鑷姩鍒锋柊锛堣疆璇㈡柊 trace锛?
+  refresh_interval: 5            # 鑷姩鍒锋柊闂撮殧锛堢锛?
 ```
 
 
-### 3.5 多模态图片处理设计 (Multimodal Image Processing Design)
+### 3.5 澶氭ā鎬佸浘鐗囧鐞嗚璁?(Multimodal Image Processing Design)
 
-**目标：** 设计一套完整的图片处理方案，使 RAG 系统能够理解、索引并检索文档中的图片内容，实现"用自然语言搜索图片"的能力，同时保持架构的简洁性与可扩展性。
+**鐩爣锛?* 璁捐涓€濂楀畬鏁寸殑鍥剧墖澶勭悊鏂规锛屼娇 RAG 绯荤粺鑳藉鐞嗚В銆佺储寮曞苟妫€绱㈡枃妗ｄ腑鐨勫浘鐗囧唴瀹癸紝瀹炵幇"鐢ㄨ嚜鐒惰瑷€鎼滅储鍥剧墖"鐨勮兘鍔涳紝鍚屾椂淇濇寔鏋舵瀯鐨勭畝娲佹€т笌鍙墿灞曟€с€?
 
-#### 3.5.1 设计理念与策略选型
+#### 3.5.1 璁捐鐞嗗康涓庣瓥鐣ラ€夊瀷
 
-多模态 RAG 的核心挑战在于：**如何让纯文本的检索系统"看懂"图片**。业界主要有两种技术路线：
+澶氭ā鎬?RAG 鐨勬牳蹇冩寫鎴樺湪浜庯細**濡備綍璁╃函鏂囨湰鐨勬绱㈢郴缁?鐪嬫噦"鍥剧墖**銆備笟鐣屼富瑕佹湁涓ょ鎶€鏈矾绾匡細
 
-| 策略 | 核心思路 | 优势 | 劣势 |
+| 绛栫暐 | 鏍稿績鎬濊矾 | 浼樺娍 | 鍔ｅ娍 |
 |-----|---------|------|------|
-| **Image-to-Text (图转文)** | 利用 Vision LLM 将图片转化为文本描述，复用纯文本 RAG 链路 | 架构统一、实现简单、成本可控 | 描述质量依赖 LLM 能力，可能丢失视觉细节 |
-| **Multi-Embedding (多模态向量)** | 使用 CLIP 等模型将图文统一映射到同一向量空间 | 保留原始视觉特征，支持图搜图 | 需引入额外向量库，架构复杂度高 |
+| **Image-to-Text (鍥捐浆鏂?** | 鍒╃敤 Vision LLM 灏嗗浘鐗囪浆鍖栦负鏂囨湰鎻忚堪锛屽鐢ㄧ函鏂囨湰 RAG 閾捐矾 | 鏋舵瀯缁熶竴銆佸疄鐜扮畝鍗曘€佹垚鏈彲鎺?| 鎻忚堪璐ㄩ噺渚濊禆 LLM 鑳藉姏锛屽彲鑳戒涪澶辫瑙夌粏鑺?|
+| **Multi-Embedding (澶氭ā鎬佸悜閲?** | 浣跨敤 CLIP 绛夋ā鍨嬪皢鍥炬枃缁熶竴鏄犲皠鍒板悓涓€鍚戦噺绌洪棿 | 淇濈暀鍘熷瑙嗚鐗瑰緛锛屾敮鎸佸浘鎼滃浘 | 闇€寮曞叆棰濆鍚戦噺搴擄紝鏋舵瀯澶嶆潅搴﹂珮 |
 
-**本项目选型：Image-to-Text（图转文）策略**
+**鏈」鐩€夊瀷锛欼mage-to-Text锛堝浘杞枃锛夌瓥鐣?*
 
-选型理由：
-- **架构统一**：无需引入 CLIP 等多模态 Embedding 模型，无需维护独立的图像向量库，完全复用现有的文本 RAG 链路（Ingestion → Hybrid Search → Rerank）。
-- **语义对齐**：通过 LLM 将图片的视觉信息转化为自然语言描述，天然与用户的文本查询在同一语义空间，检索效果可预期。
-- **成本可控**：仅在数据摄取阶段一次性调用 Vision LLM，检索阶段无额外成本。
-- **渐进增强**：未来如需支持"图搜图"等高级能力，可在此基础上叠加 CLIP Embedding，无需重构核心链路。
+閫夊瀷鐞嗙敱锛?
+- **鏋舵瀯缁熶竴**锛氭棤闇€寮曞叆 CLIP 绛夊妯℃€?Embedding 妯″瀷锛屾棤闇€缁存姢鐙珛鐨勫浘鍍忓悜閲忓簱锛屽畬鍏ㄥ鐢ㄧ幇鏈夌殑鏂囨湰 RAG 閾捐矾锛圛ngestion 鈫?Hybrid Search 鈫?Rerank锛夈€?
+- **璇箟瀵归綈**锛氶€氳繃 LLM 灏嗗浘鐗囩殑瑙嗚淇℃伅杞寲涓鸿嚜鐒惰瑷€鎻忚堪锛屽ぉ鐒朵笌鐢ㄦ埛鐨勬枃鏈煡璇㈠湪鍚屼竴璇箟绌洪棿锛屾绱㈡晥鏋滃彲棰勬湡銆?
+- **鎴愭湰鍙帶**锛氫粎鍦ㄦ暟鎹憚鍙栭樁娈典竴娆℃€ц皟鐢?Vision LLM锛屾绱㈤樁娈垫棤棰濆鎴愭湰銆?
+- **娓愯繘澧炲己**锛氭湭鏉ュ闇€鏀寔"鍥炬悳鍥?绛夐珮绾ц兘鍔涳紝鍙湪姝ゅ熀纭€涓婂彔鍔?CLIP Embedding锛屾棤闇€閲嶆瀯鏍稿績閾捐矾銆?
 
-#### 3.5.2 图片处理全流程设计
+#### 3.5.2 鍥剧墖澶勭悊鍏ㄦ祦绋嬭璁?
 
-图片处理贯穿 Ingestion Pipeline 的多个阶段，整体流程如下：
+鍥剧墖澶勭悊璐┛ Ingestion Pipeline 鐨勫涓樁娈碉紝鏁翠綋娴佺▼濡備笅锛?
 
 ```
-原始文档 (PDF/PPT/Markdown)
-    │
-    ▼
-┌─────────────────────────────────────────────────────────┐
-│  Loader 阶段：图片提取与引用收集                           │
-│  - 解析文档，识别并提取嵌入的图片资源                        │
-│  - 为每张图片生成唯一标识 (image_id)                       │
-│  - 在文档文本中插入图片占位符/引用标记                       │
-│  - 输出：Document (text + metadata.images[])             │
-└─────────────────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────────────────┐
-│  Splitter 阶段：保持图文关联                               │
-│  - 切分时保留图片引用标记在对应 Chunk 中                     │
-│  - 确保图片与其上下文段落保持关联                            │
-│  - 输出：Chunks (各自携带关联的 image_refs)                │
-└─────────────────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────────────────┐
-│  Transform 阶段：图片理解与描述生成                         │
-│  - 调用 Vision LLM 对每张图片生成结构化描述                  │
-│  - 将描述文本注入到关联 Chunk 的正文或 Metadata 中           │
-│  - 输出：Enriched Chunks (含图片语义信息)                  │
-└─────────────────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────────────────┐
-│  Storage 阶段：双轨存储                                    │
-│  - 向量库：存储增强后的 Chunk (含图片描述) 用于检索           │
-│  - 文件系统/Blob：存储原始图片文件用于返回展示                │
-└─────────────────────────────────────────────────────────┘
+鍘熷鏂囨。 (PDF/PPT/Markdown)
+    鈹?
+    鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹? Loader 闃舵锛氬浘鐗囨彁鍙栦笌寮曠敤鏀堕泦                           鈹?
+鈹? - 瑙ｆ瀽鏂囨。锛岃瘑鍒苟鎻愬彇宓屽叆鐨勫浘鐗囪祫婧?                       鈹?
+鈹? - 涓烘瘡寮犲浘鐗囩敓鎴愬敮涓€鏍囪瘑 (image_id)                       鈹?
+鈹? - 鍦ㄦ枃妗ｆ枃鏈腑鎻掑叆鍥剧墖鍗犱綅绗?寮曠敤鏍囪                       鈹?
+鈹? - 杈撳嚭锛欴ocument (text + metadata.images[])             鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+    鈹?
+    鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹? Splitter 闃舵锛氫繚鎸佸浘鏂囧叧鑱?                              鈹?
+鈹? - 鍒囧垎鏃朵繚鐣欏浘鐗囧紩鐢ㄦ爣璁板湪瀵瑰簲 Chunk 涓?                    鈹?
+鈹? - 纭繚鍥剧墖涓庡叾涓婁笅鏂囨钀戒繚鎸佸叧鑱?                           鈹?
+鈹? - 杈撳嚭锛欳hunks (鍚勮嚜鎼哄甫鍏宠仈鐨?image_refs)                鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+    鈹?
+    鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹? Transform 闃舵锛氬浘鐗囩悊瑙ｄ笌鎻忚堪鐢熸垚                         鈹?
+鈹? - 璋冪敤 Vision LLM 瀵规瘡寮犲浘鐗囩敓鎴愮粨鏋勫寲鎻忚堪                  鈹?
+鈹? - 灏嗘弿杩版枃鏈敞鍏ュ埌鍏宠仈 Chunk 鐨勬鏂囨垨 Metadata 涓?          鈹?
+鈹? - 杈撳嚭锛欵nriched Chunks (鍚浘鐗囪涔変俊鎭?                  鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+    鈹?
+    鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹? Storage 闃舵锛氬弻杞ㄥ瓨鍌?                                   鈹?
+鈹? - 鍚戦噺搴擄細瀛樺偍澧炲己鍚庣殑 Chunk (鍚浘鐗囨弿杩? 鐢ㄤ簬妫€绱?          鈹?
+鈹? - 鏂囦欢绯荤粺/Blob锛氬瓨鍌ㄥ師濮嬪浘鐗囨枃浠剁敤浜庤繑鍥炲睍绀?               鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 ```
 
-#### 3.5.3 各阶段技术要点
+#### 3.5.3 鍚勯樁娈垫妧鏈鐐?
 
-**1. Loader 阶段：图片提取与引用收集**
+**1. Loader 闃舵锛氬浘鐗囨彁鍙栦笌寮曠敤鏀堕泦**
 
-- **提取策略**：
-  - 解析文档时识别嵌入的图片资源（PDF 中的 XObject、PPT 中的媒体文件、Markdown 中的 `![]()` 引用）。
-  - 为每张图片生成全局唯一的 `image_id`（建议格式：`{doc_hash}_{page}_{seq}`）。
-  - 将图片二进制数据提取并暂存，记录其在原文档中的位置信息。
+- **鎻愬彇绛栫暐**锛?
+  - 瑙ｆ瀽鏂囨。鏃惰瘑鍒祵鍏ョ殑鍥剧墖璧勬簮锛圥DF 涓殑 XObject銆丳PT 涓殑濯掍綋鏂囦欢銆丮arkdown 涓殑 `![]()` 寮曠敤锛夈€?
+  - 涓烘瘡寮犲浘鐗囩敓鎴愬叏灞€鍞竴鐨?`image_id`锛堝缓璁牸寮忥細`{doc_hash}_{page}_{seq}`锛夈€?
+  - 灏嗗浘鐗囦簩杩涘埗鏁版嵁鎻愬彇骞舵殏瀛橈紝璁板綍鍏跺湪鍘熸枃妗ｄ腑鐨勪綅缃俊鎭€?
 
-- **引用标记**：
-  - 在转换后的 Markdown 文本中，于图片原始位置插入占位符（如 `[IMAGE: {image_id}]`）。
-  - 在 Document 的 Metadata 中维护 `images` 列表，记录每张图片的 `image_id`、原始路径、页码、尺寸等基础信息。
+- **寮曠敤鏍囪**锛?
+  - 鍦ㄨ浆鎹㈠悗鐨?Markdown 鏂囨湰涓紝浜庡浘鐗囧師濮嬩綅缃彃鍏ュ崰浣嶇锛堝 `[IMAGE: {image_id}]`锛夈€?
+  - 鍦?Document 鐨?Metadata 涓淮鎶?`images` 鍒楄〃锛岃褰曟瘡寮犲浘鐗囩殑 `image_id`銆佸師濮嬭矾寰勩€侀〉鐮併€佸昂瀵哥瓑鍩虹淇℃伅銆?
 
-- **存储原始图片**：
-  - 将提取的图片保存至本地文件系统的约定目录（如 `data/images/{collection}/{image_id}.png`）。
-  - 仅保存需要的图片格式（推荐统一转换为 PNG/JPEG），控制存储体积。
+- **瀛樺偍鍘熷鍥剧墖**锛?
+  - 灏嗘彁鍙栫殑鍥剧墖淇濆瓨鑷虫湰鍦版枃浠剁郴缁熺殑绾﹀畾鐩綍锛堝 `data/images/{collection}/{image_id}.png`锛夈€?
+  - 浠呬繚瀛橀渶瑕佺殑鍥剧墖鏍煎紡锛堟帹鑽愮粺涓€杞崲涓?PNG/JPEG锛夛紝鎺у埗瀛樺偍浣撶Н銆?
 
-**2. Splitter 阶段：保持图文关联**
+**2. Splitter 闃舵锛氫繚鎸佸浘鏂囧叧鑱?*
 
-- **关联保持原则**：
-  - 图片引用标记应与其说明性文字（Caption、前后段落）尽量保持在同一 Chunk 中。
-  - 若图片出现在章节开头或结尾，切分时应将其归入语义上最相关的 Chunk。
+- **鍏宠仈淇濇寔鍘熷垯**锛?
+  - 鍥剧墖寮曠敤鏍囪搴斾笌鍏惰鏄庢€ф枃瀛楋紙Caption銆佸墠鍚庢钀斤級灏介噺淇濇寔鍦ㄥ悓涓€ Chunk 涓€?
+  - 鑻ュ浘鐗囧嚭鐜板湪绔犺妭寮€澶存垨缁撳熬锛屽垏鍒嗘椂搴斿皢鍏跺綊鍏ヨ涔変笂鏈€鐩稿叧鐨?Chunk銆?
 
-- **Chunk Metadata 扩展**：
-  - 每个 Chunk 的 Metadata 中增加 `image_refs: List[image_id]` 字段，记录该 Chunk 关联的图片列表。
-  - 此字段用于后续 Transform 阶段定位需要处理的图片，以及检索命中后定位需要返回的图片。
+- **Chunk Metadata 鎵╁睍**锛?
+  - 姣忎釜 Chunk 鐨?Metadata 涓鍔?`image_refs: List[image_id]` 瀛楁锛岃褰曡 Chunk 鍏宠仈鐨勫浘鐗囧垪琛ㄣ€?
+  - 姝ゅ瓧娈电敤浜庡悗缁?Transform 闃舵瀹氫綅闇€瑕佸鐞嗙殑鍥剧墖锛屼互鍙婃绱㈠懡涓悗瀹氫綅闇€瑕佽繑鍥炵殑鍥剧墖銆?
 
-**3. Transform 阶段：图片理解与描述生成**
+**3. Transform 闃舵锛氬浘鐗囩悊瑙ｄ笌鎻忚堪鐢熸垚**
 
-这是多模态处理的核心环节，负责将视觉信息转化为可检索的文本语义。
+杩欐槸澶氭ā鎬佸鐞嗙殑鏍稿績鐜妭锛岃礋璐ｅ皢瑙嗚淇℃伅杞寲涓哄彲妫€绱㈢殑鏂囨湰璇箟銆?
 
-- **Vision LLM 选型**：
+- **Vision LLM 閫夊瀷**锛?
 
-| 模型 | 提供商 | 特点 | 适用场景 | 推荐指数 |
+| 妯″瀷 | 鎻愪緵鍟?| 鐗圭偣 | 閫傜敤鍦烘櫙 | 鎺ㄨ崘鎸囨暟 |
 |-----|--------|------|---------|---------|
-| **GPT-4o** | OpenAI / Azure | 理解能力强，支持复杂图表解读，英文文档表现优异 | 高质量需求、复杂业务文档、国际化场景 | ⭐⭐⭐⭐⭐ |
-| **Qwen-VL-Max** | 阿里云 (DashScope) | 中文理解能力出色，性价比高，对中文图表/文档支持好 | 中文文档、国内部署、成本敏感场景 | ⭐⭐⭐⭐⭐ |
-| **Qwen-VL-Plus** | 阿里云 (DashScope) | 速度更快，成本更低，适合大批量处理 | 大批量中文文档、快速迭代场景 | ⭐⭐⭐⭐ |
-| **Claude 3.5 Sonnet** | Anthropic | 多模态原生支持，长上下文 | 需要结合大段文字理解图片 | ⭐⭐⭐⭐ |
-| **Gemini Pro Vision** | Google | 成本较低，速度较快 | 大批量处理、成本敏感场景 | ⭐⭐⭐ |
-| **GLM-4V** | 智谱 AI (ZhipuAI) | 国内老牌，稳定性好，中文支持佳 | 国内部署备选、企业级应用 | ⭐⭐⭐⭐ |
+| **GPT-4o** | OpenAI / Azure | 鐞嗚В鑳藉姏寮猴紝鏀寔澶嶆潅鍥捐〃瑙ｈ锛岃嫳鏂囨枃妗ｈ〃鐜颁紭寮?| 楂樿川閲忛渶姹傘€佸鏉備笟鍔℃枃妗ｃ€佸浗闄呭寲鍦烘櫙 | 猸愨瓙猸愨瓙猸?|
+| **Qwen-VL-Max** | 闃块噷浜?(DashScope) | 涓枃鐞嗚В鑳藉姏鍑鸿壊锛屾€т环姣旈珮锛屽涓枃鍥捐〃/鏂囨。鏀寔濂?| 涓枃鏂囨。銆佸浗鍐呴儴缃层€佹垚鏈晱鎰熷満鏅?| 猸愨瓙猸愨瓙猸?|
+| **Qwen-VL-Plus** | 闃块噷浜?(DashScope) | 閫熷害鏇村揩锛屾垚鏈洿浣庯紝閫傚悎澶ф壒閲忓鐞?| 澶ф壒閲忎腑鏂囨枃妗ｃ€佸揩閫熻凯浠ｅ満鏅?| 猸愨瓙猸愨瓙 |
+| **Claude 3.5 Sonnet** | Anthropic | 澶氭ā鎬佸師鐢熸敮鎸侊紝闀夸笂涓嬫枃 | 闇€瑕佺粨鍚堝ぇ娈垫枃瀛楃悊瑙ｅ浘鐗?| 猸愨瓙猸愨瓙 |
+| **Gemini Pro Vision** | Google | 鎴愭湰杈冧綆锛岄€熷害杈冨揩 | 澶ф壒閲忓鐞嗐€佹垚鏈晱鎰熷満鏅?| 猸愨瓙猸?|
+| **GLM-4V** | 鏅鸿氨 AI (ZhipuAI) | 鍥藉唴鑰佺墝锛岀ǔ瀹氭€уソ锛屼腑鏂囨敮鎸佷匠 | 鍥藉唴閮ㄧ讲澶囬€夈€佷紒涓氱骇搴旂敤 | 猸愨瓙猸愨瓙 |
 
-**双模型选型策略（推荐）**：
+**鍙屾ā鍨嬮€夊瀷绛栫暐锛堟帹鑽愶級**锛?
 
-本项目采用**国内 + 国外双模型**方案，通过配置切换，兼顾不同部署环境和文档类型：
+鏈」鐩噰鐢?*鍥藉唴 + 鍥藉鍙屾ā鍨?*鏂规锛岄€氳繃閰嶇疆鍒囨崲锛屽吋椤句笉鍚岄儴缃茬幆澧冨拰鏂囨。绫诲瀷锛?
 
-| 部署环境 | 主选模型 | 备选模型 | 说明 |
+| 閮ㄧ讲鐜 | 涓婚€夋ā鍨?| 澶囬€夋ā鍨?| 璇存槑 |
 |---------|---------|---------|------|
-| **国际化 / Azure 环境** | GPT-4o (Azure) | Qwen-VL-Max | 英文文档优先用 GPT-4o，中文文档可切换 Qwen-VL |
-| **国内部署 / 纯中文场景** | Qwen-VL-Max | GPT-4o | 中文图表理解用 Qwen-VL，特殊需求可切换 GPT-4o |
-| **成本敏感 / 大批量** | Qwen-VL-Plus | Gemini Pro Vision | 牺牲部分质量换取速度和成本 |
+| **鍥介檯鍖?/ Azure 鐜** | GPT-4o (Azure) | Qwen-VL-Max | 鑻辨枃鏂囨。浼樺厛鐢?GPT-4o锛屼腑鏂囨枃妗ｅ彲鍒囨崲 Qwen-VL |
+| **鍥藉唴閮ㄧ讲 / 绾腑鏂囧満鏅?* | Qwen-VL-Max | GPT-4o | 涓枃鍥捐〃鐞嗚В鐢?Qwen-VL锛岀壒娈婇渶姹傚彲鍒囨崲 GPT-4o |
+| **鎴愭湰鏁忔劅 / 澶ф壒閲?* | Qwen-VL-Plus | Gemini Pro Vision | 鐗虹壊閮ㄥ垎璐ㄩ噺鎹㈠彇閫熷害鍜屾垚鏈?|
 
-**选型理由**：
+**閫夊瀷鐞嗙敱**锛?
 
-1. **GPT-4o (国外首选)**：
-   - 视觉理解能力业界领先，复杂图表解读准确率高
-   - Azure 部署可满足企业合规要求
-   - 英文技术文档理解效果最佳
+1. **GPT-4o (鍥藉棣栭€?**锛?
+   - 瑙嗚鐞嗚В鑳藉姏涓氱晫棰嗗厛锛屽鏉傚浘琛ㄨВ璇诲噯纭巼楂?
+   - Azure 閮ㄧ讲鍙弧瓒充紒涓氬悎瑙勮姹?
+   - 鑻辨枃鎶€鏈枃妗ｇ悊瑙ｆ晥鏋滄渶浣?
 
-2. **Qwen-VL-Max (国内首选)**：
-   - 中文场景下表现与 GPT-4o 接近，部分中文图表任务甚至更优
-   - 通过阿里云 DashScope API 调用，国内访问稳定、延迟低
-   - 价格约为 GPT-4o 的 1/3 ~ 1/5，性价比极高
-   - 原生支持中文 OCR，对中文截图、表格识别更准确
+2. **Qwen-VL-Max (鍥藉唴棣栭€?**锛?
+   - 涓枃鍦烘櫙涓嬭〃鐜颁笌 GPT-4o 鎺ヨ繎锛岄儴鍒嗕腑鏂囧浘琛ㄤ换鍔＄敋鑷虫洿浼?
+   - 閫氳繃闃块噷浜?DashScope API 璋冪敤锛屽浗鍐呰闂ǔ瀹氥€佸欢杩熶綆
+   - 浠锋牸绾︿负 GPT-4o 鐨?1/3 ~ 1/5锛屾€т环姣旀瀬楂?
+   - 鍘熺敓鏀寔涓枃 OCR锛屽涓枃鎴浘銆佽〃鏍艰瘑鍒洿鍑嗙‘
 
-- **描述生成策略**：
-  - **结构化 Prompt**：设计专用的图片理解 Prompt，引导 LLM 输出结构化描述，而非自由发挥。
-  - **上下文感知**：将图片的前后文本段落一并传入 Vision LLM，帮助其理解图片在文档中的语境与作用。
-  - **分类型处理**：针对不同类型的图片采用差异化的理解策略：
+- **鎻忚堪鐢熸垚绛栫暐**锛?
+  - **缁撴瀯鍖?Prompt**锛氳璁′笓鐢ㄧ殑鍥剧墖鐞嗚В Prompt锛屽紩瀵?LLM 杈撳嚭缁撴瀯鍖栨弿杩帮紝鑰岄潪鑷敱鍙戞尌銆?
+  - **涓婁笅鏂囨劅鐭?*锛氬皢鍥剧墖鐨勫墠鍚庢枃鏈钀戒竴骞朵紶鍏?Vision LLM锛屽府鍔╁叾鐞嗚В鍥剧墖鍦ㄦ枃妗ｄ腑鐨勮澧冧笌浣滅敤銆?
+  - **鍒嗙被鍨嬪鐞?*锛氶拡瀵逛笉鍚岀被鍨嬬殑鍥剧墖閲囩敤宸紓鍖栫殑鐞嗚В绛栫暐锛?
 
-| 图片类型 | 理解重点 | Prompt 引导方向 |
+| 鍥剧墖绫诲瀷 | 鐞嗚В閲嶇偣 | Prompt 寮曞鏂瑰悜 |
 |---------|---------|----------------|
-| **流程图/架构图** | 节点、连接关系、流程逻辑 | "描述这张图的结构和流程步骤" |
-| **数据图表** | 数据趋势、关键数值、对比关系 | "提取图表中的关键数据和结论" |
-| **截图/UI** | 界面元素、操作指引、状态信息 | "描述截图中的界面内容和关键信息" |
-| **照片/插图** | 主体对象、场景、视觉特征 | "描述图片中的主要内容" |
+| **娴佺▼鍥?鏋舵瀯鍥?* | 鑺傜偣銆佽繛鎺ュ叧绯汇€佹祦绋嬮€昏緫 | "鎻忚堪杩欏紶鍥剧殑缁撴瀯鍜屾祦绋嬫楠? |
+| **鏁版嵁鍥捐〃** | 鏁版嵁瓒嬪娍銆佸叧閿暟鍊笺€佸姣斿叧绯?| "鎻愬彇鍥捐〃涓殑鍏抽敭鏁版嵁鍜岀粨璁? |
+| **鎴浘/UI** | 鐣岄潰鍏冪礌銆佹搷浣滄寚寮曘€佺姸鎬佷俊鎭?| "鎻忚堪鎴浘涓殑鐣岄潰鍐呭鍜屽叧閿俊鎭? |
+| **鐓х墖/鎻掑浘** | 涓讳綋瀵硅薄銆佸満鏅€佽瑙夌壒寰?| "鎻忚堪鍥剧墖涓殑涓昏鍐呭" |
 
-- **描述注入方式**：
-  - **推荐：注入正文**：将生成的描述直接替换或追加到 Chunk 正文中的图片占位符位置，格式如 `[图片描述: {caption}]`。这样描述会被 Embedding 覆盖，可被直接检索。
-  - **备选：注入 Metadata**：将描述存入 `chunk.metadata.image_captions` 字段。需确保检索时该字段也被索引。
+- **鎻忚堪娉ㄥ叆鏂瑰紡**锛?
+  - **鎺ㄨ崘锛氭敞鍏ユ鏂?*锛氬皢鐢熸垚鐨勬弿杩扮洿鎺ユ浛鎹㈡垨杩藉姞鍒?Chunk 姝ｆ枃涓殑鍥剧墖鍗犱綅绗︿綅缃紝鏍煎紡濡?`[鍥剧墖鎻忚堪: {caption}]`銆傝繖鏍锋弿杩颁細琚?Embedding 瑕嗙洊锛屽彲琚洿鎺ユ绱€?
+  - **澶囬€夛細娉ㄥ叆 Metadata**锛氬皢鎻忚堪瀛樺叆 `chunk.metadata.image_captions` 瀛楁銆傞渶纭繚妫€绱㈡椂璇ュ瓧娈典篃琚储寮曘€?
 
-- **幂等与增量处理**：
-  - 为每张图片的描述计算内容哈希，存入 `processing_cache` 表。
-  - 重复处理时，若图片内容未变且 Prompt 版本一致，直接复用缓存的描述，避免重复调用 Vision LLM。
+- **骞傜瓑涓庡閲忓鐞?*锛?
+  - 涓烘瘡寮犲浘鐗囩殑鎻忚堪璁＄畻鍐呭鍝堝笇锛屽瓨鍏?`processing_cache` 琛ㄣ€?
+  - 閲嶅澶勭悊鏃讹紝鑻ュ浘鐗囧唴瀹规湭鍙樹笖 Prompt 鐗堟湰涓€鑷达紝鐩存帴澶嶇敤缂撳瓨鐨勬弿杩帮紝閬垮厤閲嶅璋冪敤 Vision LLM銆?
 
-**4. Storage 阶段：双轨存储**
+**4. Storage 闃舵锛氬弻杞ㄥ瓨鍌?*
 
-- **向量库存储（用于检索）**：
-  - 存储增强后的 Chunk，其正文已包含图片描述，Metadata 包含 `image_refs` 列表。
-  - 检索时通过文本相似度即可命中包含相关图片描述的 Chunk。
+- **鍚戦噺搴撳瓨鍌紙鐢ㄤ簬妫€绱級**锛?
+  - 瀛樺偍澧炲己鍚庣殑 Chunk锛屽叾姝ｆ枃宸插寘鍚浘鐗囨弿杩帮紝Metadata 鍖呭惈 `image_refs` 鍒楄〃銆?
+  - 妫€绱㈡椂閫氳繃鏂囨湰鐩镐技搴﹀嵆鍙懡涓寘鍚浉鍏冲浘鐗囨弿杩扮殑 Chunk銆?
 
-- **原始图片存储（用于返回）**：
-  - 图片文件存储于本地文件系统，路径记录在独立的 `images` 索引表中。
-  - 索引表字段：`image_id`, `file_path`, `source_doc`, `page`, `width`, `height`, `mime_type`。
-  - 检索命中后，根据 Chunk 的 `image_refs` 查询索引表，获取图片文件路径用于返回。
+- **鍘熷鍥剧墖瀛樺偍锛堢敤浜庤繑鍥烇級**锛?
+  - 鍥剧墖鏂囦欢瀛樺偍浜庢湰鍦版枃浠剁郴缁燂紝璺緞璁板綍鍦ㄧ嫭绔嬬殑 `images` 绱㈠紩琛ㄤ腑銆?
+  - 绱㈠紩琛ㄥ瓧娈碉細`image_id`, `file_path`, `source_doc`, `page`, `width`, `height`, `mime_type`銆?
+  - 妫€绱㈠懡涓悗锛屾牴鎹?Chunk 鐨?`image_refs` 鏌ヨ绱㈠紩琛紝鑾峰彇鍥剧墖鏂囦欢璺緞鐢ㄤ簬杩斿洖銆?
 
-#### 3.5.4 检索与返回流程
+#### 3.5.4 妫€绱笌杩斿洖娴佺▼
 
-当用户查询命中包含图片的 Chunk 时，系统需要将图片与文本一并返回：
+褰撶敤鎴锋煡璇㈠懡涓寘鍚浘鐗囩殑 Chunk 鏃讹紝绯荤粺闇€瑕佸皢鍥剧墖涓庢枃鏈竴骞惰繑鍥烇細
 
 ```
-用户查询: "系统架构是什么样的？"
-    │
-    ▼
-Hybrid Search 命中 Chunk（正文含 "[图片描述: 系统采用三层架构...]"）
-    │
-    ▼
-从 Chunk.metadata.image_refs 获取关联的 image_id 列表
-    │
-    ▼
-查询 images 索引表，获取图片文件路径
-    │
-    ▼
-读取图片文件，编码为 Base64
-    │
-    ▼
-构造 MCP 响应，包含 TextContent + ImageContent
+鐢ㄦ埛鏌ヨ: "绯荤粺鏋舵瀯鏄粈涔堟牱鐨勶紵"
+    鈹?
+    鈻?
+Hybrid Search 鍛戒腑 Chunk锛堟鏂囧惈 "[鍥剧墖鎻忚堪: 绯荤粺閲囩敤涓夊眰鏋舵瀯...]"锛?
+    鈹?
+    鈻?
+浠?Chunk.metadata.image_refs 鑾峰彇鍏宠仈鐨?image_id 鍒楄〃
+    鈹?
+    鈻?
+鏌ヨ images 绱㈠紩琛紝鑾峰彇鍥剧墖鏂囦欢璺緞
+    鈹?
+    鈻?
+璇诲彇鍥剧墖鏂囦欢锛岀紪鐮佷负 Base64
+    鈹?
+    鈻?
+鏋勯€?MCP 鍝嶅簲锛屽寘鍚?TextContent + ImageContent
 ```
 
-**MCP 响应格式**：
+**MCP 鍝嶅簲鏍煎紡**锛?
 
 ```json
 {
   "content": [
     {
       "type": "text",
-      "text": "根据文档，系统架构如下：...\n\n[1] 来源: architecture.pdf, 第5页"
+      "text": "鏍规嵁鏂囨。锛岀郴缁熸灦鏋勫涓嬶細...\n\n[1] 鏉ユ簮: architecture.pdf, 绗?椤?
     },
     {
       "type": "image",
@@ -1059,814 +1059,814 @@ Hybrid Search 命中 Chunk（正文含 "[图片描述: 系统采用三层架构.
 }
 ```
 
-#### 3.5.5 质量保障与边界处理
+#### 3.5.5 璐ㄩ噺淇濋殰涓庤竟鐣屽鐞?
 
-- **描述质量检测**：
-  - 对生成的描述进行基础质量检查（长度、是否包含关键信息）。
-  - 若描述过短或 LLM 返回"无法识别"，标记该图片为 `low_quality`，可选择人工复核或跳过索引。
+- **鎻忚堪璐ㄩ噺妫€娴?*锛?
+  - 瀵圭敓鎴愮殑鎻忚堪杩涜鍩虹璐ㄩ噺妫€鏌ワ紙闀垮害銆佹槸鍚﹀寘鍚叧閿俊鎭級銆?
+  - 鑻ユ弿杩拌繃鐭垨 LLM 杩斿洖"鏃犳硶璇嗗埆"锛屾爣璁拌鍥剧墖涓?`low_quality`锛屽彲閫夋嫨浜哄伐澶嶆牳鎴栬烦杩囩储寮曘€?
 
-- **大尺寸/特殊图片处理**：
-  - 超大图片在传入 Vision LLM 前进行压缩（保持宽高比，限制最大边长）。
-  - 对于纯装饰性图片（如分隔线、背景图），可通过尺寸或位置规则过滤，不进入描述生成流程。
+- **澶у昂瀵?鐗规畩鍥剧墖澶勭悊**锛?
+  - 瓒呭ぇ鍥剧墖鍦ㄤ紶鍏?Vision LLM 鍓嶈繘琛屽帇缂╋紙淇濇寔瀹介珮姣旓紝闄愬埗鏈€澶ц竟闀匡級銆?
+  - 瀵逛簬绾楗版€у浘鐗囷紙濡傚垎闅旂嚎銆佽儗鏅浘锛夛紝鍙€氳繃灏哄鎴栦綅缃鍒欒繃婊わ紝涓嶈繘鍏ユ弿杩扮敓鎴愭祦绋嬨€?
 
-- **批量处理优化**：
-  - 图片描述生成支持批量异步调用，提高吞吐量。
-  - 单个文档处理失败时，记录失败的图片 ID，不影响其他图片的处理进度。
+- **鎵归噺澶勭悊浼樺寲**锛?
+  - 鍥剧墖鎻忚堪鐢熸垚鏀寔鎵归噺寮傛璋冪敤锛屾彁楂樺悶鍚愰噺銆?
+  - 鍗曚釜鏂囨。澶勭悊澶辫触鏃讹紝璁板綍澶辫触鐨勫浘鐗?ID锛屼笉褰卞搷鍏朵粬鍥剧墖鐨勫鐞嗚繘搴︺€?
 
-- **降级策略**：
-  - 当 Vision LLM 不可用时，系统回退到"仅保留图片占位符"模式，图片不参与检索但不阻塞 Ingestion 流程。
-  - 在 Chunk 中标记 `has_unprocessed_images: true`，后续可增量补充描述。
+- **闄嶇骇绛栫暐**锛?
+  - 褰?Vision LLM 涓嶅彲鐢ㄦ椂锛岀郴缁熷洖閫€鍒?浠呬繚鐣欏浘鐗囧崰浣嶇"妯″紡锛屽浘鐗囦笉鍙備笌妫€绱絾涓嶉樆濉?Ingestion 娴佺▼銆?
+  - 鍦?Chunk 涓爣璁?`has_unprocessed_images: true`锛屽悗缁彲澧為噺琛ュ厖鎻忚堪銆?
 
-## 4. 测试方案
+## 4. 娴嬭瘯鏂规
 
-### 4.1 设计理念：测试驱动开发 (TDD)
+### 4.1 璁捐鐞嗗康锛氭祴璇曢┍鍔ㄥ紑鍙?(TDD)
 
-本项目采用**测试驱动开发（Test-Driven Development）**作为核心开发范式，确保每个组件在实现前就已明确其预期行为，通过自动化测试持续验证系统质量。
+鏈」鐩噰鐢?*娴嬭瘯椹卞姩寮€鍙戯紙Test-Driven Development锛?*浣滀负鏍稿績寮€鍙戣寖寮忥紝纭繚姣忎釜缁勪欢鍦ㄥ疄鐜板墠灏卞凡鏄庣‘鍏堕鏈熻涓猴紝閫氳繃鑷姩鍖栨祴璇曟寔缁獙璇佺郴缁熻川閲忋€?
 
-**核心原则**：
-- **早测试、常测试**：每个功能模块实现的同时就编写对应的单元测试，而非事后补测。
-- **测试即文档**：测试用例本身就是最准确的行为规范，新加入的开发者可通过阅读测试快速理解各模块功能。
-- **快速反馈循环**：单元测试应在秒级完成，支持开发者高频执行，立即发现引入的问题。
-- **分层测试金字塔**：大量快速的单元测试作为基座，少量关键路径的集成测试作为保障，极少数端到端测试验证完整流程。
+**鏍稿績鍘熷垯**锛?
+- **鏃╂祴璇曘€佸父娴嬭瘯**锛氭瘡涓姛鑳芥ā鍧楀疄鐜扮殑鍚屾椂灏辩紪鍐欏搴旂殑鍗曞厓娴嬭瘯锛岃€岄潪浜嬪悗琛ユ祴銆?
+- **娴嬭瘯鍗虫枃妗?*锛氭祴璇曠敤渚嬫湰韬氨鏄渶鍑嗙‘鐨勮涓鸿鑼冿紝鏂板姞鍏ョ殑寮€鍙戣€呭彲閫氳繃闃呰娴嬭瘯蹇€熺悊瑙ｅ悇妯″潡鍔熻兘銆?
+- **蹇€熷弽棣堝惊鐜?*锛氬崟鍏冩祴璇曞簲鍦ㄧ绾у畬鎴愶紝鏀寔寮€鍙戣€呴珮棰戞墽琛岋紝绔嬪嵆鍙戠幇寮曞叆鐨勯棶棰樸€?
+- **鍒嗗眰娴嬭瘯閲戝瓧濉?*锛氬ぇ閲忓揩閫熺殑鍗曞厓娴嬭瘯浣滀负鍩哄骇锛屽皯閲忓叧閿矾寰勭殑闆嗘垚娴嬭瘯浣滀负淇濋殰锛屾瀬灏戞暟绔埌绔祴璇曢獙璇佸畬鏁存祦绋嬨€?
 
 ```
         /\
-       /E2E\         <- 少量，验证关键业务流程
+       /E2E\         <- 灏戦噺锛岄獙璇佸叧閿笟鍔℃祦绋?
       /------\
-     /Integration\   <- 中量，验证模块协作
+     /Integration\   <- 涓噺锛岄獙璇佹ā鍧楀崗浣?
     /------------\
-   /  Unit Tests  \  <- 大量，验证单个函数/类
+   /  Unit Tests  \  <- 澶ч噺锛岄獙璇佸崟涓嚱鏁?绫?
   /________________\
 ```
 
-### 4.2 测试分层策略
+### 4.2 娴嬭瘯鍒嗗眰绛栫暐
 
-#### 4.2.1 单元测试 (Unit Tests)
+#### 4.2.1 鍗曞厓娴嬭瘯 (Unit Tests)
 
-**目标**：验证每个独立组件的内部逻辑正确性，隔离外部依赖。
+**鐩爣**锛氶獙璇佹瘡涓嫭绔嬬粍浠剁殑鍐呴儴閫昏緫姝ｇ‘鎬э紝闅旂澶栭儴渚濊禆銆?
 
-**覆盖范围**：
+**瑕嗙洊鑼冨洿**锛?
 
-| 模块 | 测试重点 | 典型测试用例 |
+| 妯″潡 | 娴嬭瘯閲嶇偣 | 鍏稿瀷娴嬭瘯鐢ㄤ緥 |
 |-----|---------|------------|
-| **Loader (文档解析器)** | 格式解析、元数据提取、图片引用收集 | - 测试解析单页/多页 PDF<br>- 验证 Markdown 标题层级提取<br>- 检查图片占位符插入位置 |
-| **Splitter (切分器)** | 切分边界、上下文保留、元数据传递 | - 验证按标题切分不破坏段落<br>- 测试超长文本的递归切分<br>- 检查 Chunk 的 `source` 字段正确性 |
-| **Transform (增强器)** | 图片描述生成、元数据注入 | - Mock Vision LLM，验证描述注入逻辑<br>- 测试无图片时的降级行为<br>- 验证幂等性（重复处理相同输入） |
-| **Embedding (向量化)** | 批处理、差量计算、向量维度 | - 验证相同文本生成相同向量<br>- 测试批量请求的拆分与合并<br>- 检查缓存命中逻辑 |
-| **BM25 (稀疏编码)** | 关键词提取、权重计算 | - 验证停用词过滤<br>- 测试 IDF 计算准确性<br>- 检查稀疏向量格式 |
-| **Retrieval (检索器)** | 召回精度、融合算法 | - 测试纯 Dense/Sparse/Hybrid 三种模式<br>- 验证 RRF 融合分数计算<br>- 检查 Top-K 结果排序 |
-| **Reranker (重排器)** | 分数归一化、降级回退 | - Mock Cross-Encoder，验证分数重排<br>- 测试超时后的 Fallback 逻辑<br>- 验证空候选集处理 |
+| **Loader (鏂囨。瑙ｆ瀽鍣?** | 鏍煎紡瑙ｆ瀽銆佸厓鏁版嵁鎻愬彇銆佸浘鐗囧紩鐢ㄦ敹闆?| - 娴嬭瘯瑙ｆ瀽鍗曢〉/澶氶〉 PDF<br>- 楠岃瘉 Markdown 鏍囬灞傜骇鎻愬彇<br>- 妫€鏌ュ浘鐗囧崰浣嶇鎻掑叆浣嶇疆 |
+| **Splitter (鍒囧垎鍣?** | 鍒囧垎杈圭晫銆佷笂涓嬫枃淇濈暀銆佸厓鏁版嵁浼犻€?| - 楠岃瘉鎸夋爣棰樺垏鍒嗕笉鐮村潖娈佃惤<br>- 娴嬭瘯瓒呴暱鏂囨湰鐨勯€掑綊鍒囧垎<br>- 妫€鏌?Chunk 鐨?`source` 瀛楁姝ｇ‘鎬?|
+| **Transform (澧炲己鍣?** | 鍥剧墖鎻忚堪鐢熸垚銆佸厓鏁版嵁娉ㄥ叆 | - Mock Vision LLM锛岄獙璇佹弿杩版敞鍏ラ€昏緫<br>- 娴嬭瘯鏃犲浘鐗囨椂鐨勯檷绾ц涓?br>- 楠岃瘉骞傜瓑鎬э紙閲嶅澶勭悊鐩稿悓杈撳叆锛?|
+| **Embedding (鍚戦噺鍖?** | 鎵瑰鐞嗐€佸樊閲忚绠椼€佸悜閲忕淮搴?| - 楠岃瘉鐩稿悓鏂囨湰鐢熸垚鐩稿悓鍚戦噺<br>- 娴嬭瘯鎵归噺璇锋眰鐨勬媶鍒嗕笌鍚堝苟<br>- 妫€鏌ョ紦瀛樺懡涓€昏緫 |
+| **BM25 (绋€鐤忕紪鐮?** | 鍏抽敭璇嶆彁鍙栥€佹潈閲嶈绠?| - 楠岃瘉鍋滅敤璇嶈繃婊?br>- 娴嬭瘯 IDF 璁＄畻鍑嗙‘鎬?br>- 妫€鏌ョ█鐤忓悜閲忔牸寮?|
+| **Retrieval (妫€绱㈠櫒)** | 鍙洖绮惧害銆佽瀺鍚堢畻娉?| - 娴嬭瘯绾?Dense/Sparse/Hybrid 涓夌妯″紡<br>- 楠岃瘉 RRF 铻嶅悎鍒嗘暟璁＄畻<br>- 妫€鏌?Top-K 缁撴灉鎺掑簭 |
+| **Reranker (閲嶆帓鍣?** | 鍒嗘暟褰掍竴鍖栥€侀檷绾у洖閫€ | - Mock Cross-Encoder锛岄獙璇佸垎鏁伴噸鎺?br>- 娴嬭瘯瓒呮椂鍚庣殑 Fallback 閫昏緫<br>- 楠岃瘉绌哄€欓€夐泦澶勭悊 |
 
-**技术选型**：
-- **测试框架**：`pytest`（Python 标准选择，支持参数化测试、Fixture 机制）
-- **Mock 工具**：`unittest.mock` / `pytest-mock`（隔离外部依赖，如 LLM API）
-- **断言增强**：`pytest-check`（支持多断言不中断执行）
+**鎶€鏈€夊瀷**锛?
+- **娴嬭瘯妗嗘灦**锛歚pytest`锛圥ython 鏍囧噯閫夋嫨锛屾敮鎸佸弬鏁板寲娴嬭瘯銆丗ixture 鏈哄埗锛?
+- **Mock 宸ュ叿**锛歚unittest.mock` / `pytest-mock`锛堥殧绂诲閮ㄤ緷璧栵紝濡?LLM API锛?
+- **鏂█澧炲己**锛歚pytest-check`锛堟敮鎸佸鏂█涓嶄腑鏂墽琛岋級
 
-#### 4.2.2 集成测试 (Integration Tests)
+#### 4.2.2 闆嗘垚娴嬭瘯 (Integration Tests)
 
-**目标**：验证多个组件协作时的数据流转与接口兼容性。
+**鐩爣**锛氶獙璇佸涓粍浠跺崗浣滄椂鐨勬暟鎹祦杞笌鎺ュ彛鍏煎鎬с€?
 
-**覆盖范围**：
+**瑕嗙洊鑼冨洿**锛?
 
-| 测试场景 | 验证要点 | 测试策略 |
+| 娴嬭瘯鍦烘櫙 | 楠岃瘉瑕佺偣 | 娴嬭瘯绛栫暐 |
 |---------|---------|---------|
-| **Ingestion Pipeline** | Loader → Splitter → Transform → Storage 的完整流程 | - 使用真实的测试 PDF 文件<br>- 验证最终存入向量库的数据完整性<br>- 检查中间产物（如临时图片文件）是否正确清理 |
-| **Hybrid Search** | Dense + Sparse 召回的融合结果 | - 准备已知答案的查询-文档对<br>- 验证融合后的 Top-1 是否命中正确文档<br>- 测试极端情况（某一路无结果） |
-| **Rerank Pipeline** | 召回 → 过滤 → 重排的组合 | - 验证 Metadata 过滤后的候选集正确性<br>- 检查 Reranker 是否改变了 Top-1 结果<br>- 测试 Reranker 失败时的回退 |
-| **MCP Server** | 工具调用的端到端流程 | - 模拟 MCP Client 发送 JSON-RPC 请求<br>- 验证返回的 `content` 格式符合协议<br>- 测试错误处理（如查询语法错误） |
+| **Ingestion Pipeline** | Loader 鈫?Splitter 鈫?Transform 鈫?Storage 鐨勫畬鏁存祦绋?| - 浣跨敤鐪熷疄鐨勬祴璇?PDF 鏂囦欢<br>- 楠岃瘉鏈€缁堝瓨鍏ュ悜閲忓簱鐨勬暟鎹畬鏁存€?br>- 妫€鏌ヤ腑闂翠骇鐗╋紙濡備复鏃跺浘鐗囨枃浠讹級鏄惁姝ｇ‘娓呯悊 |
+| **Hybrid Search** | Dense + Sparse 鍙洖鐨勮瀺鍚堢粨鏋?| - 鍑嗗宸茬煡绛旀鐨勬煡璇?鏂囨。瀵?br>- 楠岃瘉铻嶅悎鍚庣殑 Top-1 鏄惁鍛戒腑姝ｇ‘鏂囨。<br>- 娴嬭瘯鏋佺鎯呭喌锛堟煇涓€璺棤缁撴灉锛?|
+| **Rerank Pipeline** | 鍙洖 鈫?杩囨护 鈫?閲嶆帓鐨勭粍鍚?| - 楠岃瘉 Metadata 杩囨护鍚庣殑鍊欓€夐泦姝ｇ‘鎬?br>- 妫€鏌?Reranker 鏄惁鏀瑰彉浜?Top-1 缁撴灉<br>- 娴嬭瘯 Reranker 澶辫触鏃剁殑鍥為€€ |
+| **MCP Server** | 宸ュ叿璋冪敤鐨勭鍒扮娴佺▼ | - 妯℃嫙 MCP Client 鍙戦€?JSON-RPC 璇锋眰<br>- 楠岃瘉杩斿洖鐨?`content` 鏍煎紡绗﹀悎鍗忚<br>- 娴嬭瘯閿欒澶勭悊锛堝鏌ヨ璇硶閿欒锛?|
 
-**技术选型**：
-- **数据隔离**：每个测试使用独立的临时数据库/向量库（`pytest-tempdir`）
-- **异步测试**：`pytest-asyncio`（若 MCP Server 采用异步实现）
-- **契约测试**：定义各模块间的 Schema，确保接口不漂移
+**鎶€鏈€夊瀷**锛?
+- **鏁版嵁闅旂**锛氭瘡涓祴璇曚娇鐢ㄧ嫭绔嬬殑涓存椂鏁版嵁搴?鍚戦噺搴擄紙`pytest-tempdir`锛?
+- **寮傛娴嬭瘯**锛歚pytest-asyncio`锛堣嫢 MCP Server 閲囩敤寮傛瀹炵幇锛?
+- **濂戠害娴嬭瘯**锛氬畾涔夊悇妯″潡闂寸殑 Schema锛岀‘淇濇帴鍙ｄ笉婕傜Щ
 
-#### 4.2.3 端到端测试 (End-to-End Tests)
+#### 4.2.3 绔埌绔祴璇?(End-to-End Tests)
 
-**目标**：模拟真实用户操作，验证完整业务流程的可用性。
+**鐩爣**锛氭ā鎷熺湡瀹炵敤鎴锋搷浣滐紝楠岃瘉瀹屾暣涓氬姟娴佺▼鐨勫彲鐢ㄦ€с€?
 
-**核心场景**：
+**鏍稿績鍦烘櫙**锛?
 
-**场景 1：数据准备（离线摄取）**
-- **测试目标**：验证文档摄取流程的完整性与正确性
-- **测试步骤**：
-  - 准备测试文档（PDF 文件，包含文本、图片、表格等多种元素）
-  - 执行离线摄取脚本，将文档导入知识库
-  - 验证摄取结果：检查生成的 Chunk 数量、元数据完整性、图片描述生成
-  - 验证存储状态：确认向量库和 BM25 索引正确创建
-  - 验证幂等性：重复摄取同一文档，确保不产生重复数据
-- **验证要点**：
-  - Chunk 的切分质量（语义完整性、上下文保留）
-  - 元数据字段完整性（source、page、title、tags 等）
-  - 图片处理结果（Caption 生成、Base64 编码存储）
-  - 向量与稀疏索引的正确性
+**鍦烘櫙 1锛氭暟鎹噯澶囷紙绂荤嚎鎽勫彇锛?*
+- **娴嬭瘯鐩爣**锛氶獙璇佹枃妗ｆ憚鍙栨祦绋嬬殑瀹屾暣鎬т笌姝ｇ‘鎬?
+- **娴嬭瘯姝ラ**锛?
+  - 鍑嗗娴嬭瘯鏂囨。锛圥DF 鏂囦欢锛屽寘鍚枃鏈€佸浘鐗囥€佽〃鏍肩瓑澶氱鍏冪礌锛?
+  - 鎵ц绂荤嚎鎽勫彇鑴氭湰锛屽皢鏂囨。瀵煎叆鐭ヨ瘑搴?
+  - 楠岃瘉鎽勫彇缁撴灉锛氭鏌ョ敓鎴愮殑 Chunk 鏁伴噺銆佸厓鏁版嵁瀹屾暣鎬с€佸浘鐗囨弿杩扮敓鎴?
+  - 楠岃瘉瀛樺偍鐘舵€侊細纭鍚戦噺搴撳拰 BM25 绱㈠紩姝ｇ‘鍒涘缓
+  - 楠岃瘉骞傜瓑鎬э細閲嶅鎽勫彇鍚屼竴鏂囨。锛岀‘淇濅笉浜х敓閲嶅鏁版嵁
+- **楠岃瘉瑕佺偣**锛?
+  - Chunk 鐨勫垏鍒嗚川閲忥紙璇箟瀹屾暣鎬с€佷笂涓嬫枃淇濈暀锛?
+  - 鍏冩暟鎹瓧娈靛畬鏁存€э紙source銆乸age銆乼itle銆乼ags 绛夛級
+  - 鍥剧墖澶勭悊缁撴灉锛圕aption 鐢熸垚銆丅ase64 缂栫爜瀛樺偍锛?
+  - 鍚戦噺涓庣█鐤忕储寮曠殑姝ｇ‘鎬?
 
-**场景 2：召回测试**
-- **测试目标**：验证检索系统的召回精度与排序质量
-- **测试步骤**：
-  - 基于已摄取的知识库，准备一组测试查询（包含不同难度与类型）
-  - 执行混合检索（Dense + Sparse + Rerank）
-  - 验证召回结果：检查 Top-K 文档是否包含预期来源
-  - 对比不同检索策略的效果（纯 Dense、纯 Sparse、Hybrid）
-  - 验证 Rerank 的影响：对比重排前后的结果变化
-- **验证要点**：
-  - Hit Rate@K：Top-K 结果命中率是否达标
-  - 排序质量：正确答案是否排在前列（MRR、NDCG）
-  - 边界情况处理：空查询、无结果查询、超长查询
-  - 多模态召回：包含图片的文档是否能通过文本查询召回
+**鍦烘櫙 2锛氬彫鍥炴祴璇?*
+- **娴嬭瘯鐩爣**锛氶獙璇佹绱㈢郴缁熺殑鍙洖绮惧害涓庢帓搴忚川閲?
+- **娴嬭瘯姝ラ**锛?
+  - 鍩轰簬宸叉憚鍙栫殑鐭ヨ瘑搴擄紝鍑嗗涓€缁勬祴璇曟煡璇紙鍖呭惈涓嶅悓闅惧害涓庣被鍨嬶級
+  - 鎵ц娣峰悎妫€绱紙Dense + Sparse + Rerank锛?
+  - 楠岃瘉鍙洖缁撴灉锛氭鏌?Top-K 鏂囨。鏄惁鍖呭惈棰勬湡鏉ユ簮
+  - 瀵规瘮涓嶅悓妫€绱㈢瓥鐣ョ殑鏁堟灉锛堢函 Dense銆佺函 Sparse銆丠ybrid锛?
+  - 楠岃瘉 Rerank 鐨勫奖鍝嶏細瀵规瘮閲嶆帓鍓嶅悗鐨勭粨鏋滃彉鍖?
+- **楠岃瘉瑕佺偣**锛?
+  - Hit Rate@K锛歍op-K 缁撴灉鍛戒腑鐜囨槸鍚﹁揪鏍?
+  - 鎺掑簭璐ㄩ噺锛氭纭瓟妗堟槸鍚︽帓鍦ㄥ墠鍒楋紙MRR銆丯DCG锛?
+  - 杈圭晫鎯呭喌澶勭悊锛氱┖鏌ヨ銆佹棤缁撴灉鏌ヨ銆佽秴闀挎煡璇?
+  - 澶氭ā鎬佸彫鍥烇細鍖呭惈鍥剧墖鐨勬枃妗ｆ槸鍚﹁兘閫氳繃鏂囨湰鏌ヨ鍙洖
 
-**场景 3：MCP Client 功能测试**
-- **测试目标**：验证 MCP Server 与 Client（如 GitHub Copilot）的协议兼容性与功能完整性
-- **测试步骤**：
-  - 启动 MCP Server（Stdio Transport 模式）
-  - 模拟 MCP Client 发送各类 JSON-RPC 请求
-  - 测试工具调用：`query_knowledge_hub`、`list_collections` 等
-  - 验证返回格式：符合 MCP 协议规范（content 数组、structuredContent）
-  - 测试引用透明性：返回结果包含完整的 Citation 信息
-  - 测试多模态返回：包含图片的响应正确编码为 Base64
-- **验证要点**：
-  - 协议合规性：JSON-RPC 2.0 格式、错误码映射
-  - 工具注册：`tools/list` 返回所有可用工具及其 Schema
-  - 响应格式：TextContent 与 ImageContent 的正确组合
-  - 错误处理：无效参数、超时、服务不可用等异常场景
-  - 性能指标：单次请求的端到端延迟（含检索、重排、格式化）
+**鍦烘櫙 3锛歁CP Client 鍔熻兘娴嬭瘯**
+- **娴嬭瘯鐩爣**锛氶獙璇?MCP Server 涓?Client锛堝 GitHub Copilot锛夌殑鍗忚鍏煎鎬т笌鍔熻兘瀹屾暣鎬?
+- **娴嬭瘯姝ラ**锛?
+  - 鍚姩 MCP Server锛圫tdio Transport 妯″紡锛?
+  - 妯℃嫙 MCP Client 鍙戦€佸悇绫?JSON-RPC 璇锋眰
+  - 娴嬭瘯宸ュ叿璋冪敤锛歚query_knowledge_hub`銆乣list_collections` 绛?
+  - 楠岃瘉杩斿洖鏍煎紡锛氱鍚?MCP 鍗忚瑙勮寖锛坈ontent 鏁扮粍銆乻tructuredContent锛?
+  - 娴嬭瘯寮曠敤閫忔槑鎬э細杩斿洖缁撴灉鍖呭惈瀹屾暣鐨?Citation 淇℃伅
+  - 娴嬭瘯澶氭ā鎬佽繑鍥烇細鍖呭惈鍥剧墖鐨勫搷搴旀纭紪鐮佷负 Base64
+- **楠岃瘉瑕佺偣**锛?
+  - 鍗忚鍚堣鎬э細JSON-RPC 2.0 鏍煎紡銆侀敊璇爜鏄犲皠
+  - 宸ュ叿娉ㄥ唽锛歚tools/list` 杩斿洖鎵€鏈夊彲鐢ㄥ伐鍏峰強鍏?Schema
+  - 鍝嶅簲鏍煎紡锛歍extContent 涓?ImageContent 鐨勬纭粍鍚?
+  - 閿欒澶勭悊锛氭棤鏁堝弬鏁般€佽秴鏃躲€佹湇鍔′笉鍙敤绛夊紓甯稿満鏅?
+  - 鎬ц兘鎸囨爣锛氬崟娆¤姹傜殑绔埌绔欢杩燂紙鍚绱€侀噸鎺掋€佹牸寮忓寲锛?
 
-**测试工具**：
-- **BDD 框架**：`behave` 或 `pytest-bdd`（以 Gherkin 语法描述场景）
-- **环境准备**：
-  - 临时测试向量库（独立于生产数据）
-  - 预置的标准测试文档集
-  - 本地 MCP Server 进程（Stdio Transport）
+**娴嬭瘯宸ュ叿**锛?
+- **BDD 妗嗘灦**锛歚behave` 鎴?`pytest-bdd`锛堜互 Gherkin 璇硶鎻忚堪鍦烘櫙锛?
+- **鐜鍑嗗**锛?
+  - 涓存椂娴嬭瘯鍚戦噺搴擄紙鐙珛浜庣敓浜ф暟鎹級
+  - 棰勭疆鐨勬爣鍑嗘祴璇曟枃妗ｉ泦
+  - 鏈湴 MCP Server 杩涚▼锛圫tdio Transport锛?
 
-### 4.3 RAG 质量评估测试
+### 4.3 RAG 璐ㄩ噺璇勪及娴嬭瘯
 
-**目标**：验证已设计的评估体系（见 3.3.4 评估框架抽象）是否正确实现，并能有效评估 RAG 系统的召回与生成质量。
+**鐩爣**锛氶獙璇佸凡璁捐鐨勮瘎浼颁綋绯伙紙瑙?3.3.4 璇勪及妗嗘灦鎶借薄锛夋槸鍚︽纭疄鐜帮紝骞惰兘鏈夋晥璇勪及 RAG 绯荤粺鐨勫彫鍥炰笌鐢熸垚璐ㄩ噺銆?
 
-**测试要点**：
+**娴嬭瘯瑕佺偣**锛?
 
-1. **黄金测试集准备**
-   - 构建标准的"问题-答案-来源文档"测试集（JSON 格式）
-   - 初期人工标注核心场景，后期持续积累坏 Case
+1. **榛勯噾娴嬭瘯闆嗗噯澶?*
+   - 鏋勫缓鏍囧噯鐨?闂-绛旀-鏉ユ簮鏂囨。"娴嬭瘯闆嗭紙JSON 鏍煎紡锛?
+   - 鍒濇湡浜哄伐鏍囨敞鏍稿績鍦烘櫙锛屽悗鏈熸寔缁Н绱潖 Case
 
-2. **评估框架实现验证**
-   - 验证 Ragas/DeepEval 等评估框架的正确集成
-   - 确认评估接口能输出标准化的指标字典
-   - 测试多评估器并行执行与结果汇总
+2. **璇勪及妗嗘灦瀹炵幇楠岃瘉**
+   - 楠岃瘉 Ragas/DeepEval 绛夎瘎浼版鏋剁殑姝ｇ‘闆嗘垚
+   - 纭璇勪及鎺ュ彛鑳借緭鍑烘爣鍑嗗寲鐨勬寚鏍囧瓧鍏?
+   - 娴嬭瘯澶氳瘎浼板櫒骞惰鎵ц涓庣粨鏋滄眹鎬?
 
-3. **关键指标达标验证**
-   - 检索指标：Hit Rate@K ≥ 90%、MRR ≥ 0.8、NDCG@K ≥ 0.85
-   - 生成指标：Faithfulness ≥ 0.9、Answer Relevancy ≥ 0.85
-   - 定期运行评估，监控指标是否回归
+3. **鍏抽敭鎸囨爣杈炬爣楠岃瘉**
+   - 妫€绱㈡寚鏍囷細Hit Rate@K 鈮?90%銆丮RR 鈮?0.8銆丯DCG@K 鈮?0.85
+   - 鐢熸垚鎸囨爣锛欶aithfulness 鈮?0.9銆丄nswer Relevancy 鈮?0.85
+   - 瀹氭湡杩愯璇勪及锛岀洃鎺ф寚鏍囨槸鍚﹀洖褰?
 
-**说明**：本节重点是验证评估体系的工程实现，而非重新设计评估方法（评估方法的设计见第 3 章技术选型）。
+**璇存槑**锛氭湰鑺傞噸鐐规槸楠岃瘉璇勪及浣撶郴鐨勫伐绋嬪疄鐜帮紝鑰岄潪閲嶆柊璁捐璇勪及鏂规硶锛堣瘎浼版柟娉曠殑璁捐瑙佺 3 绔犳妧鏈€夊瀷锛夈€?
 
-### 4.4 性能与压力测试（可选）
+### 4.4 鎬ц兘涓庡帇鍔涙祴璇曪紙鍙€夛級
 
-> **说明**：本项目定位为本地 MCP Server，单用户开发环境，采用 Stdio Transport 通信方式。性能与压力测试在当前阶段**不是必需的**，此处列出主要用于：
-> 1. **架构完整性**：展示完整的工程化测试体系，体现系统设计的专业性
-> 2. **未来扩展性**：若后续需要云端部署或多用户支持，可直接参考此方案
-> 3. **性能基准建立**：通过基础性能测试了解系统瓶颈，为优化提供数据支撑
+> **璇存槑**锛氭湰椤圭洰瀹氫綅涓烘湰鍦?MCP Server锛屽崟鐢ㄦ埛寮€鍙戠幆澧冿紝閲囩敤 Stdio Transport 閫氫俊鏂瑰紡銆傛€ц兘涓庡帇鍔涙祴璇曞湪褰撳墠闃舵**涓嶆槸蹇呴渶鐨?*锛屾澶勫垪鍑轰富瑕佺敤浜庯細
+> 1. **鏋舵瀯瀹屾暣鎬?*锛氬睍绀哄畬鏁寸殑宸ョ▼鍖栨祴璇曚綋绯伙紝浣撶幇绯荤粺璁捐鐨勪笓涓氭€?
+> 2. **鏈潵鎵╁睍鎬?*锛氳嫢鍚庣画闇€瑕佷簯绔儴缃叉垨澶氱敤鎴锋敮鎸侊紝鍙洿鎺ュ弬鑰冩鏂规
+> 3. **鎬ц兘鍩哄噯寤虹珛**锛氶€氳繃鍩虹鎬ц兘娴嬭瘯浜嗚В绯荤粺鐡堕锛屼负浼樺寲鎻愪緵鏁版嵁鏀拺
 
-**可选测试场景**：
+**鍙€夋祴璇曞満鏅?*锛?
 
-| 测试类型 | 验证点 | 工具 | 优先级 |
+| 娴嬭瘯绫诲瀷 | 楠岃瘉鐐?| 宸ュ叿 | 浼樺厛绾?|
 |---------|-------|------|-------|
-| **延迟测试** | 单次查询的 P50/P95/P99 延迟 | `pytest-benchmark` | 中（可帮助识别慢查询） |
-| **吞吐量测试** | 并发查询时的 QPS 上限 | `locust` | 低（本地单用户无需求） |
-| **内存泄漏检测** | 长时间运行后的内存占用 | `memory_profiler` | 低（短期运行无影响） |
-| **向量库性能** | 不同数据规模下的查询速度 | 自定义 Benchmark | 中（验证扩展性） |
+| **寤惰繜娴嬭瘯** | 鍗曟鏌ヨ鐨?P50/P95/P99 寤惰繜 | `pytest-benchmark` | 涓紙鍙府鍔╄瘑鍒參鏌ヨ锛?|
+| **鍚炲悙閲忔祴璇?* | 骞跺彂鏌ヨ鏃剁殑 QPS 涓婇檺 | `locust` | 浣庯紙鏈湴鍗曠敤鎴锋棤闇€姹傦級 |
+| **鍐呭瓨娉勬紡妫€娴?* | 闀挎椂闂磋繍琛屽悗鐨勫唴瀛樺崰鐢?| `memory_profiler` | 浣庯紙鐭湡杩愯鏃犲奖鍝嶏級 |
+| **鍚戦噺搴撴€ц兘** | 涓嶅悓鏁版嵁瑙勬ā涓嬬殑鏌ヨ閫熷害 | 鑷畾涔?Benchmark | 涓紙楠岃瘉鎵╁睍鎬э級 |
 
-### 4.5 测试工具链与 CI/CD 集成
+### 4.5 娴嬭瘯宸ュ叿閾句笌 CI/CD 闆嗘垚
 
-**本地开发工作流**：
-- **快速验证**：仅运行单元测试，秒级反馈
-- **完整验证**：单元测试 + 集成测试，生成覆盖率报告
-- **质量评估**：定期执行 RAG 质量测试，监控指标变化
+**鏈湴寮€鍙戝伐浣滄祦**锛?
+- **蹇€熼獙璇?*锛氫粎杩愯鍗曞厓娴嬭瘯锛岀绾у弽棣?
+- **瀹屾暣楠岃瘉**锛氬崟鍏冩祴璇?+ 闆嗘垚娴嬭瘯锛岀敓鎴愯鐩栫巼鎶ュ憡
+- **璐ㄩ噺璇勪及**锛氬畾鏈熸墽琛?RAG 璐ㄩ噺娴嬭瘯锛岀洃鎺ф寚鏍囧彉鍖?
 
-**CI/CD Pipeline 设计**（可选）：
-> **说明**：本地项目不强制要求 CI/CD，但配置自动化测试流程有助于代码质量保障与持续集成实践。
+**CI/CD Pipeline 璁捐**锛堝彲閫夛級锛?
+> **璇存槑**锛氭湰鍦伴」鐩笉寮哄埗瑕佹眰 CI/CD锛屼絾閰嶇疆鑷姩鍖栨祴璇曟祦绋嬫湁鍔╀簬浠ｇ爜璐ㄩ噺淇濋殰涓庢寔缁泦鎴愬疄璺点€?
 
-- **单元测试阶段**：每次提交自动触发，验证基础功能，生成覆盖率报告
-- **集成测试阶段**：单元测试通过后执行，验证模块协作
-- **质量评估阶段**：PR 触发，运行完整的 RAG 质量测试，发布评估报告
+- **鍗曞厓娴嬭瘯闃舵**锛氭瘡娆℃彁浜よ嚜鍔ㄨЕ鍙戯紝楠岃瘉鍩虹鍔熻兘锛岀敓鎴愯鐩栫巼鎶ュ憡
+- **闆嗘垚娴嬭瘯闃舵**锛氬崟鍏冩祴璇曢€氳繃鍚庢墽琛岋紝楠岃瘉妯″潡鍗忎綔
+- **璐ㄩ噺璇勪及闃舵**锛歅R 瑙﹀彂锛岃繍琛屽畬鏁寸殑 RAG 璐ㄩ噺娴嬭瘯锛屽彂甯冭瘎浼版姤鍛?
 
-**测试覆盖率目标**：
-- **单元测试**：核心逻辑覆盖率 ≥ 80%
-- **集成测试**：关键路径覆盖率 100%（如 Ingestion、Hybrid Search）
-- **E2E 测试**：核心用户场景覆盖率 100%（至少 3 个关键流程）
+**娴嬭瘯瑕嗙洊鐜囩洰鏍?*锛?
+- **鍗曞厓娴嬭瘯**锛氭牳蹇冮€昏緫瑕嗙洊鐜?鈮?80%
+- **闆嗘垚娴嬭瘯**锛氬叧閿矾寰勮鐩栫巼 100%锛堝 Ingestion銆丠ybrid Search锛?
+- **E2E 娴嬭瘯**锛氭牳蹇冪敤鎴峰満鏅鐩栫巼 100%锛堣嚦灏?3 涓叧閿祦绋嬶級
 
 
-## 5. 系统架构与模块设计
+## 5. 绯荤粺鏋舵瀯涓庢ā鍧楄璁?
 
-### 5.1 整体架构图
+### 5.1 鏁翠綋鏋舵瀯鍥?
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                     MCP Clients (外部调用层)                                  │
-│                                                                                             │
-│    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐                        │
-│    │  GitHub Copilot │    │  Claude Desktop │    │  其他 MCP Agent │                        │
-│    └────────┬────────┘    └────────┬────────┘    └────────┬────────┘                        │
-│             │                      │                      │                                 │
-│             └──────────────────────┼──────────────────────┘                                 │
-│                                    │  JSON-RPC 2.0 (Stdio Transport)                       │
-└────────────────────────────────────┼────────────────────────────────────────────────────────┘
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   MCP Server 层 (接口层)                                     │
-│                                                                                             │
-│    ┌─────────────────────────────────────────────────────────────────────────────────┐      │
-│    │                              MCP Protocol Handler                               │      │
-│    │                    (tools/list, tools/call, resources/*)                        │      │
-│    └─────────────────────────────────────────────────────────────────────────────────┘      │
-│                                           │                                                 │
-│    ┌──────────────────────┬───────────────┼───────────────┬──────────────────────┐          │
-│    ▼                      ▼               ▼               ▼                      ▼          │
-│ ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
-│ │query_knowledge│ │list_collections│ │get_document_ │  │search_by_    │  │  其他扩展    │    │
-│ │    _hub      │  │              │  │   summary    │  │  keyword     │  │   工具...    │    │
-│ └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘    │
-└────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                         │
-                                         ▼
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   Core 层 (核心业务逻辑)                                     │
-│                                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────────────┐    │
-│  │                            Query Engine (查询引擎)                                   │    │
-│  │  ┌─────────────────────────────────────────────────────────────────────────────┐    │    │
-│  │  │                         Query Processor (查询预处理)                         │    │    │
-│  │  │            关键词提取 | 查询扩展 (同义词/别名) | Metadata 解析               │    │    │
-│  │  └─────────────────────────────────────────────────────────────────────────────┘    │    │
-│  │                                       │                                             │    │
-│  │  ┌────────────────────────────────────┼────────────────────────────────────┐        │    │
-│  │  │                     Hybrid Search Engine (混合检索引擎)                  │        │    │
-│  │  │                                    │                                    │        │    │
-│  │  │    ┌───────────────────┐    ┌──────┴──────┐    ┌───────────────────┐    │        │    │
-│  │  │    │   Dense Route     │    │   Fusion    │    │   Sparse Route    │    │        │    │
-│  │  │    │ (Embedding 语义)  │◄───┤    (RRF)    ├───►│   (BM25 关键词)   │    │        │    │
-│  │  │    └───────────────────┘    └─────────────┘    └───────────────────┘    │        │    │
-│  │  └─────────────────────────────────────────────────────────────────────────┘        │    │
-│  │                                       │                                             │    │
-│  │  ┌─────────────────────────────────────────────────────────────────────────────┐    │    │
-│  │  │                        Reranker (重排序模块) [可选]                          │    │    │
-│  │  │          None (关闭) | Cross-Encoder (本地模型) | LLM Rerank               │    │    │
-│  │  └─────────────────────────────────────────────────────────────────────────────┘    │    │
-│  │                                       │                                             │    │
-│  │  ┌─────────────────────────────────────────────────────────────────────────────┐    │    │
-│  │  │                      Response Builder (响应构建器)                           │    │    │
-│  │  │            引用生成 (Citation) | 多模态内容组装 (Text + Image)               │    │    │
-│  │  └─────────────────────────────────────────────────────────────────────────────┘    │    │
-│  └─────────────────────────────────────────────────────────────────────────────────────┘    │
-│                                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────────────────────┐    │
-│  │                          Trace Collector (追踪收集器)                                │    │
-│  │                   trace_id 生成 | 各阶段耗时记录 | JSON Lines 输出                  │    │
-│  └─────────────────────────────────────────────────────────────────────────────────────┘    │
-└────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                         │
-                                         ▼
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   Storage 层 (存储层)                                        │
-│                                                                                             │
-│    ┌─────────────────────────────────────────────────────────────────────────────────┐      │
-│    │                             Vector Store (向量存储)                              │      │
-│    │                                                                                 │      │
-│    │     ┌─────────────────────────────────────────────────────────────────────┐     │      │
-│    │     │                         Chroma DB                                   │     │      │
-│    │     │    Dense Vector | Sparse Vector | Chunk Content | Metadata          │     │      │
-│    │     └─────────────────────────────────────────────────────────────────────┘     │      │
-│    └─────────────────────────────────────────────────────────────────────────────────┘      │
-│                                                                                             │
-│    ┌──────────────────────────────────┐    ┌──────────────────────────────────┐             │
-│    │       BM25 Index (稀疏索引)       │    │       Image Store (图片存储)     │             │
-│    │        倒排索引 | IDF 统计        │    │    本地文件系统 | Base64 编码     │             │
-│    └──────────────────────────────────┘    └──────────────────────────────────┘             │
-│                                                                                             │
-│    ┌──────────────────────────────────┐    ┌──────────────────────────────────┐             │
-│    │     Trace Logs (追踪日志)         │    │   Processing Cache (处理缓存)    │             │
-│    │     JSON Lines 格式文件           │    │   文件哈希 | Chunk 哈希 | 状态   │             │
-│    └──────────────────────────────────┘    └──────────────────────────────────┘             │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?                                    MCP Clients (澶栭儴璋冪敤灞?                                  鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?                       鈹?
+鈹?   鈹? GitHub Copilot 鈹?   鈹? Claude Desktop 鈹?   鈹? 鍏朵粬 MCP Agent 鈹?                       鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?                       鈹?
+鈹?            鈹?                     鈹?                     鈹?                                鈹?
+鈹?            鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?                                鈹?
+鈹?                                   鈹? JSON-RPC 2.0 (Stdio Transport)                       鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+                                     鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?                                  MCP Server 灞?(鎺ュ彛灞?                                     鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?     鈹?
+鈹?   鈹?                             MCP Protocol Handler                               鈹?     鈹?
+鈹?   鈹?                   (tools/list, tools/call, resources/*)                        鈹?     鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?     鈹?
+鈹?                                          鈹?                                                鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?         鈹?
+鈹?   鈻?                     鈻?              鈻?              鈻?                     鈻?         鈹?
+鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?
+鈹?鈹俼uery_knowledge鈹?鈹俵ist_collections鈹?鈹俫et_document_ 鈹? 鈹俿earch_by_    鈹? 鈹? 鍏朵粬鎵╁睍    鈹?   鈹?
+鈹?鈹?   _hub      鈹? 鈹?             鈹? 鈹?  summary    鈹? 鈹? keyword     鈹? 鈹?  宸ュ叿...    鈹?   鈹?
+鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+                                         鈹?
+                                         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?                                  Core 灞?(鏍稿績涓氬姟閫昏緫)                                     鈹?
+鈹?                                                                                            鈹?
+鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?
+鈹? 鈹?                           Query Engine (鏌ヨ寮曟搸)                                   鈹?   鈹?
+鈹? 鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?   鈹?
+鈹? 鈹? 鈹?                        Query Processor (鏌ヨ棰勫鐞?                         鈹?   鈹?   鈹?
+鈹? 鈹? 鈹?           鍏抽敭璇嶆彁鍙?| 鏌ヨ鎵╁睍 (鍚屼箟璇?鍒悕) | Metadata 瑙ｆ瀽               鈹?   鈹?   鈹?
+鈹? 鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?   鈹?
+鈹? 鈹?                                      鈹?                                            鈹?   鈹?
+鈹? 鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?       鈹?   鈹?
+鈹? 鈹? 鈹?                    Hybrid Search Engine (娣峰悎妫€绱㈠紩鎿?                  鈹?       鈹?   鈹?
+鈹? 鈹? 鈹?                                   鈹?                                   鈹?       鈹?   鈹?
+鈹? 鈹? 鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹粹攢鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?       鈹?   鈹?
+鈹? 鈹? 鈹?   鈹?  Dense Route     鈹?   鈹?  Fusion    鈹?   鈹?  Sparse Route    鈹?   鈹?       鈹?   鈹?
+鈹? 鈹? 鈹?   鈹?(Embedding 璇箟)  鈹傗梽鈹€鈹€鈹€鈹?   (RRF)    鈹溾攢鈹€鈹€鈻衡攤   (BM25 鍏抽敭璇?   鈹?   鈹?       鈹?   鈹?
+鈹? 鈹? 鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?       鈹?   鈹?
+鈹? 鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?       鈹?   鈹?
+鈹? 鈹?                                      鈹?                                            鈹?   鈹?
+鈹? 鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?   鈹?
+鈹? 鈹? 鈹?                       Reranker (閲嶆帓搴忔ā鍧? [鍙€塢                          鈹?   鈹?   鈹?
+鈹? 鈹? 鈹?         None (鍏抽棴) | Cross-Encoder (鏈湴妯″瀷) | LLM Rerank               鈹?   鈹?   鈹?
+鈹? 鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?   鈹?
+鈹? 鈹?                                      鈹?                                            鈹?   鈹?
+鈹? 鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?   鈹?
+鈹? 鈹? 鈹?                     Response Builder (鍝嶅簲鏋勫缓鍣?                           鈹?   鈹?   鈹?
+鈹? 鈹? 鈹?           寮曠敤鐢熸垚 (Citation) | 澶氭ā鎬佸唴瀹圭粍瑁?(Text + Image)               鈹?   鈹?   鈹?
+鈹? 鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?   鈹?
+鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?
+鈹?                                                                                            鈹?
+鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?
+鈹? 鈹?                         Trace Collector (杩借釜鏀堕泦鍣?                                鈹?   鈹?
+鈹? 鈹?                  trace_id 鐢熸垚 | 鍚勯樁娈佃€楁椂璁板綍 | JSON Lines 杈撳嚭                  鈹?   鈹?
+鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+                                         鈹?
+                                         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?                                  Storage 灞?(瀛樺偍灞?                                        鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?     鈹?
+鈹?   鈹?                            Vector Store (鍚戦噺瀛樺偍)                              鈹?     鈹?
+鈹?   鈹?                                                                                鈹?     鈹?
+鈹?   鈹?    鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?    鈹?     鈹?
+鈹?   鈹?    鈹?                        Chroma DB                                   鈹?    鈹?     鈹?
+鈹?   鈹?    鈹?   Dense Vector | Sparse Vector | Chunk Content | Metadata          鈹?    鈹?     鈹?
+鈹?   鈹?    鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?    鈹?     鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?     鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?            鈹?
+鈹?   鈹?      BM25 Index (绋€鐤忕储寮?       鈹?   鈹?      Image Store (鍥剧墖瀛樺偍)     鈹?            鈹?
+鈹?   鈹?       鍊掓帓绱㈠紩 | IDF 缁熻        鈹?   鈹?   鏈湴鏂囦欢绯荤粺 | Base64 缂栫爜     鈹?            鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?            鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?            鈹?
+鈹?   鈹?    Trace Logs (杩借釜鏃ュ織)         鈹?   鈹?  Processing Cache (澶勭悊缂撳瓨)    鈹?            鈹?
+鈹?   鈹?    JSON Lines 鏍煎紡鏂囦欢           鈹?   鈹?  鏂囦欢鍝堝笇 | Chunk 鍝堝笇 | 鐘舵€?  鈹?            鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?            鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                              Ingestion Pipeline (离线数据摄取)                               │
-│                                                                                             │
-│    ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐   │
-│    │   Loader   │───►│  Splitter  │───►│ Transform  │───►│  Embedding │───►│   Upsert   │   │
-│    │ (文档解析) │    │  (切分器)  │    │ (增强处理) │    │  (向量化)  │    │  (存储)    │   │
-│    └────────────┘    └────────────┘    └────────────┘    └────────────┘    └────────────┘   │
-│         │                  │                  │                  │                │         │
-│         ▼                  ▼                  ▼                  ▼                ▼         │
-│    ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐   │
-│    │MarkItDown │    │Recursive   │    │LLM重写     │    │Dense:      │    │Chroma      │   │
-│    │PDF→MD     │    │Character   │    │Image       │    │OpenAI/BGE  │    │Upsert      │   │
-│    │元数据提取 │    │TextSplitter│    │Captioning  │    │Sparse:BM25 │    │幂等写入    │   │
-│    └────────────┘    └────────────┘    └────────────┘    └────────────┘    └────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?                             Ingestion Pipeline (绂荤嚎鏁版嵁鎽勫彇)                               鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?  鈹?
+鈹?   鈹?  Loader   鈹傗攢鈹€鈹€鈻衡攤  Splitter  鈹傗攢鈹€鈹€鈻衡攤 Transform  鈹傗攢鈹€鈹€鈻衡攤  Embedding 鈹傗攢鈹€鈹€鈻衡攤   Upsert   鈹?  鈹?
+鈹?   鈹?(鏂囨。瑙ｆ瀽) 鈹?   鈹? (鍒囧垎鍣?  鈹?   鈹?(澧炲己澶勭悊) 鈹?   鈹? (鍚戦噺鍖?  鈹?   鈹? (瀛樺偍)    鈹?  鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?  鈹?
+鈹?        鈹?                 鈹?                 鈹?                 鈹?               鈹?        鈹?
+鈹?        鈻?                 鈻?                 鈻?                 鈻?               鈻?        鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?  鈹?
+鈹?   鈹侻arkItDown 鈹?   鈹俁ecursive   鈹?   鈹侺LM閲嶅啓     鈹?   鈹侱ense:      鈹?   鈹侰hroma      鈹?  鈹?
+鈹?   鈹侾DF鈫扢D     鈹?   鈹侰haracter   鈹?   鈹侷mage       鈹?   鈹侽penAI/BGE  鈹?   鈹俇psert      鈹?  鈹?
+鈹?   鈹傚厓鏁版嵁鎻愬彇 鈹?   鈹俆extSplitter鈹?   鈹侰aptioning  鈹?   鈹係parse:BM25 鈹?   鈹傚箓绛夊啓鍏?   鈹?  鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?  鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                Libs 层 (可插拔抽象层)                                        │
-│                                                                                             │
-│    ┌────────────────────────────────────────────────────────────────────────────────┐       │
-│    │                            Factory Pattern (工厂模式)                           │       │
-│    └────────────────────────────────────────────────────────────────────────────────┘       │
-│                                           │                                                 │
-│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐  │
-│  │ LLM Client │ │ Embedding  │ │  Splitter  │ │VectorStore │ │  Reranker  │ │ Evaluator  │  │
-│  │  Factory   │ │  Factory   │ │  Factory   │ │  Factory   │ │  Factory   │ │  Factory   │  │
-│  ├────────────┤ ├────────────┤ ├────────────┤ ├────────────┤ ├────────────┤ ├────────────┤  │
-│  │ · Azure    │ │ · OpenAI   │ │ · Recursive│ │ · Chroma   │ │ · None     │ │ · Ragas    │  │
-│  │ · OpenAI   │ │ · BGE      │ │ · Semantic │ │ · Qdrant   │ │ · CrossEnc │ │ · DeepEval │  │
-│  │ · Ollama   │ │ · Ollama   │ │ · FixedLen │ │ · Pinecone │ │ · LLM      │ │ · Custom   │  │
-│  │ · DeepSeek │ │ · ...      │ │ · ...      │ │ · ...      │ │            │ │            │  │
-│  │ · Vision✨ │ │            │ │            │ │            │ │            │ │            │  │
-│  └────────────┘ └────────────┘ └────────────┘ └────────────┘ └────────────┘ └────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?                               Libs 灞?(鍙彃鎷旀娊璞″眰)                                        鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?      鈹?
+鈹?   鈹?                           Factory Pattern (宸ュ巶妯″紡)                           鈹?      鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?      鈹?
+鈹?                                          鈹?                                                鈹?
+鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹?
+鈹? 鈹?LLM Client 鈹?鈹?Embedding  鈹?鈹? Splitter  鈹?鈹俈ectorStore 鈹?鈹? Reranker  鈹?鈹?Evaluator  鈹? 鈹?
+鈹? 鈹? Factory   鈹?鈹? Factory   鈹?鈹? Factory   鈹?鈹? Factory   鈹?鈹? Factory   鈹?鈹? Factory   鈹? 鈹?
+鈹? 鈹溾攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹溾攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹溾攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹溾攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹溾攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹溾攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹?
+鈹? 鈹?路 Azure    鈹?鈹?路 OpenAI   鈹?鈹?路 Recursive鈹?鈹?路 Chroma   鈹?鈹?路 None     鈹?鈹?路 Ragas    鈹? 鈹?
+鈹? 鈹?路 OpenAI   鈹?鈹?路 BGE      鈹?鈹?路 Semantic 鈹?鈹?路 Qdrant   鈹?鈹?路 CrossEnc 鈹?鈹?路 DeepEval 鈹? 鈹?
+鈹? 鈹?路 Ollama   鈹?鈹?路 Ollama   鈹?鈹?路 FixedLen 鈹?鈹?路 Pinecone 鈹?鈹?路 LLM      鈹?鈹?路 Custom   鈹? 鈹?
+鈹? 鈹?路 DeepSeek 鈹?鈹?路 ...      鈹?鈹?路 ...      鈹?鈹?路 ...      鈹?鈹?           鈹?鈹?           鈹? 鈹?
+鈹? 鈹?路 Vision鉁?鈹?鈹?           鈹?鈹?           鈹?鈹?           鈹?鈹?           鈹?鈹?           鈹? 鈹?
+鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹? 鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                             Observability 层 (可观测性)                                      │
-│                                                                                             │
-│    ┌──────────────────────────────────────┐    ┌──────────────────────────────────────┐     │
-│    │          Trace Context               │    │         Web Dashboard                │     │
-│    │   trace_id | stages[] | metrics      │    │        (Streamlit)                   │     │
-│    │   record_stage() | finish()          │    │    请求列表 | 耗时瀑布图 | 详情展开   │     │
-│    └──────────────────────────────────────┘    └──────────────────────────────────────┘     │
-│                                                                                             │
-│    ┌──────────────────────────────────────┐    ┌──────────────────────────────────────┐     │
-│    │          Evaluation Module           │    │         Structured Logger            │     │
-│    │   Hit Rate | MRR | Faithfulness      │    │    JSON Formatter | File Handler     │     │
-│    └──────────────────────────────────────┘    └──────────────────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?                            Observability 灞?(鍙娴嬫€?                                      鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?    鈹?
+鈹?   鈹?         Trace Context               鈹?   鈹?        Web Dashboard                鈹?    鈹?
+鈹?   鈹?  trace_id | stages[] | metrics      鈹?   鈹?       (Streamlit)                   鈹?    鈹?
+鈹?   鈹?  record_stage() | finish()          鈹?   鈹?   璇锋眰鍒楄〃 | 鑰楁椂鐎戝竷鍥?| 璇︽儏灞曞紑   鈹?    鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?    鈹?
+鈹?                                                                                            鈹?
+鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?    鈹?
+鈹?   鈹?         Evaluation Module           鈹?   鈹?        Structured Logger            鈹?    鈹?
+鈹?   鈹?  Hit Rate | MRR | Faithfulness      鈹?   鈹?   JSON Formatter | File Handler     鈹?    鈹?
+鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?   鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?    鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 ```
 
-### 5.2 目录结构
+### 5.2 鐩綍缁撴瀯
 
 ```
 smart-knowledge-hub/
-│
-├── config/                              # 配置文件目录
-│   ├── settings.yaml                    # 主配置文件 (LLM/Embedding/VectorStore 配置)
-│   └── prompts/                         # Prompt 模板目录
-│       ├── image_captioning.txt         # 图片描述生成 Prompt
-│       ├── chunk_refinement.txt         # Chunk 重写 Prompt
-│       └── rerank.txt                   # LLM Rerank Prompt
-│
-├── src/                                 # 源代码主目录
-│   │
-│   ├── mcp_server/                      # MCP Server 层 (接口层)
-│   │   ├── __init__.py
-│   │   ├── server.py                    # MCP Server 入口 (Stdio Transport)
-│   │   ├── protocol_handler.py          # JSON-RPC 协议处理
-│   │   └── tools/                       # MCP Tools 定义
-│   │       ├── __init__.py
-│   │       ├── query_knowledge_hub.py   # 主检索工具
-│   │       ├── list_collections.py      # 列出集合工具
-│   │       └── get_document_summary.py  # 文档摘要工具
-│   │
-│   ├── core/                            # Core 层 (核心业务逻辑)
-│   │   ├── __init__.py
-│   │   ├── settings.py                   # 配置加载与校验 (Settings：load_settings/validate_settings)
-│   │   ├── types.py                      # 核心数据类型/契约（Document/Chunk/ChunkRecord），供 ingestion/retrieval/mcp 复用
-│   │   │
-│   │   ├── query_engine/                # 查询引擎模块
-│   │   │   ├── __init__.py
-│   │   │   ├── query_processor.py       # 查询预处理 (关键词提取/查询扩展)
-│   │   │   ├── hybrid_search.py         # 混合检索引擎 (Dense + Sparse + RRF)
-│   │   │   ├── dense_retriever.py       # 稠密向量检索
-│   │   │   ├── sparse_retriever.py      # 稀疏检索 (BM25)
-│   │   │   ├── fusion.py                # 结果融合 (RRF 算法)
-│   │   │   └── reranker.py              # 重排序模块 (None/CrossEncoder/LLM)
-│   │   │
-│   │   ├── response/                    # 响应构建模块
-│   │   │   ├── __init__.py
-│   │   │   ├── response_builder.py      # 响应构建器
-│   │   │   ├── citation_generator.py    # 引用生成器
-│   │   │   └── multimodal_assembler.py  # 多模态内容组装 (Text + Image)
-│   │   │
-│   │   └── trace/                       # 追踪模块
-│   │       ├── __init__.py
-│   │       ├── trace_context.py         # 追踪上下文 (trace_id/stages)
-│   │       └── trace_collector.py       # 追踪收集器
-│   │
-│   ├── ingestion/                       # Ingestion Pipeline (离线数据摄取)
-│   │   ├── __init__.py
-│   │   ├── pipeline.py                  # Pipeline 主流程编排 (支持 on_progress 回调)
-│   │   ├── document_manager.py          # 文档生命周期管理 (list/delete/stats)
-│   │   │
-│   │   ├── chunking/                    # Chunking 模块 (文档切分)
-│   │   │   ├── __init__.py
-│   │   │   └── document_chunker.py      # Document → Chunks 转换（调用 libs.splitter）
-│   │   │
-│   │   ├── transform/                   # Transform 模块 (增强处理)
-│   │   │   ├── __init__.py
-│   │   │   ├── base_transform.py        # Transform 抽象基类
-│   │   │   ├── chunk_refiner.py         # Chunk 智能重组/去噪
-│   │   │   ├── metadata_enricher.py     # 语义元数据注入 (Title/Summary/Tags)
-│   │   │   └── image_captioner.py       # 图片描述生成 (Vision LLM)
-│   │   │
-│   │   ├── embedding/                   # Embedding 模块 (向量化)
-│   │   │   ├── __init__.py
-│   │   │   ├── dense_encoder.py         # 稠密向量编码
-│   │   │   ├── sparse_encoder.py        # 稀疏向量编码 (BM25)
-│   │   │   └── batch_processor.py       # 批处理优化
-│   │   │
-│   │   └── storage/                     # Storage 模块 (存储)
-│   │       ├── __init__.py
-│   │       ├── vector_upserter.py       # 向量库 Upsert
-│   │       ├── bm25_indexer.py          # BM25 索引构建
-│   │       └── image_storage.py         # 图片文件存储
-│   │
-│   ├── libs/                            # Libs 层 (可插拔抽象层)
-│   │   ├── __init__.py
-│   │   │
-│   │   ├── loader/                      # Loader 抽象 (文档加载)
-│   │   │   ├── __init__.py
-│   │   │   ├── base_loader.py           # Loader 抽象基类
-│   │   │   ├── pdf_loader.py            # PDF Loader (MarkItDown)
-│   │   │   └── file_integrity.py        # 文件完整性检查 (SHA256 哈希)
-│   │   │
-│   │   ├── llm/                         # LLM 抽象
-│   │   │   ├── __init__.py
-│   │   │   ├── base_llm.py              # LLM 抽象基类
-│   │   │   ├── llm_factory.py           # LLM 工厂
-│   │   │   ├── azure_llm.py             # Azure OpenAI 实现
-│   │   │   ├── openai_llm.py            # OpenAI 实现
-│   │   │   ├── ollama_llm.py            # Ollama 本地模型实现
-│   │   │   ├── deepseek_llm.py          # DeepSeek 实现
-│   │   │   ├── base_vision_llm.py       # Vision LLM 抽象基类（支持图像输入）
-│   │   │   └── azure_vision_llm.py      # Azure Vision 实现 (GPT-4o/GPT-4-Vision)
-│   │   │
-│   │   ├── embedding/                   # Embedding 抽象
-│   │   │   ├── __init__.py
-│   │   │   ├── base_embedding.py        # Embedding 抽象基类
-│   │   │   ├── embedding_factory.py     # Embedding 工厂
-│   │   │   ├── openai_embedding.py      # OpenAI Embedding 实现
-│   │   │   ├── azure_embedding.py       # Azure Embedding 实现
-│   │   │   └── ollama_embedding.py      # Ollama 本地模型实现
-│   │   │
-│   │   ├── splitter/                    # Splitter 抽象 (切分策略)
-│   │   │   ├── __init__.py
-│   │   │   ├── base_splitter.py         # Splitter 抽象基类
-│   │   │   ├── splitter_factory.py      # Splitter 工厂
-│   │   │   ├── recursive_splitter.py    # RecursiveCharacterTextSplitter 实现
-│   │   │   ├── semantic_splitter.py     # 语义切分实现
-│   │   │   └── fixed_length_splitter.py # 定长切分实现
-│   │   │
-│   │   ├── vector_store/                # VectorStore 抽象
-│   │   │   ├── __init__.py
-│   │   │   ├── base_vector_store.py     # VectorStore 抽象基类
-│   │   │   ├── vector_store_factory.py  # VectorStore 工厂
-│   │   │   └── chroma_store.py          # Chroma 实现
-│   │   │
-│   │   ├── reranker/                    # Reranker 抽象
-│   │   │   ├── __init__.py
-│   │   │   ├── base_reranker.py         # Reranker 抽象基类
-│   │   │   ├── reranker_factory.py      # Reranker 工厂
-│   │   │   ├── cross_encoder_reranker.py# CrossEncoder 实现
-│   │   │   └── llm_reranker.py          # LLM Rerank 实现
-│   │   │
-│   │   └── evaluator/                   # Evaluator 抽象
-│   │       ├── __init__.py
-│   │       ├── base_evaluator.py        # Evaluator 抽象基类
-│   │       ├── evaluator_factory.py     # Evaluator 工厂
-│   │       ├── ragas_evaluator.py       # Ragas 实现
-│   │       └── custom_evaluator.py      # 自定义指标实现
-│   │
-│   └── observability/                   # Observability 层 (可观测性)
-│       ├── __init__.py
-│       ├── logger.py                    # 结构化日志 (JSON Formatter)
-│       ├── dashboard/                   # Web Dashboard (可视化管理平台)
-│       │   ├── __init__.py
-│       │   ├── app.py                   # Streamlit 入口 (页面导航注册)
-│       │   ├── pages/                   # 六大功能页面
-│       │   │   ├── overview.py          # 系统总览 (组件配置 + 数据统计)
-│       │   │   ├── data_browser.py      # 数据浏览器 (文档/Chunk/图片查看)
-│       │   │   ├── ingestion_manager.py # Ingestion 管理 (触发摄取/删除文档)
-│       │   │   ├── ingestion_traces.py  # Ingestion 追踪 (摄取历史与详情)
-│       │   │   ├── query_traces.py      # Query 追踪 (查询历史与详情)
-│       │   │   └── evaluation_panel.py  # 评估面板 (运行评估/查看指标)
-│       │   └── services/                # Dashboard 数据服务层
-│       │       ├── trace_service.py     # Trace 读取服务 (解析 traces.jsonl)
-│       │       ├── data_service.py      # 数据浏览服务 (ChromaStore/ImageStorage)
-│       │       └── config_service.py    # 配置读取服务 (Settings 展示)
-│       └── evaluation/                  # 评估模块
-│           ├── __init__.py
-│           ├── eval_runner.py           # 评估执行器
-│           ├── ragas_evaluator.py       # Ragas 评估实现
-│           └── composite_evaluator.py   # 组合评估器 (多后端并行)
+鈹?
+鈹溾攢鈹€ config/                              # 閰嶇疆鏂囦欢鐩綍
+鈹?  鈹溾攢鈹€ settings.yaml                    # 涓婚厤缃枃浠?(LLM/Embedding/VectorStore 閰嶇疆)
+鈹?  鈹斺攢鈹€ prompts/                         # Prompt 妯℃澘鐩綍
+鈹?      鈹溾攢鈹€ image_captioning.txt         # 鍥剧墖鎻忚堪鐢熸垚 Prompt
+鈹?      鈹溾攢鈹€ chunk_refinement.txt         # Chunk 閲嶅啓 Prompt
+鈹?      鈹斺攢鈹€ rerank.txt                   # LLM Rerank Prompt
+鈹?
+鈹溾攢鈹€ src/                                 # 婧愪唬鐮佷富鐩綍
+鈹?  鈹?
+鈹?  鈹溾攢鈹€ mcp_server/                      # MCP Server 灞?(鎺ュ彛灞?
+鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹溾攢鈹€ server.py                    # MCP Server 鍏ュ彛 (Stdio Transport)
+鈹?  鈹?  鈹溾攢鈹€ protocol_handler.py          # JSON-RPC 鍗忚澶勭悊
+鈹?  鈹?  鈹斺攢鈹€ tools/                       # MCP Tools 瀹氫箟
+鈹?  鈹?      鈹溾攢鈹€ __init__.py
+鈹?  鈹?      鈹溾攢鈹€ query_knowledge_hub.py   # 涓绘绱㈠伐鍏?
+鈹?  鈹?      鈹溾攢鈹€ list_collections.py      # 鍒楀嚭闆嗗悎宸ュ叿
+鈹?  鈹?      鈹斺攢鈹€ get_document_summary.py  # 鏂囨。鎽樿宸ュ叿
+鈹?  鈹?
+鈹?  鈹溾攢鈹€ core/                            # Core 灞?(鏍稿績涓氬姟閫昏緫)
+鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹溾攢鈹€ settings.py                   # 閰嶇疆鍔犺浇涓庢牎楠?(Settings锛歭oad_settings/validate_settings)
+鈹?  鈹?  鈹溾攢鈹€ types.py                      # 鏍稿績鏁版嵁绫诲瀷/濂戠害锛圖ocument/Chunk/ChunkRecord锛夛紝渚?ingestion/retrieval/mcp 澶嶇敤
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ query_engine/                # 鏌ヨ寮曟搸妯″潡
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ query_processor.py       # 鏌ヨ棰勫鐞?(鍏抽敭璇嶆彁鍙?鏌ヨ鎵╁睍)
+鈹?  鈹?  鈹?  鈹溾攢鈹€ hybrid_search.py         # 娣峰悎妫€绱㈠紩鎿?(Dense + Sparse + RRF)
+鈹?  鈹?  鈹?  鈹溾攢鈹€ dense_retriever.py       # 绋犲瘑鍚戦噺妫€绱?
+鈹?  鈹?  鈹?  鈹溾攢鈹€ sparse_retriever.py      # 绋€鐤忔绱?(BM25)
+鈹?  鈹?  鈹?  鈹溾攢鈹€ fusion.py                # 缁撴灉铻嶅悎 (RRF 绠楁硶)
+鈹?  鈹?  鈹?  鈹斺攢鈹€ reranker.py              # 閲嶆帓搴忔ā鍧?(None/CrossEncoder/LLM)
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ response/                    # 鍝嶅簲鏋勫缓妯″潡
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ response_builder.py      # 鍝嶅簲鏋勫缓鍣?
+鈹?  鈹?  鈹?  鈹溾攢鈹€ citation_generator.py    # 寮曠敤鐢熸垚鍣?
+鈹?  鈹?  鈹?  鈹斺攢鈹€ multimodal_assembler.py  # 澶氭ā鎬佸唴瀹圭粍瑁?(Text + Image)
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹斺攢鈹€ trace/                       # 杩借釜妯″潡
+鈹?  鈹?      鈹溾攢鈹€ __init__.py
+鈹?  鈹?      鈹溾攢鈹€ trace_context.py         # 杩借釜涓婁笅鏂?(trace_id/stages)
+鈹?  鈹?      鈹斺攢鈹€ trace_collector.py       # 杩借釜鏀堕泦鍣?
+鈹?  鈹?
+鈹?  鈹溾攢鈹€ ingestion/                       # Ingestion Pipeline (绂荤嚎鏁版嵁鎽勫彇)
+鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹溾攢鈹€ pipeline.py                  # Pipeline 涓绘祦绋嬬紪鎺?(鏀寔 on_progress 鍥炶皟)
+鈹?  鈹?  鈹溾攢鈹€ document_manager.py          # 鏂囨。鐢熷懡鍛ㄦ湡绠＄悊 (list/delete/stats)
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ chunking/                    # Chunking 妯″潡 (鏂囨。鍒囧垎)
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹斺攢鈹€ document_chunker.py      # Document 鈫?Chunks 杞崲锛堣皟鐢?libs.splitter锛?
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ transform/                   # Transform 妯″潡 (澧炲己澶勭悊)
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_transform.py        # Transform 鎶借薄鍩虹被
+鈹?  鈹?  鈹?  鈹溾攢鈹€ chunk_refiner.py         # Chunk 鏅鸿兘閲嶇粍/鍘诲櫔
+鈹?  鈹?  鈹?  鈹溾攢鈹€ metadata_enricher.py     # 璇箟鍏冩暟鎹敞鍏?(Title/Summary/Tags)
+鈹?  鈹?  鈹?  鈹斺攢鈹€ image_captioner.py       # 鍥剧墖鎻忚堪鐢熸垚 (Vision LLM)
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ embedding/                   # Embedding 妯″潡 (鍚戦噺鍖?
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ dense_encoder.py         # 绋犲瘑鍚戦噺缂栫爜
+鈹?  鈹?  鈹?  鈹溾攢鈹€ sparse_encoder.py        # 绋€鐤忓悜閲忕紪鐮?(BM25)
+鈹?  鈹?  鈹?  鈹斺攢鈹€ batch_processor.py       # 鎵瑰鐞嗕紭鍖?
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹斺攢鈹€ storage/                     # Storage 妯″潡 (瀛樺偍)
+鈹?  鈹?      鈹溾攢鈹€ __init__.py
+鈹?  鈹?      鈹溾攢鈹€ vector_upserter.py       # 鍚戦噺搴?Upsert
+鈹?  鈹?      鈹溾攢鈹€ bm25_indexer.py          # BM25 绱㈠紩鏋勫缓
+鈹?  鈹?      鈹斺攢鈹€ image_storage.py         # 鍥剧墖鏂囦欢瀛樺偍
+鈹?  鈹?
+鈹?  鈹溾攢鈹€ libs/                            # Libs 灞?(鍙彃鎷旀娊璞″眰)
+鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ loader/                      # Loader 鎶借薄 (鏂囨。鍔犺浇)
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_loader.py           # Loader 鎶借薄鍩虹被
+鈹?  鈹?  鈹?  鈹溾攢鈹€ pdf_loader.py            # PDF Loader (MarkItDown)
+鈹?  鈹?  鈹?  鈹斺攢鈹€ file_integrity.py        # 鏂囦欢瀹屾暣鎬ф鏌?(SHA256 鍝堝笇)
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ llm/                         # LLM 鎶借薄
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_llm.py              # LLM 鎶借薄鍩虹被
+鈹?  鈹?  鈹?  鈹溾攢鈹€ llm_factory.py           # LLM 宸ュ巶
+鈹?  鈹?  鈹?  鈹溾攢鈹€ azure_llm.py             # Azure OpenAI 瀹炵幇
+鈹?  鈹?  鈹?  鈹溾攢鈹€ openai_llm.py            # OpenAI 瀹炵幇
+鈹?  鈹?  鈹?  鈹溾攢鈹€ ollama_llm.py            # Ollama 鏈湴妯″瀷瀹炵幇
+鈹?  鈹?  鈹?  鈹溾攢鈹€ deepseek_llm.py          # DeepSeek 瀹炵幇
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_vision_llm.py       # Vision LLM 鎶借薄鍩虹被锛堟敮鎸佸浘鍍忚緭鍏ワ級
+鈹?  鈹?  鈹?  鈹斺攢鈹€ azure_vision_llm.py      # Azure Vision 瀹炵幇 (GPT-4o/GPT-4-Vision)
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ embedding/                   # Embedding 鎶借薄
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_embedding.py        # Embedding 鎶借薄鍩虹被
+鈹?  鈹?  鈹?  鈹溾攢鈹€ embedding_factory.py     # Embedding 宸ュ巶
+鈹?  鈹?  鈹?  鈹溾攢鈹€ openai_embedding.py      # OpenAI Embedding 瀹炵幇
+鈹?  鈹?  鈹?  鈹溾攢鈹€ azure_embedding.py       # Azure Embedding 瀹炵幇
+鈹?  鈹?  鈹?  鈹斺攢鈹€ ollama_embedding.py      # Ollama 鏈湴妯″瀷瀹炵幇
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ splitter/                    # Splitter 鎶借薄 (鍒囧垎绛栫暐)
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_splitter.py         # Splitter 鎶借薄鍩虹被
+鈹?  鈹?  鈹?  鈹溾攢鈹€ splitter_factory.py      # Splitter 宸ュ巶
+鈹?  鈹?  鈹?  鈹溾攢鈹€ recursive_splitter.py    # RecursiveCharacterTextSplitter 瀹炵幇
+鈹?  鈹?  鈹?  鈹溾攢鈹€ semantic_splitter.py     # 璇箟鍒囧垎瀹炵幇
+鈹?  鈹?  鈹?  鈹斺攢鈹€ fixed_length_splitter.py # 瀹氶暱鍒囧垎瀹炵幇
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ vector_store/                # VectorStore 鎶借薄
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_vector_store.py     # VectorStore 鎶借薄鍩虹被
+鈹?  鈹?  鈹?  鈹溾攢鈹€ vector_store_factory.py  # VectorStore 宸ュ巶
+鈹?  鈹?  鈹?  鈹斺攢鈹€ chroma_store.py          # Chroma 瀹炵幇
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹溾攢鈹€ reranker/                    # Reranker 鎶借薄
+鈹?  鈹?  鈹?  鈹溾攢鈹€ __init__.py
+鈹?  鈹?  鈹?  鈹溾攢鈹€ base_reranker.py         # Reranker 鎶借薄鍩虹被
+鈹?  鈹?  鈹?  鈹溾攢鈹€ reranker_factory.py      # Reranker 宸ュ巶
+鈹?  鈹?  鈹?  鈹溾攢鈹€ cross_encoder_reranker.py# CrossEncoder 瀹炵幇
+鈹?  鈹?  鈹?  鈹斺攢鈹€ llm_reranker.py          # LLM Rerank 瀹炵幇
+鈹?  鈹?  鈹?
+鈹?  鈹?  鈹斺攢鈹€ evaluator/                   # Evaluator 鎶借薄
+鈹?  鈹?      鈹溾攢鈹€ __init__.py
+鈹?  鈹?      鈹溾攢鈹€ base_evaluator.py        # Evaluator 鎶借薄鍩虹被
+鈹?  鈹?      鈹溾攢鈹€ evaluator_factory.py     # Evaluator 宸ュ巶
+鈹?  鈹?      鈹溾攢鈹€ ragas_evaluator.py       # Ragas 瀹炵幇
+鈹?  鈹?      鈹斺攢鈹€ custom_evaluator.py      # 鑷畾涔夋寚鏍囧疄鐜?
+鈹?  鈹?
+鈹?  鈹斺攢鈹€ observability/                   # Observability 灞?(鍙娴嬫€?
+鈹?      鈹溾攢鈹€ __init__.py
+鈹?      鈹溾攢鈹€ logger.py                    # 缁撴瀯鍖栨棩蹇?(JSON Formatter)
+鈹?      鈹溾攢鈹€ dashboard/                   # Web Dashboard (鍙鍖栫鐞嗗钩鍙?
+鈹?      鈹?  鈹溾攢鈹€ __init__.py
+鈹?      鈹?  鈹溾攢鈹€ app.py                   # Streamlit 鍏ュ彛 (椤甸潰瀵艰埅娉ㄥ唽)
+鈹?      鈹?  鈹溾攢鈹€ pages/                   # 鍏ぇ鍔熻兘椤甸潰
+鈹?      鈹?  鈹?  鈹溾攢鈹€ overview.py          # 绯荤粺鎬昏 (缁勪欢閰嶇疆 + 鏁版嵁缁熻)
+鈹?      鈹?  鈹?  鈹溾攢鈹€ data_browser.py      # 鏁版嵁娴忚鍣?(鏂囨。/Chunk/鍥剧墖鏌ョ湅)
+鈹?      鈹?  鈹?  鈹溾攢鈹€ ingestion_manager.py # Ingestion 绠＄悊 (瑙﹀彂鎽勫彇/鍒犻櫎鏂囨。)
+鈹?      鈹?  鈹?  鈹溾攢鈹€ ingestion_traces.py  # Ingestion 杩借釜 (鎽勫彇鍘嗗彶涓庤鎯?
+鈹?      鈹?  鈹?  鈹溾攢鈹€ query_traces.py      # Query 杩借釜 (鏌ヨ鍘嗗彶涓庤鎯?
+鈹?      鈹?  鈹?  鈹斺攢鈹€ evaluation_panel.py  # 璇勪及闈㈡澘 (杩愯璇勪及/鏌ョ湅鎸囨爣)
+鈹?      鈹?  鈹斺攢鈹€ services/                # Dashboard 鏁版嵁鏈嶅姟灞?
+鈹?      鈹?      鈹溾攢鈹€ trace_service.py     # Trace 璇诲彇鏈嶅姟 (瑙ｆ瀽 traces.jsonl)
+鈹?      鈹?      鈹溾攢鈹€ data_service.py      # 鏁版嵁娴忚鏈嶅姟 (ChromaStore/ImageStorage)
+鈹?      鈹?      鈹斺攢鈹€ config_service.py    # 閰嶇疆璇诲彇鏈嶅姟 (Settings 灞曠ず)
+鈹?      鈹斺攢鈹€ evaluation/                  # 璇勪及妯″潡
+鈹?          鈹溾攢鈹€ __init__.py
+鈹?          鈹溾攢鈹€ eval_runner.py           # 璇勪及鎵ц鍣?
+鈹?          鈹溾攢鈹€ ragas_evaluator.py       # Ragas 璇勪及瀹炵幇
+鈹?          鈹斺攢鈹€ composite_evaluator.py   # 缁勫悎璇勪及鍣?(澶氬悗绔苟琛?
 
-│
-├── data/                                # 数据目录
-│   ├── documents/                       # 原始文档存放
-│   │   └── {collection}/                # 按集合分类
-│   ├── images/                          # 提取的图片存放
-│   │   └── {collection}/                # 按集合分类（实际存储在 {doc_hash}/ 子目录下）
-│   └── db/                              # 数据库与索引文件目录
-│       ├── ingestion_history.db         # 文件完整性历史记录 (SQLite)
-│       │                                # 表结构：file_hash, file_path, status, processed_at, error_msg
-│       │                                # 用途：增量摄取，避免重复处理未变更文件
-│       ├── image_index.db               # 图片索引映射 (SQLite)
-│       │                                # 表结构：image_id, file_path, collection, doc_hash, page_num
-│       │                                # 用途：快速查询 image_id → 本地文件路径，支持图片检索与引用
-│       ├── chroma/                      # Chroma 向量库目录
-│       │                                # 存储 Dense Vector、Sparse Vector 与 Chunk Metadata
-│       └── bm25/                        # BM25 索引目录
-│                                        # 存储倒排索引与 IDF 统计信息（当前使用 pickle）
-│
-├── cache/                               # 缓存目录
-│   ├── embeddings/                      # Embedding 缓存 (按内容哈希)
-│   ├── captions/                        # 图片描述缓存
-│   └── processing/                      # 处理状态缓存 (文件哈希/Chunk 哈希)
-│
-├── logs/                                # 日志目录
-│   ├── traces.jsonl                     # 追踪日志 (JSON Lines)
-│   └── app.log                          # 应用日志
-│
-├── tests/                               # 测试目录
-│   ├── unit/                            # 单元测试
-│   │   ├── test_dense_retriever.py      # D2: 稠密检索器测试
-│   │   ├── test_sparse_retriever.py     # D3: 稀疏检索器测试
-│   │   ├── test_fusion_rrf.py           # D4: RRF 融合测试
-│   │   ├── test_reranker_fallback.py    # D6: Reranker 回退测试
-│   │   ├── test_protocol_handler.py     # E2: 协议处理器测试
-│   │   ├── test_response_builder.py     # E3: 响应构建器测试
-│   │   ├── test_list_collections.py     # E4: 集合列表工具测试
-│   │   ├── test_get_document_summary.py # E5: 文档摘要工具测试
-│   │   ├── test_trace_context.py        # F1: 追踪上下文测试
-│   │   ├── test_jsonl_logger.py         # F2: JSON Lines 日志测试
-│   │   └── ...                          # 其他已有单元测试
-│   ├── integration/                     # 集成测试
-│   │   ├── test_ingestion_pipeline.py
-│   │   ├── test_hybrid_search.py        # D5: 混合检索集成测试
-│   │   └── test_mcp_server.py           # E1-E6: MCP 服务器集成测试
-│   ├── e2e/                             # 端到端测试
-│   │   ├── test_data_ingestion.py
-│   │   ├── test_recall.py               # G2: 召回回归测试
-│   │   └── test_mcp_client.py           # G1: MCP Client 模拟测试
-│   └── fixtures/                        # 测试数据
-│       ├── sample_documents/
-│       └── golden_test_set.json         # F5/G2: 黄金测试集
-│
-├── scripts/                             # 脚本目录
-│   ├── ingest.py                        # 数据摄取脚本（离线摄取入口）
-│   ├── query.py                         # 查询测试脚本（在线查询入口）
-│   ├── evaluate.py                      # 评估运行脚本
-│   └── start_dashboard.py               # Dashboard 启动脚本
-│
-├── main.py                              # MCP Server 启动入口
-├── pyproject.toml                       # Python 项目配置
-├── requirements.txt                     # 依赖列表
-└── README.md                            # 项目说明
+鈹?
+鈹溾攢鈹€ data/                                # 鏁版嵁鐩綍
+鈹?  鈹溾攢鈹€ documents/                       # 鍘熷鏂囨。瀛樻斁
+鈹?  鈹?  鈹斺攢鈹€ {collection}/                # 鎸夐泦鍚堝垎绫?
+鈹?  鈹溾攢鈹€ images/                          # 鎻愬彇鐨勫浘鐗囧瓨鏀?
+鈹?  鈹?  鈹斺攢鈹€ {collection}/                # 鎸夐泦鍚堝垎绫伙紙瀹為檯瀛樺偍鍦?{doc_hash}/ 瀛愮洰褰曚笅锛?
+鈹?  鈹斺攢鈹€ db/                              # 鏁版嵁搴撲笌绱㈠紩鏂囦欢鐩綍
+鈹?      鈹溾攢鈹€ ingestion_history.db         # 鏂囦欢瀹屾暣鎬у巻鍙茶褰?(SQLite)
+鈹?      鈹?                               # 琛ㄧ粨鏋勶細file_hash, file_path, status, processed_at, error_msg
+鈹?      鈹?                               # 鐢ㄩ€旓細澧為噺鎽勫彇锛岄伩鍏嶉噸澶嶅鐞嗘湭鍙樻洿鏂囦欢
+鈹?      鈹溾攢鈹€ image_index.db               # 鍥剧墖绱㈠紩鏄犲皠 (SQLite)
+鈹?      鈹?                               # 琛ㄧ粨鏋勶細image_id, file_path, collection, doc_hash, page_num
+鈹?      鈹?                               # 鐢ㄩ€旓細蹇€熸煡璇?image_id 鈫?鏈湴鏂囦欢璺緞锛屾敮鎸佸浘鐗囨绱笌寮曠敤
+鈹?      鈹溾攢鈹€ chroma/                      # Chroma 鍚戦噺搴撶洰褰?
+鈹?      鈹?                               # 瀛樺偍 Dense Vector銆丼parse Vector 涓?Chunk Metadata
+鈹?      鈹斺攢鈹€ bm25/                        # BM25 绱㈠紩鐩綍
+鈹?                                       # 瀛樺偍鍊掓帓绱㈠紩涓?IDF 缁熻淇℃伅锛堝綋鍓嶄娇鐢?pickle锛?
+鈹?
+鈹溾攢鈹€ cache/                               # 缂撳瓨鐩綍
+鈹?  鈹溾攢鈹€ embeddings/                      # Embedding 缂撳瓨 (鎸夊唴瀹瑰搱甯?
+鈹?  鈹溾攢鈹€ captions/                        # 鍥剧墖鎻忚堪缂撳瓨
+鈹?  鈹斺攢鈹€ processing/                      # 澶勭悊鐘舵€佺紦瀛?(鏂囦欢鍝堝笇/Chunk 鍝堝笇)
+鈹?
+鈹溾攢鈹€ logs/                                # 鏃ュ織鐩綍
+鈹?  鈹溾攢鈹€ traces.jsonl                     # 杩借釜鏃ュ織 (JSON Lines)
+鈹?  鈹斺攢鈹€ app.log                          # 搴旂敤鏃ュ織
+鈹?
+鈹溾攢鈹€ tests/                               # 娴嬭瘯鐩綍
+鈹?  鈹溾攢鈹€ unit/                            # 鍗曞厓娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_dense_retriever.py      # D2: 绋犲瘑妫€绱㈠櫒娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_sparse_retriever.py     # D3: 绋€鐤忔绱㈠櫒娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_fusion_rrf.py           # D4: RRF 铻嶅悎娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_reranker_fallback.py    # D6: Reranker 鍥為€€娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_protocol_handler.py     # E2: 鍗忚澶勭悊鍣ㄦ祴璇?
+鈹?  鈹?  鈹溾攢鈹€ test_response_builder.py     # E3: 鍝嶅簲鏋勫缓鍣ㄦ祴璇?
+鈹?  鈹?  鈹溾攢鈹€ test_list_collections.py     # E4: 闆嗗悎鍒楄〃宸ュ叿娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_get_document_summary.py # E5: 鏂囨。鎽樿宸ュ叿娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_trace_context.py        # F1: 杩借釜涓婁笅鏂囨祴璇?
+鈹?  鈹?  鈹溾攢鈹€ test_jsonl_logger.py         # F2: JSON Lines 鏃ュ織娴嬭瘯
+鈹?  鈹?  鈹斺攢鈹€ ...                          # 鍏朵粬宸叉湁鍗曞厓娴嬭瘯
+鈹?  鈹溾攢鈹€ integration/                     # 闆嗘垚娴嬭瘯
+鈹?  鈹?  鈹溾攢鈹€ test_ingestion_pipeline.py
+鈹?  鈹?  鈹溾攢鈹€ test_hybrid_search.py        # D5: 娣峰悎妫€绱㈤泦鎴愭祴璇?
+鈹?  鈹?  鈹斺攢鈹€ test_mcp_server.py           # E1-E6: MCP 鏈嶅姟鍣ㄩ泦鎴愭祴璇?
+鈹?  鈹溾攢鈹€ e2e/                             # 绔埌绔祴璇?
+鈹?  鈹?  鈹溾攢鈹€ test_data_ingestion.py
+鈹?  鈹?  鈹溾攢鈹€ test_recall.py               # G2: 鍙洖鍥炲綊娴嬭瘯
+鈹?  鈹?  鈹斺攢鈹€ test_mcp_client.py           # G1: MCP Client 妯℃嫙娴嬭瘯
+鈹?  鈹斺攢鈹€ fixtures/                        # 娴嬭瘯鏁版嵁
+鈹?      鈹溾攢鈹€ sample_documents/
+鈹?      鈹斺攢鈹€ golden_test_set.json         # F5/G2: 榛勯噾娴嬭瘯闆?
+鈹?
+鈹溾攢鈹€ scripts/                             # 鑴氭湰鐩綍
+鈹?  鈹溾攢鈹€ ingest.py                        # 鏁版嵁鎽勫彇鑴氭湰锛堢绾挎憚鍙栧叆鍙ｏ級
+鈹?  鈹溾攢鈹€ query.py                         # 鏌ヨ娴嬭瘯鑴氭湰锛堝湪绾挎煡璇㈠叆鍙ｏ級
+鈹?  鈹溾攢鈹€ evaluate.py                      # 璇勪及杩愯鑴氭湰
+鈹?  鈹斺攢鈹€ start_dashboard.py               # Dashboard 鍚姩鑴氭湰
+鈹?
+鈹溾攢鈹€ main.py                              # MCP Server 鍚姩鍏ュ彛
+鈹溾攢鈹€ pyproject.toml                       # Python 椤圭洰閰嶇疆
+鈹溾攢鈹€ requirements.txt                     # 渚濊禆鍒楄〃
+鈹斺攢鈹€ README.md                            # 椤圭洰璇存槑
 ```
 
-### 5.3 模块说明
+### 5.3 妯″潡璇存槑
 
-#### 5.3.1 MCP Server 层
+#### 5.3.1 MCP Server 灞?
 
-| 模块 | 职责 | 关键技术点 |
+| 妯″潡 | 鑱岃矗 | 鍏抽敭鎶€鏈偣 |
 |-----|-----|----------|
-| `server.py` | MCP Server 主入口，处理 Stdio Transport 通信 | Python MCP SDK，JSON-RPC 2.0 |
-| `protocol_handler.py` | 协议解析与能力协商 | `initialize`、`tools/list`、`tools/call` |
-| `tools/*` | 对外暴露的工具函数实现 | 装饰器定义，参数校验，响应格式化 |
+| `server.py` | MCP Server 涓诲叆鍙ｏ紝澶勭悊 Stdio Transport 閫氫俊 | Python MCP SDK锛孞SON-RPC 2.0 |
+| `protocol_handler.py` | 鍗忚瑙ｆ瀽涓庤兘鍔涘崗鍟?| `initialize`銆乣tools/list`銆乣tools/call` |
+| `tools/*` | 瀵瑰鏆撮湶鐨勫伐鍏峰嚱鏁板疄鐜?| 瑁呴グ鍣ㄥ畾涔夛紝鍙傛暟鏍￠獙锛屽搷搴旀牸寮忓寲 |
 
-#### 5.3.2 Core 层
+#### 5.3.2 Core 灞?
 
-| 模块 | 职责 | 关键技术点 |
+| 妯″潡 | 鑱岃矗 | 鍏抽敭鎶€鏈偣 |
 |-----|-----|----------|
-| `settings.py` | 配置加载与校验 | 读取 `config/settings.yaml`，解析为 `Settings`，必填字段校验（fail-fast） |
-| `types.py` | 核心数据类型/契约（全链路复用） | 定义 `Document/Chunk/ChunkRecord/ProcessedQuery/RetrievalResult`；序列化稳定；作为 ingestion/retrieval/mcp 的数据契约中心 |
-| `query_processor.py` | 查询预处理 | 关键词提取、同义词扩展、Metadata 解析 |
-| `hybrid_search.py` | 混合检索编排 | 并行 Dense/Sparse 召回，结果融合，Metadata 过滤 |
-| `dense_retriever.py` | 语义向量检索 | Query Embedding + VectorStore 检索，Cosine Similarity |
-| `sparse_retriever.py` | BM25 关键词检索 | 倒排索引查询，TF-IDF 打分 |
-| `fusion.py` | 结果融合 | RRF 算法，排名倒数加权 |
-| `reranker.py` | 精排重排 | CrossEncoder / LLM Rerank / Fallback 回退 |
-| `response_builder.py` | 响应构建 | MCP 响应格式化，Markdown 生成 |
-| `citation_generator.py` | 引用生成 | 从检索结果生成结构化引用列表 |
-| `multimodal_assembler.py` | 多模态组装 | Text + Image Base64 编码，MCP 多内容类型 |
-| `trace_context.py` | 追踪上下文 | trace_id 生成，阶段记录，finish 汇总 |
-| `trace_collector.py` | 追踪收集器 | 收集 trace 并触发持久化到 JSON Lines |
+| `settings.py` | 閰嶇疆鍔犺浇涓庢牎楠?| 璇诲彇 `config/settings.yaml`锛岃В鏋愪负 `Settings`锛屽繀濉瓧娈垫牎楠岋紙fail-fast锛?|
+| `types.py` | 鏍稿績鏁版嵁绫诲瀷/濂戠害锛堝叏閾捐矾澶嶇敤锛?| 瀹氫箟 `Document/Chunk/ChunkRecord/ProcessedQuery/RetrievalResult`锛涘簭鍒楀寲绋冲畾锛涗綔涓?ingestion/retrieval/mcp 鐨勬暟鎹绾︿腑蹇?|
+| `query_processor.py` | 鏌ヨ棰勫鐞?| 鍏抽敭璇嶆彁鍙栥€佸悓涔夎瘝鎵╁睍銆丮etadata 瑙ｆ瀽 |
+| `hybrid_search.py` | 娣峰悎妫€绱㈢紪鎺?| 骞惰 Dense/Sparse 鍙洖锛岀粨鏋滆瀺鍚堬紝Metadata 杩囨护 |
+| `dense_retriever.py` | 璇箟鍚戦噺妫€绱?| Query Embedding + VectorStore 妫€绱紝Cosine Similarity |
+| `sparse_retriever.py` | BM25 鍏抽敭璇嶆绱?| 鍊掓帓绱㈠紩鏌ヨ锛孴F-IDF 鎵撳垎 |
+| `fusion.py` | 缁撴灉铻嶅悎 | RRF 绠楁硶锛屾帓鍚嶅€掓暟鍔犳潈 |
+| `reranker.py` | 绮炬帓閲嶆帓 | CrossEncoder / LLM Rerank / Fallback 鍥為€€ |
+| `response_builder.py` | 鍝嶅簲鏋勫缓 | MCP 鍝嶅簲鏍煎紡鍖栵紝Markdown 鐢熸垚 |
+| `citation_generator.py` | 寮曠敤鐢熸垚 | 浠庢绱㈢粨鏋滅敓鎴愮粨鏋勫寲寮曠敤鍒楄〃 |
+| `multimodal_assembler.py` | 澶氭ā鎬佺粍瑁?| Text + Image Base64 缂栫爜锛孧CP 澶氬唴瀹圭被鍨?|
+| `trace_context.py` | 杩借釜涓婁笅鏂?| trace_id 鐢熸垚锛岄樁娈佃褰曪紝finish 姹囨€?|
+| `trace_collector.py` | 杩借釜鏀堕泦鍣?| 鏀堕泦 trace 骞惰Е鍙戞寔涔呭寲鍒?JSON Lines |
 
-#### 5.3.3 Scripts 层（命令行入口）
+#### 5.3.3 Scripts 灞傦紙鍛戒护琛屽叆鍙ｏ級
 
-| 脚本 | 职责 | 关键技术点 |
+| 鑴氭湰 | 鑱岃矗 | 鍏抽敭鎶€鏈偣 |
 |-----|-----|----------|
-| `ingest.py` | 离线数据摄取入口 | CLI 参数解析，调用 Ingestion Pipeline，支持 `--collection`/`--path`/`--force` |
-| `query.py` | 在线查询测试入口 | CLI 参数解析，调用 HybridSearch + Reranker，支持 `--query`/`--top-k`/`--verbose` |
-| `evaluate.py` | 评估运行入口 | 加载 golden_test_set，运行评估，输出 metrics |
-| `start_dashboard.py` | Dashboard 启动入口 | Streamlit 应用启动 |
+| `ingest.py` | 绂荤嚎鏁版嵁鎽勫彇鍏ュ彛 | CLI 鍙傛暟瑙ｆ瀽锛岃皟鐢?Ingestion Pipeline锛屾敮鎸?`--collection`/`--path`/`--force` |
+| `query.py` | 鍦ㄧ嚎鏌ヨ娴嬭瘯鍏ュ彛 | CLI 鍙傛暟瑙ｆ瀽锛岃皟鐢?HybridSearch + Reranker锛屾敮鎸?`--query`/`--top-k`/`--verbose` |
+| `evaluate.py` | 璇勪及杩愯鍏ュ彛 | 鍔犺浇 golden_test_set锛岃繍琛岃瘎浼帮紝杈撳嚭 metrics |
+| `start_dashboard.py` | Dashboard 鍚姩鍏ュ彛 | Streamlit 搴旂敤鍚姩 |
 
-#### 5.3.4 Ingestion Pipeline 层
+#### 5.3.4 Ingestion Pipeline 灞?
 
-| 模块 | 职责 | 关键技术点 |
+| 妯″潡 | 鑱岃矗 | 鍏抽敭鎶€鏈偣 |
 |-----|-----|----------|
-| `pipeline.py` | Pipeline 流程编排 | 串行执行（或分阶段可观测），异常处理，增量更新；支持 `on_progress` 回调；统一使用 `core/types.py` 的数据契约 |
-| `document_manager.py` | 文档生命周期管理 | list/delete/stats 操作；跨 4 个存储（Chroma/BM25/ImageStorage/FileIntegrity）的协调删除；供 Dashboard 与 CLI 调用 |
+| `pipeline.py` | Pipeline 娴佺▼缂栨帓 | 涓茶鎵ц锛堟垨鍒嗛樁娈靛彲瑙傛祴锛夛紝寮傚父澶勭悊锛屽閲忔洿鏂帮紱鏀寔 `on_progress` 鍥炶皟锛涚粺涓€浣跨敤 `core/types.py` 鐨勬暟鎹绾?|
+| `document_manager.py` | 鏂囨。鐢熷懡鍛ㄦ湡绠＄悊 | list/delete/stats 鎿嶄綔锛涜法 4 涓瓨鍌紙Chroma/BM25/ImageStorage/FileIntegrity锛夌殑鍗忚皟鍒犻櫎锛涗緵 Dashboard 涓?CLI 璋冪敤 |
 
-| `chunking/document_chunker.py` | Document→Chunks 转换 | 调用 `libs.splitter` 进行文本切分；生成稳定 Chunk ID（格式：`{doc_id}_{index:04d}_{hash}`）；继承 metadata；建立 source_ref 溯源链接 |
-| `transform/base_transform.py` | Transform 抽象 | 原子化、幂等；可独立重试；失败降级不阻塞 |
-| `transform/chunk_refiner.py` | Chunk 智能重组 | 规则去噪 + 可选 LLM 二次加工；可回退 |
-| `transform/metadata_enricher.py` | 元数据增强 | Title/Summary/Tags 规则生成 + 可选 LLM 增强 |
-| `transform/image_captioner.py` | 图片描述生成 | Vision LLM；写回 metadata/text；禁用/失败降级 |
-| `embedding/dense_encoder.py` | 稠密向量编码 | 通过 `libs.embedding` 调用具体 provider；批处理 |
-| `embedding/sparse_encoder.py` | 稀疏向量编码 | BM25 编码/统计（或替换实现）；批处理 |
-| `storage/vector_upserter.py` | 向量存储写入 | 通过 `libs.vector_store` Upsert；幂等；metadata 完整 |
+| `chunking/document_chunker.py` | Document鈫扖hunks 杞崲 | 璋冪敤 `libs.splitter` 杩涜鏂囨湰鍒囧垎锛涚敓鎴愮ǔ瀹?Chunk ID锛堟牸寮忥細`{doc_id}_{index:04d}_{hash}`锛夛紱缁ф壙 metadata锛涘缓绔?source_ref 婧簮閾炬帴 |
+| `transform/base_transform.py` | Transform 鎶借薄 | 鍘熷瓙鍖栥€佸箓绛夛紱鍙嫭绔嬮噸璇曪紱澶辫触闄嶇骇涓嶉樆濉?|
+| `transform/chunk_refiner.py` | Chunk 鏅鸿兘閲嶇粍 | 瑙勫垯鍘诲櫔 + 鍙€?LLM 浜屾鍔犲伐锛涘彲鍥為€€ |
+| `transform/metadata_enricher.py` | 鍏冩暟鎹寮?| Title/Summary/Tags 瑙勫垯鐢熸垚 + 鍙€?LLM 澧炲己 |
+| `transform/image_captioner.py` | 鍥剧墖鎻忚堪鐢熸垚 | Vision LLM锛涘啓鍥?metadata/text锛涚鐢?澶辫触闄嶇骇 |
+| `embedding/dense_encoder.py` | 绋犲瘑鍚戦噺缂栫爜 | 閫氳繃 `libs.embedding` 璋冪敤鍏蜂綋 provider锛涙壒澶勭悊 |
+| `embedding/sparse_encoder.py` | 绋€鐤忓悜閲忕紪鐮?| BM25 缂栫爜/缁熻锛堟垨鏇挎崲瀹炵幇锛夛紱鎵瑰鐞?|
+| `storage/vector_upserter.py` | 鍚戦噺瀛樺偍鍐欏叆 | 閫氳繃 `libs.vector_store` Upsert锛涘箓绛夛紱metadata 瀹屾暣 |
 
-#### 5.3.5 Libs 层 (可插拔抽象)
+#### 5.3.5 Libs 灞?(鍙彃鎷旀娊璞?
 
-| 抽象接口 | 当前默认实现 | 可替换选项 |
+| 鎶借薄鎺ュ彛 | 褰撳墠榛樿瀹炵幇 | 鍙浛鎹㈤€夐」 |
 |---------|------------|----------|
 | `LLMClient` | Azure OpenAI | OpenAI / Ollama / DeepSeek |
 | `VisionLLMClient` | Azure OpenAI Vision (GPT-4o) | OpenAI Vision / Ollama Vision (LLaVA) |
-| `EmbeddingClient` | OpenAI text-embedding-3 | BGE / Ollama 本地模型 |
-| `Loader` | PDF Loader（MarkItDown） | Markdown/HTML/Code Loader 等 |
-| `FileIntegrity` | SQLite (`data/db/ingestion_history.db`) | Redis（分布式）/ PostgreSQL（企业级）/ JSON文件（测试） |
+| `EmbeddingClient` | OpenAI text-embedding-3 | BGE / Ollama 鏈湴妯″瀷 |
+| `Loader` | PDF Loader锛圡arkItDown锛?| Markdown/HTML/Code Loader 绛?|
+| `FileIntegrity` | SQLite (`data/db/ingestion_history.db`) | Redis锛堝垎甯冨紡锛? PostgreSQL锛堜紒涓氱骇锛? JSON鏂囦欢锛堟祴璇曪級 |
 | `Splitter` | RecursiveCharacterTextSplitter | Semantic / FixedLen |
 | `VectorStore` | Chroma | Qdrant / Pinecone / Milvus |
-| `Reranker` | CrossEncoder | LLM Rerank / None (关闭) |
-| `Evaluator` | Ragas | DeepEval / 自定义指标 |
+| `Reranker` | CrossEncoder | LLM Rerank / None (鍏抽棴) |
+| `Evaluator` | Ragas | DeepEval / 鑷畾涔夋寚鏍?|
 
-#### 5.3.6 Observability 层
+#### 5.3.6 Observability 灞?
 
-| 模块 | 职责 | 关键技术点 |
+| 妯″潡 | 鑱岃矗 | 鍏抽敭鎶€鏈偣 |
 |-----|-----|----------|
-| `logger.py` | 结构化日志 | JSON Formatter，JSON Lines 输出 |
-| `trace_context.py` | 请求级追踪 | trace_id，trace_type（query/ingestion），阶段耗时记录，`finish()` + `to_dict()` 序列化 |
-| `trace_collector.py` | 追踪收集器 | 收集 trace 并触发持久化到 JSON Lines |
-| `dashboard/app.py` | Dashboard 入口 | Streamlit 多页面应用，`st.navigation` 页面注册 |
-| `dashboard/pages/overview.py` | 系统总览 | 组件配置卡片，数据资产统计 |
-| `dashboard/pages/data_browser.py` | 数据浏览器 | 文档列表，Chunk 详情，图片预览 |
-| `dashboard/pages/ingestion_manager.py` | Ingestion 管理 | 文件上传，摄取触发（进度条），文档删除 |
-| `dashboard/pages/ingestion_traces.py` | Ingestion 追踪 | 摄取历史，阶段耗时瀑布图 |
-| `dashboard/pages/query_traces.py` | Query 追踪 | 查询历史，Dense/Sparse 对比，Rerank 变化 |
-| `dashboard/pages/evaluation_panel.py` | 评估面板 | 运行评估，指标展示，历史趋势（Phase H 实现） |
-| `dashboard/services/trace_service.py` | Trace 数据服务 | 解析 traces.jsonl，按 trace_type 分类 |
-| `dashboard/services/data_service.py` | 数据浏览服务 | 封装 ChromaStore/ImageStorage 读取 |
-| `dashboard/services/config_service.py` | 配置读取服务 | 封装 Settings 展示 |
-| `evaluation/eval_runner.py` | 评估执行 | 黄金测试集，指标计算，报告生成 |
-| `evaluation/ragas_evaluator.py` | Ragas 评估 | Faithfulness, Answer Relevancy, Context Precision |
-| `evaluation/composite_evaluator.py` | 组合评估器 | 多后端并行执行，结果汇总 |
+| `logger.py` | 缁撴瀯鍖栨棩蹇?| JSON Formatter锛孞SON Lines 杈撳嚭 |
+| `trace_context.py` | 璇锋眰绾ц拷韪?| trace_id锛宼race_type锛坬uery/ingestion锛夛紝闃舵鑰楁椂璁板綍锛宍finish()` + `to_dict()` 搴忓垪鍖?|
+| `trace_collector.py` | 杩借釜鏀堕泦鍣?| 鏀堕泦 trace 骞惰Е鍙戞寔涔呭寲鍒?JSON Lines |
+| `dashboard/app.py` | Dashboard 鍏ュ彛 | Streamlit 澶氶〉闈㈠簲鐢紝`st.navigation` 椤甸潰娉ㄥ唽 |
+| `dashboard/pages/overview.py` | 绯荤粺鎬昏 | 缁勪欢閰嶇疆鍗＄墖锛屾暟鎹祫浜х粺璁?|
+| `dashboard/pages/data_browser.py` | 鏁版嵁娴忚鍣?| 鏂囨。鍒楄〃锛孋hunk 璇︽儏锛屽浘鐗囬瑙?|
+| `dashboard/pages/ingestion_manager.py` | Ingestion 绠＄悊 | 鏂囦欢涓婁紶锛屾憚鍙栬Е鍙戯紙杩涘害鏉★級锛屾枃妗ｅ垹闄?|
+| `dashboard/pages/ingestion_traces.py` | Ingestion 杩借釜 | 鎽勫彇鍘嗗彶锛岄樁娈佃€楁椂鐎戝竷鍥?|
+| `dashboard/pages/query_traces.py` | Query 杩借釜 | 鏌ヨ鍘嗗彶锛孌ense/Sparse 瀵规瘮锛孯erank 鍙樺寲 |
+| `dashboard/pages/evaluation_panel.py` | 璇勪及闈㈡澘 | 杩愯璇勪及锛屾寚鏍囧睍绀猴紝鍘嗗彶瓒嬪娍锛圥hase H 瀹炵幇锛?|
+| `dashboard/services/trace_service.py` | Trace 鏁版嵁鏈嶅姟 | 瑙ｆ瀽 traces.jsonl锛屾寜 trace_type 鍒嗙被 |
+| `dashboard/services/data_service.py` | 鏁版嵁娴忚鏈嶅姟 | 灏佽 ChromaStore/ImageStorage 璇诲彇 |
+| `dashboard/services/config_service.py` | 閰嶇疆璇诲彇鏈嶅姟 | 灏佽 Settings 灞曠ず |
+| `evaluation/eval_runner.py` | 璇勪及鎵ц | 榛勯噾娴嬭瘯闆嗭紝鎸囨爣璁＄畻锛屾姤鍛婄敓鎴?|
+| `evaluation/ragas_evaluator.py` | Ragas 璇勪及 | Faithfulness, Answer Relevancy, Context Precision |
+| `evaluation/composite_evaluator.py` | 缁勫悎璇勪及鍣?| 澶氬悗绔苟琛屾墽琛岋紝缁撴灉姹囨€?|
 
 
-### 5.4 数据流说明
+### 5.4 鏁版嵁娴佽鏄?
 
-#### 5.4.1 离线数据摄取流 (Ingestion Flow)
-
-```
-原始文档 (PDF)
-      │
-      ▼
-┌─────────────────┐     未变更则跳过
-│ File Integrity  │───────────────────────────► 结束
-│   (SHA256)      │
-└────────┬────────┘
-         │ 新文件/已变更
-         ▼
-┌─────────────────┐
-│     Loader      │  PDF → Markdown + 图片提取 + 元数据收集
-│   (MarkItDown)  │
-└────────┬────────┘
-         │ Document (text + metadata.images)
-         ▼
-┌─────────────────┐
-│    Splitter     │  按语义边界切分，保留图片引用
-│ (Recursive)     │
-└────────┬────────┘
-         │ Chunks[] (with image_refs)
-         ▼
-┌─────────────────┐
-│   Transform     │  LLM 重写 + 元数据注入 + 图片描述生成
-│ (Enrichment)    │
-└────────┬────────┘
-         │ Enriched Chunks[] (with captions in text)
-         ▼
-┌─────────────────┐
-│   Embedding     │  Dense (OpenAI) + Sparse (BM25) 双路编码
-│  (Dual Path)    │
-└────────┬────────┘
-         │ Vectors + Chunks + Metadata
-         ▼
-┌─────────────────┐
-│    Upsert       │  Chroma Upsert (幂等) + BM25 Index + 图片存储
-│   (Storage)     │
-└─────────────────┘
-```
-
-#### 5.4.2 在线查询流 (Query Flow)
+#### 5.4.1 绂荤嚎鏁版嵁鎽勫彇娴?(Ingestion Flow)
 
 ```
-用户查询 (via MCP Client)
-      │
-      ▼
-┌─────────────────┐
-│  MCP Server     │  JSON-RPC 解析，工具路由
-│ (Stdio Transport)│
-└────────┬────────┘
-         │ query + params
-         ▼
-┌─────────────────┐
-│ Query Processor │  关键词提取 + 同义词扩展 + Metadata 解析
-│                 │
-└────────┬────────┘
-         │ processed_query + filters
-         ▼
-┌─────────────────────────────────────────────┐
-│              Hybrid Search                  │
-│  ┌─────────────┐          ┌─────────────┐   │
-│  │Dense Retrieval│  并行   │Sparse Retrieval│   │
-│  │ (Embedding)  │◄───────►│  (BM25)     │   │
-│  └──────┬──────┘          └──────┬──────┘   │
-│         │                        │          │
-│         └────────┬───────────────┘          │
-│                  ▼                          │
-│         ┌─────────────┐                     │
-│         │   Fusion    │  RRF 融合           │
-│         │   (RRF)     │                     │
-│         └──────┬──────┘                     │
-└────────────────┼────────────────────────────┘
-                 │ Top-M 候选
-                 ▼
-┌─────────────────┐
-│    Reranker     │  CrossEncoder / LLM / None
-│   (Optional)    │
-└────────┬────────┘
-         │ Top-K 精排结果
-         ▼
-┌─────────────────┐
-│ Response Builder│  引用生成 + 图片 Base64 编码 + MCP 格式化
-│                 │
-└────────┬────────┘
-         │ MCP Response (TextContent + ImageContent)
-         ▼
-返回给 MCP Client (Copilot / Claude Desktop)
+鍘熷鏂囨。 (PDF)
+      鈹?
+      鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?    鏈彉鏇村垯璺宠繃
+鈹?File Integrity  鈹傗攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈻?缁撴潫
+鈹?  (SHA256)      鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?鏂版枃浠?宸插彉鏇?
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?    Loader      鈹? PDF 鈫?Markdown + 鍥剧墖鎻愬彇 + 鍏冩暟鎹敹闆?
+鈹?  (MarkItDown)  鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?Document (text + metadata.images)
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?   Splitter     鈹? 鎸夎涔夎竟鐣屽垏鍒嗭紝淇濈暀鍥剧墖寮曠敤
+鈹?(Recursive)     鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?Chunks[] (with image_refs)
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?  Transform     鈹? LLM 閲嶅啓 + 鍏冩暟鎹敞鍏?+ 鍥剧墖鎻忚堪鐢熸垚
+鈹?(Enrichment)    鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?Enriched Chunks[] (with captions in text)
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?  Embedding     鈹? Dense (OpenAI) + Sparse (BM25) 鍙岃矾缂栫爜
+鈹? (Dual Path)    鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?Vectors + Chunks + Metadata
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?   Upsert       鈹? Chroma Upsert (骞傜瓑) + BM25 Index + 鍥剧墖瀛樺偍
+鈹?  (Storage)     鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
 ```
 
-#### 5.4.3 管理操作流 (Management Flow)
+#### 5.4.2 鍦ㄧ嚎鏌ヨ娴?(Query Flow)
+
+```
+鐢ㄦ埛鏌ヨ (via MCP Client)
+      鈹?
+      鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹? MCP Server     鈹? JSON-RPC 瑙ｆ瀽锛屽伐鍏疯矾鐢?
+鈹?(Stdio Transport)鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?query + params
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?Query Processor 鈹? 鍏抽敭璇嶆彁鍙?+ 鍚屼箟璇嶆墿灞?+ Metadata 瑙ｆ瀽
+鈹?                鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?processed_query + filters
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?             Hybrid Search                  鈹?
+鈹? 鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?         鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?  鈹?
+鈹? 鈹侱ense Retrieval鈹? 骞惰   鈹係parse Retrieval鈹?  鈹?
+鈹? 鈹?(Embedding)  鈹傗梽鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈻衡攤  (BM25)     鈹?  鈹?
+鈹? 鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹?         鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹?  鈹?
+鈹?        鈹?                       鈹?         鈹?
+鈹?        鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?         鈹?
+鈹?                 鈻?                         鈹?
+鈹?        鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?                    鈹?
+鈹?        鈹?  Fusion    鈹? RRF 铻嶅悎           鈹?
+鈹?        鈹?  (RRF)     鈹?                    鈹?
+鈹?        鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹?                    鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹尖攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+                 鈹?Top-M 鍊欓€?
+                 鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?   Reranker     鈹? CrossEncoder / LLM / None
+鈹?  (Optional)    鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?Top-K 绮炬帓缁撴灉
+         鈻?
+鈹屸攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+鈹?Response Builder鈹? 寮曠敤鐢熸垚 + 鍥剧墖 Base64 缂栫爜 + MCP 鏍煎紡鍖?
+鈹?                鈹?
+鈹斺攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹攢鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+         鈹?MCP Response (TextContent + ImageContent)
+         鈻?
+杩斿洖缁?MCP Client (Copilot / Claude Desktop)
+```
+
+#### 5.4.3 绠＄悊鎿嶄綔娴?(Management Flow)
 
 ```
 Dashboard (Streamlit UI)
-      │
-      ├─── 数据浏览 ──────────────────────────────────────────┐
-      │                                                       │
-      │    DataService                                        │
-      │    ├── ChromaStore.get_by_metadata(source=...)        │
-      │    ├── ImageStorage.list_images(collection, doc_hash) │
-      │    └── 返回文档列表 / Chunk 详情 / 图片预览            │
-      │                                                       │
-      ├─── Ingestion 管理 ────────────────────────────────────┤
-      │                                                       │
-      │    触发摄取：                                          │
-      │    ├── IngestionPipeline.run(path, collection,        │
-      │    │                         on_progress=callback)    │
-      │    └── st.progress() 实时更新进度                      │
-      │                                                       │
-      │    删除文档：                                          │
-      │    ├── DocumentManager.delete_document(source, col)   │
-      │    │   ├── ChromaStore.delete_by_metadata(source=...) │
-      │    │   ├── BM25Indexer.remove_document(source=...)    │
-      │    │   ├── ImageStorage.delete_images(col, doc_hash)  │
-      │    │   └── FileIntegrity.remove_record(file_hash)     │
-      │    └── 刷新文档列表                                    │
-      │                                                       │
-      └─── Trace 查看 ───────────────────────────────────────┘
-           │
+      鈹?
+      鈹溾攢鈹€鈹€ 鏁版嵁娴忚 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+      鈹?                                                      鈹?
+      鈹?   DataService                                        鈹?
+      鈹?   鈹溾攢鈹€ ChromaStore.get_by_metadata(source=...)        鈹?
+      鈹?   鈹溾攢鈹€ ImageStorage.list_images(collection, doc_hash) 鈹?
+      鈹?   鈹斺攢鈹€ 杩斿洖鏂囨。鍒楄〃 / Chunk 璇︽儏 / 鍥剧墖棰勮            鈹?
+      鈹?                                                      鈹?
+      鈹溾攢鈹€鈹€ Ingestion 绠＄悊 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+      鈹?                                                      鈹?
+      鈹?   瑙﹀彂鎽勫彇锛?                                         鈹?
+      鈹?   鈹溾攢鈹€ IngestionPipeline.run(path, collection,        鈹?
+      鈹?   鈹?                        on_progress=callback)    鈹?
+      鈹?   鈹斺攢鈹€ st.progress() 瀹炴椂鏇存柊杩涘害                      鈹?
+      鈹?                                                      鈹?
+      鈹?   鍒犻櫎鏂囨。锛?                                         鈹?
+      鈹?   鈹溾攢鈹€ DocumentManager.delete_document(source, col)   鈹?
+      鈹?   鈹?  鈹溾攢鈹€ ChromaStore.delete_by_metadata(source=...) 鈹?
+      鈹?   鈹?  鈹溾攢鈹€ BM25Indexer.remove_document(source=...)    鈹?
+      鈹?   鈹?  鈹溾攢鈹€ ImageStorage.delete_images(col, doc_hash)  鈹?
+      鈹?   鈹?  鈹斺攢鈹€ FileIntegrity.remove_record(file_hash)     鈹?
+      鈹?   鈹斺攢鈹€ 鍒锋柊鏂囨。鍒楄〃                                    鈹?
+      鈹?                                                      鈹?
+      鈹斺攢鈹€鈹€ Trace 鏌ョ湅 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹?
+           鈹?
            TraceService
-           ├── 读取 logs/traces.jsonl
-           ├── 按 trace_type 分类 (query / ingestion)
-           └── 返回 Trace 列表与详情
+           鈹溾攢鈹€ 璇诲彇 logs/traces.jsonl
+           鈹溾攢鈹€ 鎸?trace_type 鍒嗙被 (query / ingestion)
+           鈹斺攢鈹€ 杩斿洖 Trace 鍒楄〃涓庤鎯?
 ```
 
-### 5.5 配置驱动设计
+### 5.5 閰嶇疆椹卞姩璁捐
 
 
-系统通过 `config/settings.yaml` 统一配置各组件实现，支持零代码切换：
+绯荤粺閫氳繃 `config/settings.yaml` 缁熶竴閰嶇疆鍚勭粍浠跺疄鐜帮紝鏀寔闆朵唬鐮佸垏鎹細
 
 ```yaml
-# config/settings.yaml 示例
+# config/settings.yaml 绀轰緥
 
-# LLM 配置
+# LLM 閰嶇疆
 llm:
   provider: azure           # azure | openai | ollama | deepseek
   model: gpt-4o
   azure_endpoint: "..."
   api_key: "${AZURE_API_KEY}"
 
-# Embedding 配置
+# Embedding 閰嶇疆
 embedding:
-  provider: openai          # openai | azure | ollama (本地)
+  provider: openai          # openai | azure | ollama (鏈湴)
   model: text-embedding-3-small
   
-# Vision LLM 配置 (图片描述)
+# Vision LLM 閰嶇疆 (鍥剧墖鎻忚堪)
 vision_llm:
   provider: azure           # azure | dashscope (Qwen-VL)
   model: gpt-4o
   
-# 向量存储配置
+# 鍚戦噺瀛樺偍閰嶇疆
 vector_store:
   backend: chroma           # chroma | qdrant | pinecone
   persist_path: ./data/db/chroma
 
-# 检索配置
+# 妫€绱㈤厤缃?
 retrieval:
   sparse_backend: bm25      # bm25 | elasticsearch
   fusion_algorithm: rrf     # rrf | weighted_sum
@@ -1874,115 +1874,115 @@ retrieval:
   top_k_sparse: 20
   top_k_final: 10
 
-# 重排配置
+# 閲嶆帓閰嶇疆
 rerank:
   backend: cross_encoder    # none | cross_encoder | llm
   model: cross-encoder/ms-marco-MiniLM-L-6-v2
   top_m: 30
 
-# 评估配置
+# 璇勪及閰嶇疆
 evaluation:
   backends: [ragas, custom]
   golden_test_set: ./tests/fixtures/golden_test_set.json
 
-# 可观测性配置
+# 鍙娴嬫€ч厤缃?
 observability:
   enabled: true
   log_file: ./logs/traces.jsonl
 
-# Dashboard 管理平台配置
+# Dashboard 绠＄悊骞冲彴閰嶇疆
 dashboard:
   enabled: true
-  port: 8501                     # Streamlit 服务端口
-  traces_dir: ./logs             # Trace 日志文件目录
-  auto_refresh: true             # 是否自动刷新（轮询新 trace）
-  refresh_interval: 5            # 自动刷新间隔（秒）
+  port: 8501                     # Streamlit 鏈嶅姟绔彛
+  traces_dir: ./logs             # Trace 鏃ュ織鏂囦欢鐩綍
+  auto_refresh: true             # 鏄惁鑷姩鍒锋柊锛堣疆璇㈡柊 trace锛?
+  refresh_interval: 5            # 鑷姩鍒锋柊闂撮殧锛堢锛?
 ```
 
-### 5.6 扩展性设计要点
+### 5.6 鎵╁睍鎬ц璁¤鐐?
 
 
-1. **新增 LLM Provider**：实现 `BaseLLM` 接口，在 `llm_factory.py` 注册，配置文件指定 `provider` 即可
-2. **新增文档格式**：实现 `BaseLoader` 接口，在 Pipeline 中注册对应文件扩展名的处理器
-3. **新增检索策略**：实现检索接口，在 `hybrid_search.py` 中组合调用
-4. **新增评估指标**：实现 `BaseEvaluator` 接口，在配置中添加到 `backends` 列表
+1. **鏂板 LLM Provider**锛氬疄鐜?`BaseLLM` 鎺ュ彛锛屽湪 `llm_factory.py` 娉ㄥ唽锛岄厤缃枃浠舵寚瀹?`provider` 鍗冲彲
+2. **鏂板鏂囨。鏍煎紡**锛氬疄鐜?`BaseLoader` 鎺ュ彛锛屽湪 Pipeline 涓敞鍐屽搴旀枃浠舵墿灞曞悕鐨勫鐞嗗櫒
+3. **鏂板妫€绱㈢瓥鐣?*锛氬疄鐜版绱㈡帴鍙ｏ紝鍦?`hybrid_search.py` 涓粍鍚堣皟鐢?
+4. **鏂板璇勪及鎸囨爣**锛氬疄鐜?`BaseEvaluator` 鎺ュ彛锛屽湪閰嶇疆涓坊鍔犲埌 `backends` 鍒楄〃
 
 
-## 6. 项目排期
+## 6. 椤圭洰鎺掓湡
 
-> **排期原则（严格对齐本 DEV_SPEC 的架构分层与目录结构）**
+> **鎺掓湡鍘熷垯锛堜弗鏍煎榻愭湰 DEV_SPEC 鐨勬灦鏋勫垎灞備笌鐩綍缁撴瀯锛?*
 > 
-> - **只按本文档设计落地**：以第 5.2 节目录树为“交付清单”，每一步都要在文件系统上产生可见变化。
-> - **1 小时一个可验收增量**：每个小阶段（≈1h）都必须同时给出“验收标准 + 测试方法”，尽量做到 TDD。
-> - **先打通主闭环，再补齐默认实现**：优先做“可跑通的端到端路径（Ingestion → Retrieval → MCP Tool）”，并在 Libs 层补齐可运行的默认后端实现，避免出现“只有接口没有实现”的空转。
-> - **外部依赖可替换/可 Mock**：LLM/Embedding/Vision/VectorStore 的真实调用在单元测试中一律用 Fake/Mock，集成测试再开真实后端（可选）。
+> - **鍙寜鏈枃妗ｈ璁¤惤鍦?*锛氫互绗?5.2 鑺傜洰褰曟爲涓衡€滀氦浠樻竻鍗曗€濓紝姣忎竴姝ラ兘瑕佸湪鏂囦欢绯荤粺涓婁骇鐢熷彲瑙佸彉鍖栥€?
+> - **1 灏忔椂涓€涓彲楠屾敹澧為噺**锛氭瘡涓皬闃舵锛堚増1h锛夐兘蹇呴』鍚屾椂缁欏嚭鈥滈獙鏀舵爣鍑?+ 娴嬭瘯鏂规硶鈥濓紝灏介噺鍋氬埌 TDD銆?
+> - **鍏堟墦閫氫富闂幆锛屽啀琛ラ綈榛樿瀹炵幇**锛氫紭鍏堝仛鈥滃彲璺戦€氱殑绔埌绔矾寰勶紙Ingestion 鈫?Retrieval 鈫?MCP Tool锛夆€濓紝骞跺湪 Libs 灞傝ˉ榻愬彲杩愯鐨勯粯璁ゅ悗绔疄鐜帮紝閬垮厤鍑虹幇鈥滃彧鏈夋帴鍙ｆ病鏈夊疄鐜扳€濈殑绌鸿浆銆?
+> - **澶栭儴渚濊禆鍙浛鎹?鍙?Mock**锛歀LM/Embedding/Vision/VectorStore 鐨勭湡瀹炶皟鐢ㄥ湪鍗曞厓娴嬭瘯涓竴寰嬬敤 Fake/Mock锛岄泦鎴愭祴璇曞啀寮€鐪熷疄鍚庣锛堝彲閫夛級銆?
 
-### 阶段总览（大阶段 → 目的）
+### 闃舵鎬昏锛堝ぇ闃舵 鈫?鐩殑锛?
 
-1. **阶段 A：工程骨架与测试基座**
-   - 目的：建立可运行、可配置、可测试的工程骨架；后续所有模块都能以 TDD 方式落地。
-2. **阶段 B：Libs 可插拔层（Factory + Base 接口 + 默认可运行实现）**
-  - 目的：把“可替换”变成代码事实；并补齐可运行的默认后端实现，确保 Core / Ingestion 不仅“可编译”，还可在真实环境跑通。
-3. **阶段 C：Ingestion Pipeline（PDF→MD→Chunk→Embedding→Upsert）**
-  - 目的：离线摄取链路跑通，能把样例文档写入向量库/BM25 索引并支持增量。
-4. **阶段 D：Retrieval（Dense + Sparse + RRF + 可选 Rerank）**
-  - 目的：在线查询链路跑通，得到 Top-K chunks（含引用信息），并具备稳定回退策略。
-5. **阶段 E：MCP Server 层与 Tools 落地**
-   - 目的：按 MCP 标准暴露 tools，让 Copilot/Claude 可直接调用查询能力。
-6. **阶段 F：Trace 基础设施与打点**
-   - 目的：增强 TraceContext，实现结构化日志持久化，在 Ingestion + Query 双链路打点，添加 Pipeline 进度回调。
-7. **阶段 G：可视化管理平台 Dashboard**
-   - 目的：搭建 Streamlit 六页面管理平台（系统总览 / 数据浏览 / Ingestion 管理 / Ingestion 追踪 / Query 追踪 / 评估占位），实现 DocumentManager 跨存储协调。
-8. **阶段 H：评估体系**
-   - 目的：实现 RagasEvaluator + CompositeEvaluator + EvalRunner，启用评估面板页面，建立 golden test set 回归基线。
-9. **阶段 I：端到端验收与文档收口**
-   - 目的：补齐 E2E 测试（MCP Client 模拟 + Dashboard 冒烟），完善 README，全链路验收，确保“开箱即用 + 可复现”。
+1. **闃舵 A锛氬伐绋嬮鏋朵笌娴嬭瘯鍩哄骇**
+   - 鐩殑锛氬缓绔嬪彲杩愯銆佸彲閰嶇疆銆佸彲娴嬭瘯鐨勫伐绋嬮鏋讹紱鍚庣画鎵€鏈夋ā鍧楅兘鑳戒互 TDD 鏂瑰紡钀藉湴銆?
+2. **闃舵 B锛歀ibs 鍙彃鎷斿眰锛團actory + Base 鎺ュ彛 + 榛樿鍙繍琛屽疄鐜帮級**
+  - 鐩殑锛氭妸鈥滃彲鏇挎崲鈥濆彉鎴愪唬鐮佷簨瀹烇紱骞惰ˉ榻愬彲杩愯鐨勯粯璁ゅ悗绔疄鐜帮紝纭繚 Core / Ingestion 涓嶄粎鈥滃彲缂栬瘧鈥濓紝杩樺彲鍦ㄧ湡瀹炵幆澧冭窇閫氥€?
+3. **闃舵 C锛欼ngestion Pipeline锛圥DF鈫扢D鈫扖hunk鈫扙mbedding鈫扷psert锛?*
+  - 鐩殑锛氱绾挎憚鍙栭摼璺窇閫氾紝鑳芥妸鏍蜂緥鏂囨。鍐欏叆鍚戦噺搴?BM25 绱㈠紩骞舵敮鎸佸閲忋€?
+4. **闃舵 D锛歊etrieval锛圖ense + Sparse + RRF + 鍙€?Rerank锛?*
+  - 鐩殑锛氬湪绾挎煡璇㈤摼璺窇閫氾紝寰楀埌 Top-K chunks锛堝惈寮曠敤淇℃伅锛夛紝骞跺叿澶囩ǔ瀹氬洖閫€绛栫暐銆?
+5. **闃舵 E锛歁CP Server 灞備笌 Tools 钀藉湴**
+   - 鐩殑锛氭寜 MCP 鏍囧噯鏆撮湶 tools锛岃 Copilot/Claude 鍙洿鎺ヨ皟鐢ㄦ煡璇㈣兘鍔涖€?
+6. **闃舵 F锛歍race 鍩虹璁炬柦涓庢墦鐐?*
+   - 鐩殑锛氬寮?TraceContext锛屽疄鐜扮粨鏋勫寲鏃ュ織鎸佷箙鍖栵紝鍦?Ingestion + Query 鍙岄摼璺墦鐐癸紝娣诲姞 Pipeline 杩涘害鍥炶皟銆?
+7. **闃舵 G锛氬彲瑙嗗寲绠＄悊骞冲彴 Dashboard**
+   - 鐩殑锛氭惌寤?Streamlit 鍏〉闈㈢鐞嗗钩鍙帮紙绯荤粺鎬昏 / 鏁版嵁娴忚 / Ingestion 绠＄悊 / Ingestion 杩借釜 / Query 杩借釜 / 璇勪及鍗犱綅锛夛紝瀹炵幇 DocumentManager 璺ㄥ瓨鍌ㄥ崗璋冦€?
+8. **闃舵 H锛氳瘎浼颁綋绯?*
+   - 鐩殑锛氬疄鐜?RagasEvaluator + CompositeEvaluator + EvalRunner锛屽惎鐢ㄨ瘎浼伴潰鏉块〉闈紝寤虹珛 golden test set 鍥炲綊鍩虹嚎銆?
+9. **闃舵 I锛氱鍒扮楠屾敹涓庢枃妗ｆ敹鍙?*
+   - 鐩殑锛氳ˉ榻?E2E 娴嬭瘯锛圡CP Client 妯℃嫙 + Dashboard 鍐掔儫锛夛紝瀹屽杽 README锛屽叏閾捐矾楠屾敹锛岀‘淇濃€滃紑绠卞嵆鐢?+ 鍙鐜扳€濄€?
 
 
 ---
 
-### 📊 进度跟踪表 (Progress Tracking)
+### 馃搳 杩涘害璺熻釜琛?(Progress Tracking)
 
-> **状态说明**：`[ ]` 未开始 | `[~]` 进行中 | `[x]` 已完成
+> **鐘舵€佽鏄?*锛歚[ ]` 鏈紑濮?| `[~]` 杩涜涓?| `[x]` 宸插畬鎴?
 > 
-> **更新时间**：每完成一个子任务后更新对应状态
+> **鏇存柊鏃堕棿**锛氭瘡瀹屾垚涓€涓瓙浠诲姟鍚庢洿鏂板搴旂姸鎬?
 
-#### 阶段 A：工程骨架与测试基座
+#### 闃舵 A锛氬伐绋嬮鏋朵笌娴嬭瘯鍩哄骇
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| A1 | 初始化目录树与最小可运行入口 | [x] | 2026-04-20 | 已完成骨架、占位模块与导入验证 |
-| A2 | 引入 pytest 并建立测试目录约定 | [x] | 2026-04-20 | 已建立 pytest 基座、fixture 占位与导入冒烟测试 |
-| A3 | 配置加载与校验（Settings） | [x] | 2026-04-20 | 已实现 YAML 加载、字段校验、启动校验与单测 |
+| A1 | 鍒濆鍖栫洰褰曟爲涓庢渶灏忓彲杩愯鍏ュ彛 | [x] | 2026-04-20 | 宸插畬鎴愰鏋躲€佸崰浣嶆ā鍧椾笌瀵煎叆楠岃瘉 |
+| A2 | 寮曞叆 pytest 骞跺缓绔嬫祴璇曠洰褰曠害瀹?| [x] | 2026-04-20 | 宸插缓绔?pytest 鍩哄骇銆乫ixture 鍗犱綅涓庡鍏ュ啋鐑熸祴璇?|
+| A3 | 閰嶇疆鍔犺浇涓庢牎楠岋紙Settings锛?| [x] | 2026-04-20 | 宸插疄鐜?YAML 鍔犺浇銆佸瓧娈垫牎楠屻€佸惎鍔ㄦ牎楠屼笌鍗曟祴 |
 
-#### 阶段 B：Libs 可插拔层
+#### 闃舵 B锛歀ibs 鍙彃鎷斿眰
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| B1 | LLM 抽象接口与工厂 | [x] | 2026-04-21 | 已实现 BaseLLM、ChatMessage、LLMFactory 注册/创建与单测 |
-| B2 | Embedding 抽象接口与工厂 | [x] | 2026-04-21 | 已实现 BaseEmbedding、EmbeddingFactory 注册/创建与单测 |
-| B3 | Splitter 抽象接口与工厂 | [x] | 2026-04-21 | 已实现 BaseSplitter、SplitterFactory 注册/创建、参数前置校验与补充单测 |
-| B4 | VectorStore 抽象接口与工厂 | [x] | 2026-04-22 | 已实现 BaseVectorStore、VectorStoreFactory 与契约测试 |
-| B5 | Reranker 抽象接口与工厂（含 None 回退） | [x] | 2026-04-22 | 已实现 BaseReranker、RerankerFactory、NoneReranker 与单测 |
-| B6 | Evaluator 抽象接口与工厂 | [x] | 2026-04-22 | 已实现 BaseEvaluator、EvaluatorFactory、CustomEvaluator(hit_rate/mrr) 与单测 |
-| B7.1 | OpenAI-Compatible LLM 实现 | [x] | 2026-04-22 | 已实现 OpenAI/Azure/DeepSeek provider、工厂路由与 smoke 单测；审查通过（含 Azure base_url alias 修复） |
-| B7.2 | Ollama LLM 实现 | [x] | 2026-04-22 | 已实现 OllamaLLM、工厂路由与连接失败/超时 smoke 单测 |
-| B7.3 | OpenAI & Azure Embedding 实现 | [x] | 2026-04-22 | 已实现 OpenAI/Azure Embedding provider、工厂路由与 smoke 单测 |
-| B7.4 | Ollama Embedding 实现 | [x] | 2026-04-22 | 已实现 OllamaEmbedding、工厂路由与连接失败/超时 smoke 单测 |
-| B7.5 | Recursive Splitter 默认实现 | [x] | 2026-04-22 | 已实现 RecursiveSplitter、工厂内置路由与 markdown 切分单测；审查通过（含 custom separators 修复） |
-| B7.6 | ChromaStore 默认实现 | [x] | 2026-04-22 | 已实现 ChromaStore 持久化、工厂内置路由、roundtrip 集成测试与 embedding signature 一致性机制 |
-| B7.7 | LLM Reranker 实现 | [x] | 2026-04-22 | 已实现 LLMReranker（prompt 文件读取、严格 ranked_ids schema 解析）、工厂 llm 内置路由；修复空/缺失 id 与重复 id 候选丢失问题并补齐综合单测 |
-| B7.8 | Cross-Encoder Reranker 实现 | [x] | 2026-04-28 | 已实现 CrossEncoderReranker（Top-M 重排、可注入 scorer、默认可运行打分）、工厂 cross_encoder 内置路由与超时/失败回退信号 |
-| B8 | Vision LLM 抽象接口与工厂集成 | [x] | 2026-04-30 | 已实现 BaseVisionLLM/ChatResponse、LLMFactory.create_vision_llm/register_vision 路由能力与 vision 工厂单测 |
-| B9 | Azure Vision LLM 实现 | [x] | 2026-04-30 | 已实现 AzureVisionLLM（路径/base64 输入、max_image_size 压缩钩子、Azure 错误码包装），并接入 vision 工厂内置 azure 路由 |
+| B1 | LLM 鎶借薄鎺ュ彛涓庡伐鍘?| [x] | 2026-04-21 | 宸插疄鐜?BaseLLM銆丆hatMessage銆丩LMFactory 娉ㄥ唽/鍒涘缓涓庡崟娴?|
+| B2 | Embedding 鎶借薄鎺ュ彛涓庡伐鍘?| [x] | 2026-04-21 | 宸插疄鐜?BaseEmbedding銆丒mbeddingFactory 娉ㄥ唽/鍒涘缓涓庡崟娴?|
+| B3 | Splitter 鎶借薄鎺ュ彛涓庡伐鍘?| [x] | 2026-04-21 | 宸插疄鐜?BaseSplitter銆丼plitterFactory 娉ㄥ唽/鍒涘缓銆佸弬鏁板墠缃牎楠屼笌琛ュ厖鍗曟祴 |
+| B4 | VectorStore 鎶借薄鎺ュ彛涓庡伐鍘?| [x] | 2026-04-22 | 宸插疄鐜?BaseVectorStore銆乂ectorStoreFactory 涓庡绾︽祴璇?|
+| B5 | Reranker 鎶借薄鎺ュ彛涓庡伐鍘傦紙鍚?None 鍥為€€锛?| [x] | 2026-04-22 | 宸插疄鐜?BaseReranker銆丷erankerFactory銆丯oneReranker 涓庡崟娴?|
+| B6 | Evaluator 鎶借薄鎺ュ彛涓庡伐鍘?| [x] | 2026-04-22 | 宸插疄鐜?BaseEvaluator銆丒valuatorFactory銆丆ustomEvaluator(hit_rate/mrr) 涓庡崟娴?|
+| B7.1 | OpenAI-Compatible LLM 瀹炵幇 | [x] | 2026-04-22 | 宸插疄鐜?OpenAI/Azure/DeepSeek provider銆佸伐鍘傝矾鐢变笌 smoke 鍗曟祴锛涘鏌ラ€氳繃锛堝惈 Azure base_url alias 淇锛?|
+| B7.2 | Ollama LLM 瀹炵幇 | [x] | 2026-04-22 | 宸插疄鐜?OllamaLLM銆佸伐鍘傝矾鐢变笌杩炴帴澶辫触/瓒呮椂 smoke 鍗曟祴 |
+| B7.3 | OpenAI & Azure Embedding 瀹炵幇 | [x] | 2026-04-22 | 宸插疄鐜?OpenAI/Azure Embedding provider銆佸伐鍘傝矾鐢变笌 smoke 鍗曟祴 |
+| B7.4 | Ollama Embedding 瀹炵幇 | [x] | 2026-04-22 | 宸插疄鐜?OllamaEmbedding銆佸伐鍘傝矾鐢变笌杩炴帴澶辫触/瓒呮椂 smoke 鍗曟祴 |
+| B7.5 | Recursive Splitter 榛樿瀹炵幇 | [x] | 2026-04-22 | 宸插疄鐜?RecursiveSplitter銆佸伐鍘傚唴缃矾鐢变笌 markdown 鍒囧垎鍗曟祴锛涘鏌ラ€氳繃锛堝惈 custom separators 淇锛?|
+| B7.6 | ChromaStore 榛樿瀹炵幇 | [x] | 2026-04-22 | 宸插疄鐜?ChromaStore 鎸佷箙鍖栥€佸伐鍘傚唴缃矾鐢便€乺oundtrip 闆嗘垚娴嬭瘯涓?embedding signature 涓€鑷存€ф満鍒?|
+| B7.7 | LLM Reranker 瀹炵幇 | [x] | 2026-04-22 | 宸插疄鐜?LLMReranker锛坧rompt 鏂囦欢璇诲彇銆佷弗鏍?ranked_ids schema 瑙ｆ瀽锛夈€佸伐鍘?llm 鍐呯疆璺敱锛涗慨澶嶇┖/缂哄け id 涓庨噸澶?id 鍊欓€変涪澶遍棶棰樺苟琛ラ綈缁煎悎鍗曟祴 |
+| B7.8 | Cross-Encoder Reranker 瀹炵幇 | [x] | 2026-04-28 | 宸插疄鐜?CrossEncoderReranker锛圱op-M 閲嶆帓銆佸彲娉ㄥ叆 scorer銆侀粯璁ゅ彲杩愯鎵撳垎锛夈€佸伐鍘?cross_encoder 鍐呯疆璺敱涓庤秴鏃?澶辫触鍥為€€淇″彿 |
+| B8 | Vision LLM 鎶借薄鎺ュ彛涓庡伐鍘傞泦鎴?| [x] | 2026-04-30 | 宸插疄鐜?BaseVisionLLM/ChatResponse銆丩LMFactory.create_vision_llm/register_vision 璺敱鑳藉姏涓?vision 宸ュ巶鍗曟祴 |
+| B9 | Azure Vision LLM 瀹炵幇 | [x] | 2026-04-30 | 宸插疄鐜?AzureVisionLLM锛堣矾寰?base64 杈撳叆銆乵ax_image_size 鍘嬬缉閽╁瓙銆丄zure 閿欒鐮佸寘瑁咃級锛屽苟鎺ュ叆 vision 宸ュ巶鍐呯疆 azure 璺敱 |
 
-#### 阶段 C：Ingestion Pipeline MVP
+#### 闃舵 C锛欼ngestion Pipeline MVP
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| C1 | 定义核心数据类型/契约（Document/Chunk/ChunkRecord） | [x] | 2026-05-25 | 已实现 Document/Chunk/ChunkRecord 契约、metadata.images 结构校验、图片占位符规范与序列化单测 |
-| C2 | 文件完整性检查（SHA256） | [x] | 2026-05-25 | 已实现 FileIntegrityChecker 抽象与 SQLiteIntegrityChecker（WAL、hash 去重判定、success/failed 标记）及单测 |
-| C3 | Loader 抽象基类与 PDF Loader | [x] | 2026-05-25 | 已实现 BaseLoader 抽象接口、PdfLoader 最小行为（Document 契约、图片占位符合并、图片提取失败降级）及契约单测 |
+| C1 | 瀹氫箟鏍稿績鏁版嵁绫诲瀷/濂戠害锛圖ocument/Chunk/ChunkRecord锛?| [x] | 2026-05-25 | 宸插疄鐜?Document/Chunk/ChunkRecord 濂戠害銆乵etadata.images 缁撴瀯鏍￠獙銆佸浘鐗囧崰浣嶇瑙勮寖涓庡簭鍒楀寲鍗曟祴 |
+| C2 | 鏂囦欢瀹屾暣鎬ф鏌ワ紙SHA256锛?| [x] | 2026-05-25 | 宸插疄鐜?FileIntegrityChecker 鎶借薄涓?SQLiteIntegrityChecker锛圵AL銆乭ash 鍘婚噸鍒ゅ畾銆乻uccess/failed 鏍囪锛夊強鍗曟祴 |
+| C3 | Loader 鎶借薄鍩虹被涓?PDF Loader | [x] | 2026-05-25 | 宸插疄鐜?BaseLoader 鎶借薄鎺ュ彛銆丳dfLoader 鏈€灏忚涓猴紙Document 濂戠害銆佸浘鐗囧崰浣嶇鍚堝苟銆佸浘鐗囨彁鍙栧け璐ラ檷绾э級鍙婂绾﹀崟娴?|
 | C4 | Splitter integration (via Libs) | [x] | 2026-05-25 | Implemented `DocumentChunker` adapter and added C4 unit/contract tests; included in unified C4/C5 regression run. |
 | C5 | Transform base + ChunkRefiner | [x] | 2026-05-25 | Implemented `BaseTransform` + `ChunkRefiner` (rule cleanup, optional LLM refine, graceful fallback); unified run result: unit 26 passed, integration 2 skipped (missing OPENAI_API_KEY). |
 | C6 | MetadataEnricher | [x] | 2026-05-25 | Implemented `MetadataEnricher` (rule-based metadata + optional LLM enrichment + graceful fallback); review recheck passed (unit 10 passed, fallback_count repro fixed). |
@@ -1990,640 +1990,640 @@ dashboard:
 | C8 | DenseEncoder | [x] | 2026-05-26 | Implemented `DenseEncoder` (batch embedding via `libs.embedding`, `ChunkRecord` output, configurable `batch_size`, trace metrics); C8 review passed with `tests/unit/test_dense_encoder.py` (7 passed). |
 | C9 | SparseEncoder | [x] | 2026-05-26 | Implemented `SparseEncoder` (BM25-style sparse term weights, configurable `k1/b/min_token_length/remove_stopwords`, trace metrics); C9 review passed with `tests/unit/test_sparse_encoder.py` (7 passed). |
 | C10 | BatchProcessor | [x] | 2026-05-26 | Implemented `BatchProcessor` (batch orchestration for dense/sparse encoders, per-batch elapsed metrics, merge validation); recheck passed with extended C8/C9/C10 suite (`28 passed`). |
-| C11 | BM25Indexer（倒排索引+IDF计算） | [ ] | | |
-| C12 | VectorUpserter（幂等upsert） | [ ] | | |
-| C13 | ImageStorage（图片存储+SQLite索引） | [ ] | | |
-| C14 | Pipeline 编排（MVP 串起来） | [ ] | | |
-| C15 | 脚本入口 ingest.py | [ ] | | |
+| C11 | BM25Indexer锛堝€掓帓绱㈠紩+IDF璁＄畻锛?| [ ] | | |
+| C12 | VectorUpserter锛堝箓绛塽psert锛?| [ ] | | |
+| C13 | ImageStorage锛堝浘鐗囧瓨鍌?SQLite绱㈠紩锛?| [ ] | | |
+| C14 | Pipeline 缂栨帓锛圡VP 涓茶捣鏉ワ級 | [ ] | | |
+| C15 | 鑴氭湰鍏ュ彛 ingest.py | [ ] | | |
 
-#### 阶段 D：Retrieval MVP
+#### 闃舵 D锛歊etrieval MVP
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| D1 | QueryProcessor（关键词提取 + filters） | [ ] | | |
-| D2 | DenseRetriever（调用 VectorStore.query） | [ ] | | |
-| D3 | SparseRetriever（BM25 查询） | [ ] | | |
+| D1 | QueryProcessor锛堝叧閿瘝鎻愬彇 + filters锛?| [ ] | | |
+| D2 | DenseRetriever锛堣皟鐢?VectorStore.query锛?| [ ] | | |
+| D3 | SparseRetriever锛圔M25 鏌ヨ锛?| [ ] | | |
 | D4 | RRF Fusion | [ ] | | |
-| D5 | HybridSearch 编排 | [ ] | | |
-| D6 | Reranker（Core 层编排 + Fallback） | [ ] | | |
-| D7 | 脚本入口 query.py（查询可用） | [ ] | | |
+| D5 | HybridSearch 缂栨帓 | [ ] | | |
+| D6 | Reranker锛圕ore 灞傜紪鎺?+ Fallback锛?| [ ] | | |
+| D7 | 鑴氭湰鍏ュ彛 query.py锛堟煡璇㈠彲鐢級 | [ ] | | |
 
-#### 阶段 E：MCP Server 层与 Tools
+#### 闃舵 E锛歁CP Server 灞備笌 Tools
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| E1 | MCP Server 入口与 Stdio 约束 | [ ] | | |
-| E2 | Protocol Handler 协议解析与能力协商 | [ ] | | |
+| E1 | MCP Server 鍏ュ彛涓?Stdio 绾︽潫 | [ ] | | |
+| E2 | Protocol Handler 鍗忚瑙ｆ瀽涓庤兘鍔涘崗鍟?| [ ] | | |
 | E3 | query_knowledge_hub Tool | [ ] | | |
 | E4 | list_collections Tool | [ ] | | |
 | E5 | get_document_summary Tool | [ ] | | |
-| E6 | 多模态返回组装（Text + Image） | [ ] | | |
+| E6 | 澶氭ā鎬佽繑鍥炵粍瑁咃紙Text + Image锛?| [ ] | | |
 
-#### 阶段 F：Trace 基础设施与打点
+#### 闃舵 F锛歍race 鍩虹璁炬柦涓庢墦鐐?
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| F1 | TraceContext 增强（finish + 耗时统计 + trace_type） | [ ] | | |
-| F2 | 结构化日志 logger（JSON Lines） | [ ] | | |
-| F3 | 在 Query 链路打点 | [ ] | | |
-| F4 | 在 Ingestion 链路打点 | [ ] | | |
-| F5 | Pipeline 进度回调 (on_progress) | [ ] | | |
+| F1 | TraceContext 澧炲己锛坒inish + 鑰楁椂缁熻 + trace_type锛?| [ ] | | |
+| F2 | 缁撴瀯鍖栨棩蹇?logger锛圝SON Lines锛?| [ ] | | |
+| F3 | 鍦?Query 閾捐矾鎵撶偣 | [ ] | | |
+| F4 | 鍦?Ingestion 閾捐矾鎵撶偣 | [ ] | | |
+| F5 | Pipeline 杩涘害鍥炶皟 (on_progress) | [ ] | | |
 
-#### 阶段 G：可视化管理平台 Dashboard
+#### 闃舵 G锛氬彲瑙嗗寲绠＄悊骞冲彴 Dashboard
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| G1 | Dashboard 基础架构与系统总览页 | [ ] | | |
-| G2 | DocumentManager 实现 | [ ] | | |
-| G3 | 数据浏览器页面 | [ ] | | |
-| G4 | Ingestion 管理页面 | [ ] | | |
-| G5 | Ingestion 追踪页面 | [ ] | | |
-| G6 | Query 追踪页面 | [ ] | | |
+| G1 | Dashboard 鍩虹鏋舵瀯涓庣郴缁熸€昏椤?| [ ] | | |
+| G2 | DocumentManager 瀹炵幇 | [ ] | | |
+| G3 | 鏁版嵁娴忚鍣ㄩ〉闈?| [ ] | | |
+| G4 | Ingestion 绠＄悊椤甸潰 | [ ] | | |
+| G5 | Ingestion 杩借釜椤甸潰 | [ ] | | |
+| G6 | Query 杩借釜椤甸潰 | [ ] | | |
 
-#### 阶段 H：评估体系
+#### 闃舵 H锛氳瘎浼颁綋绯?
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| H1 | RagasEvaluator 实现 | [ ] | | |
-| H2 | CompositeEvaluator 实现 | [ ] | | |
+| H1 | RagasEvaluator 瀹炵幇 | [ ] | | |
+| H2 | CompositeEvaluator 瀹炵幇 | [ ] | | |
 | H3 | EvalRunner + Golden Test Set | [ ] | | |
-| H4 | 评估面板页面 | [ ] | | |
-| H5 | Recall 回归测试（E2E） | [ ] | | |
+| H4 | 璇勪及闈㈡澘椤甸潰 | [ ] | | |
+| H5 | Recall 鍥炲綊娴嬭瘯锛圗2E锛?| [ ] | | |
 
-#### 阶段 I：端到端验收与文档收口
+#### 闃舵 I锛氱鍒扮楠屾敹涓庢枃妗ｆ敹鍙?
 
-| 任务编号 | 任务名称 | 状态 | 完成日期 | 备注 |
+| 浠诲姟缂栧彿 | 浠诲姟鍚嶇О | 鐘舵€?| 瀹屾垚鏃ユ湡 | 澶囨敞 |
 |---------|---------|------|---------|------|
-| I1 | E2E：MCP Client 侧调用模拟 | [ ] | | |
-| I2 | E2E：Dashboard 冒烟测试 | [ ] | | |
-| I3 | 完善 README（运行说明 + MCP + Dashboard） | [ ] | | |
-| I4 | 清理接口一致性（契约测试补齐） | [ ] | | |
-| I5 | 全链路 E2E 验收 | [ ] | | |
+| I1 | E2E锛歁CP Client 渚ц皟鐢ㄦā鎷?| [ ] | | |
+| I2 | E2E锛欴ashboard 鍐掔儫娴嬭瘯 | [ ] | | |
+| I3 | 瀹屽杽 README锛堣繍琛岃鏄?+ MCP + Dashboard锛?| [ ] | | |
+| I4 | 娓呯悊鎺ュ彛涓€鑷存€э紙濂戠害娴嬭瘯琛ラ綈锛?| [ ] | | |
+| I5 | 鍏ㄩ摼璺?E2E 楠屾敹 | [ ] | | |
 
 ---
 
-### 📈 总体进度
+### 馃搱 鎬讳綋杩涘害
 
-| 阶段 | 总任务数 | 已完成 | 进度 |
+| 闃舵 | 鎬讳换鍔℃暟 | 宸插畬鎴?| 杩涘害 |
 |------|---------|--------|------|
-| 阶段 A | 3 | 3 | 100% |
-| 阶段 B | 16 | 16 | 100% |
-| 阶段 C | 15 | 3 | 20% |
-| 阶段 D | 7 | 0 | 0% |
-| 阶段 E | 6 | 0 | 0% |
-| 阶段 F | 5 | 0 | 0% |
-| 阶段 G | 6 | 0 | 0% |
-| 阶段 H | 5 | 0 | 0% |
-| 阶段 I | 5 | 0 | 0% |
-| **总计** | **68** | **22** | **32%** |
+| 闃舵 A | 3 | 3 | 100% |
+| 闃舵 B | 16 | 16 | 100% |
+| 闃舵 C | 15 | 3 | 20% |
+| 闃舵 D | 7 | 0 | 0% |
+| 闃舵 E | 6 | 0 | 0% |
+| 闃舵 F | 5 | 0 | 0% |
+| 闃舵 G | 6 | 0 | 0% |
+| 闃舵 H | 5 | 0 | 0% |
+| 闃舵 I | 5 | 0 | 0% |
+| **鎬昏** | **68** | **22** | **32%** |
 
 
 ---
 
-## 阶段 A：工程骨架与测试基座（目标：先可导入，再可测试）
+## 闃舵 A锛氬伐绋嬮鏋朵笌娴嬭瘯鍩哄骇锛堢洰鏍囷細鍏堝彲瀵煎叆锛屽啀鍙祴璇曪級
 
-### A1：初始化目录树与最小可运行入口
-- **目标**：在 repo 根目录创建第 5.2 节所述目录骨架与空模块文件（可 import）。
-- **修改文件**：
+### A1锛氬垵濮嬪寲鐩綍鏍戜笌鏈€灏忓彲杩愯鍏ュ彛
+- **鐩爣**锛氬湪 repo 鏍圭洰褰曞垱寤虹 5.2 鑺傛墍杩扮洰褰曢鏋朵笌绌烘ā鍧楁枃浠讹紙鍙?import锛夈€?
+- **淇敼鏂囦欢**锛?
   - `main.py`
   - `pyproject.toml`
   - `README.md`
-  - `.gitignore`（Python 项目标准忽略规则：`__pycache__`、`.venv`、`.env`、`*.pyc`、IDE 配置等）
-  - `src/**/__init__.py`（按目录树补齐）
-  - `config/settings.yaml`（最小可解析配置）
-  - `config/prompts/image_captioning.txt`（可先放占位内容，后续阶段补充 Prompt）
-  - `config/prompts/chunk_refinement.txt`（可先放占位内容，后续阶段补充 Prompt）
-  - `config/prompts/rerank.txt`（可先放占位内容，后续阶段补充 Prompt）
-- **实现类/函数**：无（仅骨架）。
-- **实现类/函数**：无（仅骨架，不实现业务逻辑）。
-- **实现类/函数**：为当前项目创建一个虚拟环境模块。
- - **验收标准**：
-  - 目录结构与 DEV_SPEC 5.2 一致（至少把对应目录创建出来）。
-  - `config/prompts/` 目录存在，且三个 prompt 文件可被读取（即使只是占位文本）。
-  - 能导入关键顶层包（与目录结构一一对应）：
+  - `.gitignore`锛圥ython 椤圭洰鏍囧噯蹇界暐瑙勫垯锛歚__pycache__`銆乣.venv`銆乣.env`銆乣*.pyc`銆両DE 閰嶇疆绛夛級
+  - `src/**/__init__.py`锛堟寜鐩綍鏍戣ˉ榻愶級
+  - `config/settings.yaml`锛堟渶灏忓彲瑙ｆ瀽閰嶇疆锛?
+  - `config/prompts/image_captioning.txt`锛堝彲鍏堟斁鍗犱綅鍐呭锛屽悗缁樁娈佃ˉ鍏?Prompt锛?
+  - `config/prompts/chunk_refinement.txt`锛堝彲鍏堟斁鍗犱綅鍐呭锛屽悗缁樁娈佃ˉ鍏?Prompt锛?
+  - `config/prompts/rerank.txt`锛堝彲鍏堟斁鍗犱綅鍐呭锛屽悗缁樁娈佃ˉ鍏?Prompt锛?
+- **瀹炵幇绫?鍑芥暟**锛氭棤锛堜粎楠ㄦ灦锛夈€?
+- **瀹炵幇绫?鍑芥暟**锛氭棤锛堜粎楠ㄦ灦锛屼笉瀹炵幇涓氬姟閫昏緫锛夈€?
+- **瀹炵幇绫?鍑芥暟**锛氫负褰撳墠椤圭洰鍒涘缓涓€涓櫄鎷熺幆澧冩ā鍧椼€?
+ - **楠屾敹鏍囧噯**锛?
+  - 鐩綍缁撴瀯涓?DEV_SPEC 5.2 涓€鑷达紙鑷冲皯鎶婂搴旂洰褰曞垱寤哄嚭鏉ワ級銆?
+  - `config/prompts/` 鐩綍瀛樺湪锛屼笖涓変釜 prompt 鏂囦欢鍙璇诲彇锛堝嵆浣垮彧鏄崰浣嶆枃鏈級銆?
+  - 鑳藉鍏ュ叧閿《灞傚寘锛堜笌鐩綍缁撴瀯涓€涓€瀵瑰簲锛夛細
     - `python -c "import mcp_server; import core; import ingestion; import libs; import observability"`
-  - 可以启动虚拟环境模块
-- **测试方法**：运行 `python -m compileall src`（仅做语法/可导入性检查；pytest 基座在 A2 建立）。
+  - 鍙互鍚姩铏氭嫙鐜妯″潡
+- **娴嬭瘯鏂规硶**锛氳繍琛?`python -m compileall src`锛堜粎鍋氳娉?鍙鍏ユ€ф鏌ワ紱pytest 鍩哄骇鍦?A2 寤虹珛锛夈€?
 
-### A2：引入 pytest 并建立测试目录约定
-- **目标**：建立 `tests/unit|integration|e2e|fixtures` 目录与 pytest 运行基座。
-- **修改文件**：
-  - `pyproject.toml`（添加 pytest 配置：testpaths、markers 等）
+### A2锛氬紩鍏?pytest 骞跺缓绔嬫祴璇曠洰褰曠害瀹?
+- **鐩爣**锛氬缓绔?`tests/unit|integration|e2e|fixtures` 鐩綍涓?pytest 杩愯鍩哄骇銆?
+- **淇敼鏂囦欢**锛?
+  - `pyproject.toml`锛堟坊鍔?pytest 閰嶇疆锛歵estpaths銆乵arkers 绛夛級
   - `tests/unit/test_smoke_imports.py`
-  - `tests/fixtures/sample_documents/`（放 1 个最小样例文档占位）
-- **实现类/函数**：无。
-- **实现类/函数**：无（新增的是测试文件与 pytest 配置）。
-- **验收标准**：
-  - `pytest -q` 可运行并通过。
-  - 至少 1 个冒烟测试（例如 `tests/unit/test_smoke_imports.py` 只做关键包 import 校验）。
-- **测试方法**：`pytest -q tests/unit/test_smoke_imports.py`。
+  - `tests/fixtures/sample_documents/`锛堟斁 1 涓渶灏忔牱渚嬫枃妗ｅ崰浣嶏級
+- **瀹炵幇绫?鍑芥暟**锛氭棤銆?
+- **瀹炵幇绫?鍑芥暟**锛氭棤锛堟柊澧炵殑鏄祴璇曟枃浠朵笌 pytest 閰嶇疆锛夈€?
+- **楠屾敹鏍囧噯**锛?
+  - `pytest -q` 鍙繍琛屽苟閫氳繃銆?
+  - 鑷冲皯 1 涓啋鐑熸祴璇曪紙渚嬪 `tests/unit/test_smoke_imports.py` 鍙仛鍏抽敭鍖?import 鏍￠獙锛夈€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_smoke_imports.py`銆?
 
-### A3：配置加载与校验（Settings）
-- **目标**：实现读取 `config/settings.yaml` 的配置加载器，并在启动时校验关键字段存在。
-- **修改文件**：
-  - `main.py`（启动时调用 `load_settings()`，缺字段直接 fail-fast 退出）
-  - `src/observability/logger.py`（先占位：提供 get_logger，stderr 输出）
-  - `src/core/settings.py`（新增：集中放 Settings 数据结构与加载/校验逻辑）
-  - `config/settings.yaml`（补齐字段：llm/embedding/vector_store/retrieval/rerank/evaluation/observability）
+### A3锛氶厤缃姞杞戒笌鏍￠獙锛圫ettings锛?
+- **鐩爣**锛氬疄鐜拌鍙?`config/settings.yaml` 鐨勯厤缃姞杞藉櫒锛屽苟鍦ㄥ惎鍔ㄦ椂鏍￠獙鍏抽敭瀛楁瀛樺湪銆?
+- **淇敼鏂囦欢**锛?
+  - `main.py`锛堝惎鍔ㄦ椂璋冪敤 `load_settings()`锛岀己瀛楁鐩存帴 fail-fast 閫€鍑猴級
+  - `src/observability/logger.py`锛堝厛鍗犱綅锛氭彁渚?get_logger锛宻tderr 杈撳嚭锛?
+  - `src/core/settings.py`锛堟柊澧烇細闆嗕腑鏀?Settings 鏁版嵁缁撴瀯涓庡姞杞?鏍￠獙閫昏緫锛?
+  - `config/settings.yaml`锛堣ˉ榻愬瓧娈碉細llm/embedding/vector_store/retrieval/rerank/evaluation/observability锛?
   - `tests/unit/test_config_loading.py`
-- **实现类/函数**：
-  - `Settings`（dataclass：只做结构与最小校验；不在这里做任何网络/IO 的“业务初始化”）
-  - `load_settings(path: str) -> Settings`（读取 YAML -> 解析为 Settings -> 校验必填字段）
-  - `validate_settings(settings: Settings) -> None`（把“必填字段检查”集中化，错误信息包含字段路径，例如 `embedding.provider`）
-- **验收标准**：
-  - `main.py` 启动时能成功加载 `config/settings.yaml` 并拿到 `Settings` 对象。
-  - 删除/缺失关键字段时（例如 `embedding.provider`），启动或 `load_settings()` 抛出“可读错误”（明确指出缺的是哪个字段）。
-- **测试方法**：`pytest -q tests/unit/test_config_loading.py`。
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `Settings`锛坉ataclass锛氬彧鍋氱粨鏋勪笌鏈€灏忔牎楠岋紱涓嶅湪杩欓噷鍋氫换浣曠綉缁?IO 鐨勨€滀笟鍔″垵濮嬪寲鈥濓級
+  - `load_settings(path: str) -> Settings`锛堣鍙?YAML -> 瑙ｆ瀽涓?Settings -> 鏍￠獙蹇呭～瀛楁锛?
+  - `validate_settings(settings: Settings) -> None`锛堟妸鈥滃繀濉瓧娈垫鏌モ€濋泦涓寲锛岄敊璇俊鎭寘鍚瓧娈佃矾寰勶紝渚嬪 `embedding.provider`锛?
+- **楠屾敹鏍囧噯**锛?
+  - `main.py` 鍚姩鏃惰兘鎴愬姛鍔犺浇 `config/settings.yaml` 骞舵嬁鍒?`Settings` 瀵硅薄銆?
+  - 鍒犻櫎/缂哄け鍏抽敭瀛楁鏃讹紙渚嬪 `embedding.provider`锛夛紝鍚姩鎴?`load_settings()` 鎶涘嚭鈥滃彲璇婚敊璇€濓紙鏄庣‘鎸囧嚭缂虹殑鏄摢涓瓧娈碉級銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_config_loading.py`銆?
 
 ---
 
-## 阶段 B：Libs 可插拔层（目标：Factory 可工作，且至少有“默认后端”可跑通端到端）
+## 闃舵 B锛歀ibs 鍙彃鎷斿眰锛堢洰鏍囷細Factory 鍙伐浣滐紝涓旇嚦灏戞湁鈥滈粯璁ゅ悗绔€濆彲璺戦€氱鍒扮锛?
 
-### B1：LLM 抽象接口与工厂
-- **目标**：定义 `BaseLLM` 与 `LLMFactory`，支持按配置选择 provider。
-- **修改文件**：
+### B1锛歀LM 鎶借薄鎺ュ彛涓庡伐鍘?
+- **鐩爣**锛氬畾涔?`BaseLLM` 涓?`LLMFactory`锛屾敮鎸佹寜閰嶇疆閫夋嫨 provider銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/llm/base_llm.py`
   - `src/libs/llm/llm_factory.py`
   - `tests/unit/test_llm_factory.py`
-- **实现类/函数**：
-  - `BaseLLM.chat(messages) -> str`（或统一 response 对象）
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `BaseLLM.chat(messages) -> str`锛堟垨缁熶竴 response 瀵硅薄锛?
   - `LLMFactory.create(settings) -> BaseLLM`
-- **验收标准**：在测试里用 Fake provider（测试内 stub）验证工厂路由逻辑。
-- **测试方法**：`pytest -q tests/unit/test_llm_factory.py`。
+- **楠屾敹鏍囧噯**锛氬湪娴嬭瘯閲岀敤 Fake provider锛堟祴璇曞唴 stub锛夐獙璇佸伐鍘傝矾鐢遍€昏緫銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_llm_factory.py`銆?
 
-### B2：Embedding 抽象接口与工厂
-- **目标**：定义 `BaseEmbedding` 与 `EmbeddingFactory`，支持批量 embed。
-- **修改文件**：
+### B2锛欵mbedding 鎶借薄鎺ュ彛涓庡伐鍘?
+- **鐩爣**锛氬畾涔?`BaseEmbedding` 涓?`EmbeddingFactory`锛屾敮鎸佹壒閲?embed銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/embedding/base_embedding.py`
   - `src/libs/embedding/embedding_factory.py`
   - `tests/unit/test_embedding_factory.py`
-- **实现类/函数**：
+- **瀹炵幇绫?鍑芥暟**锛?
   - `BaseEmbedding.embed(texts: list[str], trace: TraceContext | None = None) -> list[list[float]]`
   - `EmbeddingFactory.create(settings) -> BaseEmbedding`
-- **验收标准**：Fake embedding 返回稳定向量，工厂按 provider 分流。
-- **测试方法**：`pytest -q tests/unit/test_embedding_factory.py`。
+- **楠屾敹鏍囧噯**锛欶ake embedding 杩斿洖绋冲畾鍚戦噺锛屽伐鍘傛寜 provider 鍒嗘祦銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_embedding_factory.py`銆?
 
-### B3：Splitter 抽象接口与工厂
-- **目标**：定义 `BaseSplitter` 与 `SplitterFactory`，支持不同切分策略（Recursive/Semantic/Fixed）。
-- **修改文件**：
+### B3锛歋plitter 鎶借薄鎺ュ彛涓庡伐鍘?
+- **鐩爣**锛氬畾涔?`BaseSplitter` 涓?`SplitterFactory`锛屾敮鎸佷笉鍚屽垏鍒嗙瓥鐣ワ紙Recursive/Semantic/Fixed锛夈€?
+- **淇敼鏂囦欢**锛?
   - `src/libs/splitter/base_splitter.py`
   - `src/libs/splitter/splitter_factory.py`
   - `tests/unit/test_splitter_factory.py`
-- **实现类/函数**：
+- **瀹炵幇绫?鍑芥暟**锛?
   - `BaseSplitter.split_text(text: str, trace: TraceContext | None = None) -> List[str]`
   - `SplitterFactory.create(settings) -> BaseSplitter`
-- **验收标准**：Factory 能根据配置返回不同类型的 Splitter 实例（测试中可用 Fake 实现）。
-- **测试方法**：`pytest -q tests/unit/test_splitter_factory.py`。
+- **楠屾敹鏍囧噯**锛欶actory 鑳芥牴鎹厤缃繑鍥炰笉鍚岀被鍨嬬殑 Splitter 瀹炰緥锛堟祴璇曚腑鍙敤 Fake 瀹炵幇锛夈€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_splitter_factory.py`銆?
 
-### B4：VectorStore 抽象接口与工厂（先定义契约）
-- **目标**：定义 `BaseVectorStore` 与 `VectorStoreFactory`，先不接真实 DB。
-- **修改文件**：
+### B4锛歏ectorStore 鎶借薄鎺ュ彛涓庡伐鍘傦紙鍏堝畾涔夊绾︼級
+- **鐩爣**锛氬畾涔?`BaseVectorStore` 涓?`VectorStoreFactory`锛屽厛涓嶆帴鐪熷疄 DB銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/vector_store/base_vector_store.py`
   - `src/libs/vector_store/vector_store_factory.py`
   - `tests/unit/test_vector_store_contract.py`
-- **实现类/函数**：
+- **瀹炵幇绫?鍑芥暟**锛?
   - `BaseVectorStore.upsert(records, trace: TraceContext | None = None)`
   - `BaseVectorStore.query(vector, top_k, filters, trace: TraceContext | None = None)`
-- **验收标准**：契约测试（contract test）约束输入输出 shape。
-- **测试方法**：`pytest -q tests/unit/test_vector_store_contract.py`。
+- **楠屾敹鏍囧噯**锛氬绾︽祴璇曪紙contract test锛夌害鏉熻緭鍏ヨ緭鍑?shape銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_vector_store_contract.py`銆?
 
-### B5：Reranker 抽象接口与工厂（含 None 回退）
-- **目标**：实现 `BaseReranker`、`RerankerFactory`，提供 `NoneReranker` 作为默认回退。
-- **修改文件**：
+### B5锛歊eranker 鎶借薄鎺ュ彛涓庡伐鍘傦紙鍚?None 鍥為€€锛?
+- **鐩爣**锛氬疄鐜?`BaseReranker`銆乣RerankerFactory`锛屾彁渚?`NoneReranker` 浣滀负榛樿鍥為€€銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/reranker/base_reranker.py`
   - `src/libs/reranker/reranker_factory.py`
   - `tests/unit/test_reranker_factory.py`
-- **实现类/函数**：
+- **瀹炵幇绫?鍑芥暟**锛?
   - `BaseReranker.rerank(query, candidates, trace: TraceContext | None = None) -> ranked_candidates`
-  - `NoneReranker`（保持原顺序）
-- **验收标准**：backend=none 时不会改变排序；未知 backend 明确报错。
-- **测试方法**：`pytest -q tests/unit/test_reranker_factory.py`。
+  - `NoneReranker`锛堜繚鎸佸師椤哄簭锛?
+- **楠屾敹鏍囧噯**锛歜ackend=none 鏃朵笉浼氭敼鍙樻帓搴忥紱鏈煡 backend 鏄庣‘鎶ラ敊銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_reranker_factory.py`銆?
 
-### B6：Evaluator 抽象接口与工厂（先做自定义轻量指标）
-- **目标**：定义 `BaseEvaluator`、`EvaluatorFactory`，实现最小 `CustomEvaluator`（例如 hit_rate/mrr）。
-- **修改文件**：
+### B6锛欵valuator 鎶借薄鎺ュ彛涓庡伐鍘傦紙鍏堝仛鑷畾涔夎交閲忔寚鏍囷級
+- **鐩爣**锛氬畾涔?`BaseEvaluator`銆乣EvaluatorFactory`锛屽疄鐜版渶灏?`CustomEvaluator`锛堜緥濡?hit_rate/mrr锛夈€?
+- **淇敼鏂囦欢**锛?
   - `src/libs/evaluator/base_evaluator.py`
   - `src/libs/evaluator/evaluator_factory.py`
   - `src/libs/evaluator/custom_evaluator.py`
   - `tests/unit/test_custom_evaluator.py`
-- **验收标准**：输入 query + retrieved_ids + golden_ids 能输出稳定 metrics。
-- **测试方法**：`pytest -q tests/unit/test_custom_evaluator.py`。
+- **楠屾敹鏍囧噯**锛氳緭鍏?query + retrieved_ids + golden_ids 鑳借緭鍑虹ǔ瀹?metrics銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_custom_evaluator.py`銆?
 
-### B7：补齐 Libs 默认实现（拆分为≈1h可验收增量）
+### B7锛氳ˉ榻?Libs 榛樿瀹炵幇锛堟媶鍒嗕负鈮?h鍙獙鏀跺閲忥級
 
-> 说明：B7 只补齐与端到端主链路强相关的默认实现（LLM/Embedding/Splitter/VectorStore/Reranker）。其余可选扩展（例如额外 splitter 策略、更多 vector store 后端、更多 evaluator 后端等）保持原排期不提前。
+> 璇存槑锛欱7 鍙ˉ榻愪笌绔埌绔富閾捐矾寮虹浉鍏崇殑榛樿瀹炵幇锛圠LM/Embedding/Splitter/VectorStore/Reranker锛夈€傚叾浣欏彲閫夋墿灞曪紙渚嬪棰濆 splitter 绛栫暐銆佹洿澶?vector store 鍚庣銆佹洿澶?evaluator 鍚庣绛夛級淇濇寔鍘熸帓鏈熶笉鎻愬墠銆?
 
-### B7.1：OpenAI-Compatible LLM（OpenAI/Azure/DeepSeek）
-- **目标**：补齐 OpenAI-compatible 的 LLM 实现，确保通过 `LLMFactory` 可创建并可被 mock 测试。
-- **修改文件**：
+### B7.1锛歄penAI-Compatible LLM锛圤penAI/Azure/DeepSeek锛?
+- **鐩爣**锛氳ˉ榻?OpenAI-compatible 鐨?LLM 瀹炵幇锛岀‘淇濋€氳繃 `LLMFactory` 鍙垱寤哄苟鍙 mock 娴嬭瘯銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/llm/openai_llm.py`
   - `src/libs/llm/azure_llm.py`
   - `src/libs/llm/deepseek_llm.py`
-  - `tests/unit/test_llm_providers_smoke.py`（mock HTTP，不走真实网络）
-- **验收标准**：
-  - 配置不同 `provider` 时工厂路由正确。
-  - `chat(messages)` 对输入 shape 校验清晰，异常信息可读（包含 provider 与错误类型）。
-- **测试方法**：`pytest -q tests/unit/test_llm_providers_smoke.py`。
+  - `tests/unit/test_llm_providers_smoke.py`锛坢ock HTTP锛屼笉璧扮湡瀹炵綉缁滐級
+- **楠屾敹鏍囧噯**锛?
+  - 閰嶇疆涓嶅悓 `provider` 鏃跺伐鍘傝矾鐢辨纭€?
+  - `chat(messages)` 瀵硅緭鍏?shape 鏍￠獙娓呮櫚锛屽紓甯镐俊鎭彲璇伙紙鍖呭惈 provider 涓庨敊璇被鍨嬶級銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_llm_providers_smoke.py`銆?
 
-### B7.2：Ollama LLM（本地后端）
-- **目标**：补齐 `ollama_llm.py`，支持本地 HTTP endpoint（默认 `base_url` + `model`），并可被 mock 测试。
-- **修改文件**：
+### B7.2锛歄llama LLM锛堟湰鍦板悗绔級
+- **鐩爣**锛氳ˉ榻?`ollama_llm.py`锛屾敮鎸佹湰鍦?HTTP endpoint锛堥粯璁?`base_url` + `model`锛夛紝骞跺彲琚?mock 娴嬭瘯銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/llm/ollama_llm.py`
-  - `tests/unit/test_ollama_llm.py`（mock HTTP）
-- **验收标准**：
-  - provider=ollama 时可由 `LLMFactory` 创建。
-  - 在连接失败/超时等场景下，抛出可读错误且不泄露敏感配置。
-- **测试方法**：`pytest -q tests/unit/test_ollama_llm.py`。
+  - `tests/unit/test_ollama_llm.py`锛坢ock HTTP锛?
+- **楠屾敹鏍囧噯**锛?
+  - provider=ollama 鏃跺彲鐢?`LLMFactory` 鍒涘缓銆?
+  - 鍦ㄨ繛鎺ュけ璐?瓒呮椂绛夊満鏅笅锛屾姏鍑哄彲璇婚敊璇笖涓嶆硠闇叉晱鎰熼厤缃€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_ollama_llm.py`銆?
 
-### B7.3：OpenAI & Azure Embedding 实现
-- **目标**：补齐 `openai_embedding.py` 和 `azure_embedding.py`，支持 OpenAI 官方 API 和 Azure OpenAI 服务的 Embedding 调用，支持批量 `embed(texts)`，并可被 mock 测试。
-- **修改文件**：
+### B7.3锛歄penAI & Azure Embedding 瀹炵幇
+- **鐩爣**锛氳ˉ榻?`openai_embedding.py` 鍜?`azure_embedding.py`锛屾敮鎸?OpenAI 瀹樻柟 API 鍜?Azure OpenAI 鏈嶅姟鐨?Embedding 璋冪敤锛屾敮鎸佹壒閲?`embed(texts)`锛屽苟鍙 mock 娴嬭瘯銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/embedding/openai_embedding.py`
   - `src/libs/embedding/azure_embedding.py`
-  - `tests/unit/test_embedding_providers_smoke.py`（mock HTTP，包含 OpenAI 和 Azure 测试用例）
-- **验收标准**：
-  - provider=openai 时 `EmbeddingFactory` 可创建，支持 OpenAI 官方 API 的 text-embedding-3-small/large 等模型。
-  - provider=azure 时 `EmbeddingFactory` 可创建，正确处理 Azure 特有的 endpoint、api-version、api-key 配置，支持 Azure 部署的 text-embedding-ada-002 等模型。
-  - 空输入、超长输入有明确行为（报错或截断策略由配置决定）。
-  - Azure 实现复用 OpenAI Embedding 的核心逻辑，保持行为一致性。
-- **测试方法**：`pytest -q tests/unit/test_embedding_providers_smoke.py`。
+  - `tests/unit/test_embedding_providers_smoke.py`锛坢ock HTTP锛屽寘鍚?OpenAI 鍜?Azure 娴嬭瘯鐢ㄤ緥锛?
+- **楠屾敹鏍囧噯**锛?
+  - provider=openai 鏃?`EmbeddingFactory` 鍙垱寤猴紝鏀寔 OpenAI 瀹樻柟 API 鐨?text-embedding-3-small/large 绛夋ā鍨嬨€?
+  - provider=azure 鏃?`EmbeddingFactory` 鍙垱寤猴紝姝ｇ‘澶勭悊 Azure 鐗规湁鐨?endpoint銆乤pi-version銆乤pi-key 閰嶇疆锛屾敮鎸?Azure 閮ㄧ讲鐨?text-embedding-ada-002 绛夋ā鍨嬨€?
+  - 绌鸿緭鍏ャ€佽秴闀胯緭鍏ユ湁鏄庣‘琛屼负锛堟姤閿欐垨鎴柇绛栫暐鐢遍厤缃喅瀹氾級銆?
+  - Azure 瀹炵幇澶嶇敤 OpenAI Embedding 鐨勬牳蹇冮€昏緫锛屼繚鎸佽涓轰竴鑷存€с€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_embedding_providers_smoke.py`銆?
 
-### B7.4：Ollama Embedding 实现
-- **目标**：补齐 `ollama_embedding.py`，支持通过 Ollama HTTP API 调用本地部署的 Embedding 模型（如 `nomic-embed-text`、`mxbai-embed-large` 等），实现 `embed(texts)` 批量向量化功能。
-- **修改文件**：
+### B7.4锛歄llama Embedding 瀹炵幇
+- **鐩爣**锛氳ˉ榻?`ollama_embedding.py`锛屾敮鎸侀€氳繃 Ollama HTTP API 璋冪敤鏈湴閮ㄧ讲鐨?Embedding 妯″瀷锛堝 `nomic-embed-text`銆乣mxbai-embed-large` 绛夛級锛屽疄鐜?`embed(texts)` 鎵归噺鍚戦噺鍖栧姛鑳姐€?
+- **淇敼鏂囦欢**锛?
   - `src/libs/embedding/ollama_embedding.py`
-  - `tests/unit/test_ollama_embedding.py`（包含 mock HTTP 测试）
-- **验收标准**：
-  - provider=ollama 时 `EmbeddingFactory` 可创建。
-  - 支持配置 Ollama 服务地址（默认 http://localhost:11434）和模型名称。
-  - 输出向量维度由模型决定（如 nomic-embed-text 为 768 维），满足 ingestion/retrieval 的接口契约。
-  - 支持批量 `embed(texts)` 调用，内部处理单条/批量请求逻辑。
-  - 空输入、超长输入有明确行为（报错或截断策略）。
-  - mock 测试覆盖正常响应、连接失败、超时等场景。
-- **测试方法**：`pytest -q tests/unit/test_ollama_embedding.py`。
+  - `tests/unit/test_ollama_embedding.py`锛堝寘鍚?mock HTTP 娴嬭瘯锛?
+- **楠屾敹鏍囧噯**锛?
+  - provider=ollama 鏃?`EmbeddingFactory` 鍙垱寤恒€?
+  - 鏀寔閰嶇疆 Ollama 鏈嶅姟鍦板潃锛堥粯璁?http://localhost:11434锛夊拰妯″瀷鍚嶇О銆?
+  - 杈撳嚭鍚戦噺缁村害鐢辨ā鍨嬪喅瀹氾紙濡?nomic-embed-text 涓?768 缁达級锛屾弧瓒?ingestion/retrieval 鐨勬帴鍙ｅ绾︺€?
+  - 鏀寔鎵归噺 `embed(texts)` 璋冪敤锛屽唴閮ㄥ鐞嗗崟鏉?鎵归噺璇锋眰閫昏緫銆?
+  - 绌鸿緭鍏ャ€佽秴闀胯緭鍏ユ湁鏄庣‘琛屼负锛堟姤閿欐垨鎴柇绛栫暐锛夈€?
+  - mock 娴嬭瘯瑕嗙洊姝ｅ父鍝嶅簲銆佽繛鎺ュけ璐ャ€佽秴鏃剁瓑鍦烘櫙銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_ollama_embedding.py`銆?
 
-### B7.5：Recursive Splitter 默认实现
-- **目标**：补齐 `recursive_splitter.py`，封装 LangChain 的切分逻辑，作为默认切分器。
-- **修改文件**：
+### B7.5锛歊ecursive Splitter 榛樿瀹炵幇
+- **鐩爣**锛氳ˉ榻?`recursive_splitter.py`锛屽皝瑁?LangChain 鐨勫垏鍒嗛€昏緫锛屼綔涓洪粯璁ゅ垏鍒嗗櫒銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/splitter/recursive_splitter.py`
   - `tests/unit/test_recursive_splitter_lib.py`
-- **验收标准**：
-  - provider=recursive 时 `SplitterFactory` 可创建。
-  - `split_text` 能正确处理 Markdown 结构（标题/代码块不被打断）。
-- **测试方法**：`pytest -q tests/unit/test_recursive_splitter_lib.py`。
+- **楠屾敹鏍囧噯**锛?
+  - provider=recursive 鏃?`SplitterFactory` 鍙垱寤恒€?
+  - `split_text` 鑳芥纭鐞?Markdown 缁撴瀯锛堟爣棰?浠ｇ爜鍧椾笉琚墦鏂級銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_recursive_splitter_lib.py`銆?
 
-### B7.6：ChromaStore（VectorStore 默认后端）
-- **目标**：补齐 `chroma_store.py`，支持最小 `upsert(records)` 与 `query(vector, top_k, filters)`，并支持本地持久化目录（例如 `data/db/chroma/`）。
-- **修改文件**：
+### B7.6锛欳hromaStore锛圴ectorStore 榛樿鍚庣锛?
+- **鐩爣**锛氳ˉ榻?`chroma_store.py`锛屾敮鎸佹渶灏?`upsert(records)` 涓?`query(vector, top_k, filters)`锛屽苟鏀寔鏈湴鎸佷箙鍖栫洰褰曪紙渚嬪 `data/db/chroma/`锛夈€?
+- **淇敼鏂囦欢**锛?
   - `src/libs/vector_store/chroma_store.py`
   - `tests/integration/test_chroma_store_roundtrip.py`
-- **验收标准**：
-  - provider=chroma 时 `VectorStoreFactory` 可创建。
-  - **必须完成完整的 upsert→query roundtrip 测试**：使用 mock 数据完成真实的存储和检索流程，验证返回结果的确定性和正确性。
-  - 测试应覆盖：基本 upsert、向量查询、top_k 参数、metadata filters（如支持）。
-  - 使用临时目录进行持久化测试，测试结束后清理。
-- **测试方法**：`pytest -q tests/integration/test_chroma_store_roundtrip.py`
+- **楠屾敹鏍囧噯**锛?
+  - provider=chroma 鏃?`VectorStoreFactory` 鍙垱寤恒€?
+  - **蹇呴』瀹屾垚瀹屾暣鐨?upsert鈫抭uery roundtrip 娴嬭瘯**锛氫娇鐢?mock 鏁版嵁瀹屾垚鐪熷疄鐨勫瓨鍌ㄥ拰妫€绱㈡祦绋嬶紝楠岃瘉杩斿洖缁撴灉鐨勭‘瀹氭€у拰姝ｇ‘鎬с€?
+  - 娴嬭瘯搴旇鐩栵細鍩烘湰 upsert銆佸悜閲忔煡璇€乼op_k 鍙傛暟銆乵etadata filters锛堝鏀寔锛夈€?
+  - 浣跨敤涓存椂鐩綍杩涜鎸佷箙鍖栨祴璇曪紝娴嬭瘯缁撴潫鍚庢竻鐞嗐€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_chroma_store_roundtrip.py`
 
-### B7.7：LLM Reranker（读取 rerank prompt）
-- **目标**：补齐 `llm_reranker.py`，读取 `config/prompts/rerank.txt` 构造 prompt（测试中可注入替代文本），并可在失败时返回可回退信号。
-- **修改文件**：
+### B7.7锛歀LM Reranker锛堣鍙?rerank prompt锛?
+- **鐩爣**锛氳ˉ榻?`llm_reranker.py`锛岃鍙?`config/prompts/rerank.txt` 鏋勯€?prompt锛堟祴璇曚腑鍙敞鍏ユ浛浠ｆ枃鏈級锛屽苟鍙湪澶辫触鏃惰繑鍥炲彲鍥為€€淇″彿銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/reranker/llm_reranker.py`
-  - `tests/unit/test_llm_reranker.py`（mock LLM）
-  - `tests/unit/test_llm_reranker_b77_comprehensive.py`（空/缺失 id、重复 id、工厂配置边界）
-- **验收标准**：
-  - backend=llm 时 `RerankerFactory` 可创建。
-  - 输出严格结构化（例如 ranked ids），不满足 schema 时抛出可读错误。
-  - 候选重排不丢数据：空/缺失 `id` 与重复 `id` 的候选均需完整保留（仅重排，不裁剪）。
-- **测试方法**：`pytest -q tests/unit/test_llm_reranker.py tests/unit/test_llm_reranker_b77_comprehensive.py`。
+  - `tests/unit/test_llm_reranker.py`锛坢ock LLM锛?
+  - `tests/unit/test_llm_reranker_b77_comprehensive.py`锛堢┖/缂哄け id銆侀噸澶?id銆佸伐鍘傞厤缃竟鐣岋級
+- **楠屾敹鏍囧噯**锛?
+  - backend=llm 鏃?`RerankerFactory` 鍙垱寤恒€?
+  - 杈撳嚭涓ユ牸缁撴瀯鍖栵紙渚嬪 ranked ids锛夛紝涓嶆弧瓒?schema 鏃舵姏鍑哄彲璇婚敊璇€?
+  - 鍊欓€夐噸鎺掍笉涓㈡暟鎹細绌?缂哄け `id` 涓庨噸澶?`id` 鐨勫€欓€夊潎闇€瀹屾暣淇濈暀锛堜粎閲嶆帓锛屼笉瑁佸壀锛夈€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_llm_reranker.py tests/unit/test_llm_reranker_b77_comprehensive.py`銆?
 
-### B7.8：Cross-Encoder Reranker（本地/托管模型，占位可跑）
-- **目标**：补齐 `cross_encoder_reranker.py`，支持对 Top-M candidates 打分排序；测试中用 mock scorer 保证 deterministic。
-- **修改文件**：
+### B7.8锛欳ross-Encoder Reranker锛堟湰鍦?鎵樼妯″瀷锛屽崰浣嶅彲璺戯級
+- **鐩爣**锛氳ˉ榻?`cross_encoder_reranker.py`锛屾敮鎸佸 Top-M candidates 鎵撳垎鎺掑簭锛涙祴璇曚腑鐢?mock scorer 淇濊瘉 deterministic銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/reranker/cross_encoder_reranker.py`
   - `src/libs/reranker/reranker_factory.py`
   - `src/libs/reranker/__init__.py`
-  - `tests/unit/test_cross_encoder_reranker.py`（mock scorer）
-  - `tests/unit/test_reranker_factory.py`（provider=cross_encoder 路由）
-- **验收标准**：
-  - backend=cross_encoder 时 `RerankerFactory` 可创建。
-  - 提供超时/失败回退信号（供 Core 层 `D6` fallback 使用）。
-- **测试方法**：`pytest -q tests/unit/test_cross_encoder_reranker.py tests/unit/test_reranker_factory.py`。
+  - `tests/unit/test_cross_encoder_reranker.py`锛坢ock scorer锛?
+  - `tests/unit/test_reranker_factory.py`锛坧rovider=cross_encoder 璺敱锛?
+- **楠屾敹鏍囧噯**锛?
+  - backend=cross_encoder 鏃?`RerankerFactory` 鍙垱寤恒€?
+  - 鎻愪緵瓒呮椂/澶辫触鍥為€€淇″彿锛堜緵 Core 灞?`D6` fallback 浣跨敤锛夈€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_cross_encoder_reranker.py tests/unit/test_reranker_factory.py`銆?
 
-### B8：Vision LLM 抽象接口与工厂集成
-- **目标**：定义 `BaseVisionLLM` 抽象接口，扩展 `LLMFactory` 支持 Vision LLM 创建，为 C7 的 ImageCaptioner 提供底层抽象。
-- **修改文件**：
+### B8锛歏ision LLM 鎶借薄鎺ュ彛涓庡伐鍘傞泦鎴?
+- **鐩爣**锛氬畾涔?`BaseVisionLLM` 鎶借薄鎺ュ彛锛屾墿灞?`LLMFactory` 鏀寔 Vision LLM 鍒涘缓锛屼负 C7 鐨?ImageCaptioner 鎻愪緵搴曞眰鎶借薄銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/llm/base_vision_llm.py`
-  - `src/libs/llm/llm_factory.py`（扩展 `create_vision_llm` 方法）
+  - `src/libs/llm/llm_factory.py`锛堟墿灞?`create_vision_llm` 鏂规硶锛?
   - `src/libs/llm/__init__.py`
   - `tests/unit/test_vision_llm_factory.py`
-- **实现类/函数**：
+- **瀹炵幇绫?鍑芥暟**锛?
   - `BaseVisionLLM.chat_with_image(text: str, image_path: str | bytes, trace: TraceContext | None = None) -> ChatResponse`
   - `LLMFactory.create_vision_llm(settings) -> BaseVisionLLM`
-- **验收标准**：
-  - 抽象接口清晰定义多模态输入（文本+图片路径/base64）。
-  - 工厂方法 `create_vision_llm` 能根据配置路由到不同 provider（测试中用 Fake Vision LLM 验证）。
-  - 接口设计支持图片预处理（压缩、格式转换）的扩展点。
-- **测试方法**：`pytest -q tests/unit/test_vision_llm_factory.py`。
+- **楠屾敹鏍囧噯**锛?
+  - 鎶借薄鎺ュ彛娓呮櫚瀹氫箟澶氭ā鎬佽緭鍏ワ紙鏂囨湰+鍥剧墖璺緞/base64锛夈€?
+  - 宸ュ巶鏂规硶 `create_vision_llm` 鑳芥牴鎹厤缃矾鐢卞埌涓嶅悓 provider锛堟祴璇曚腑鐢?Fake Vision LLM 楠岃瘉锛夈€?
+  - 鎺ュ彛璁捐鏀寔鍥剧墖棰勫鐞嗭紙鍘嬬缉銆佹牸寮忚浆鎹級鐨勬墿灞曠偣銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_vision_llm_factory.py`銆?
 
-### B9：Azure Vision LLM 实现
-- **目标**：实现 `AzureVisionLLM`，支持通过 Azure OpenAI 调用 GPT-4o/GPT-4-Vision-Preview 进行图像理解。
-- **修改文件**：
+### B9锛欰zure Vision LLM 瀹炵幇
+- **鐩爣**锛氬疄鐜?`AzureVisionLLM`锛屾敮鎸侀€氳繃 Azure OpenAI 璋冪敤 GPT-4o/GPT-4-Vision-Preview 杩涜鍥惧儚鐞嗚В銆?
+- **淇敼鏂囦欢**锛?
   - `src/libs/llm/azure_vision_llm.py`
   - `src/libs/llm/llm_factory.py`
   - `src/libs/llm/__init__.py`
-  - `tests/unit/test_azure_vision_llm.py`（mock HTTP，不走真实 API）
-  - `tests/unit/test_vision_llm_factory.py`（vision_llm.provider=azure 路由验证）
-- **实现类/函数**：
-  - `AzureVisionLLM(BaseVisionLLM)`：实现 `chat_with_image` 方法
-  - 支持 Azure 特有配置：`azure_endpoint`, `api_version`, `deployment_name`, `api_key`
-- **验收标准**：
-  - provider=azure 且配置 vision_llm 时，`LLMFactory.create_vision_llm()` 可创建 Azure Vision LLM 实例。
-  - 支持图片路径和 base64 两种输入方式。
-  - 图片过大时自动压缩至 `max_image_size` 配置的尺寸（默认2048px）。
-  - API 调用失败时抛出清晰错误，包含 Azure 特有错误码。
-  - mock 测试覆盖：正常调用、图片压缩、超时、认证失败等场景。
-- **测试方法**：`pytest -q tests/unit/test_azure_vision_llm.py tests/unit/test_vision_llm_factory.py`。
+  - `tests/unit/test_azure_vision_llm.py`锛坢ock HTTP锛屼笉璧扮湡瀹?API锛?
+  - `tests/unit/test_vision_llm_factory.py`锛坴ision_llm.provider=azure 璺敱楠岃瘉锛?
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `AzureVisionLLM(BaseVisionLLM)`锛氬疄鐜?`chat_with_image` 鏂规硶
+  - 鏀寔 Azure 鐗规湁閰嶇疆锛歚azure_endpoint`, `api_version`, `deployment_name`, `api_key`
+- **楠屾敹鏍囧噯**锛?
+  - provider=azure 涓旈厤缃?vision_llm 鏃讹紝`LLMFactory.create_vision_llm()` 鍙垱寤?Azure Vision LLM 瀹炰緥銆?
+  - 鏀寔鍥剧墖璺緞鍜?base64 涓ょ杈撳叆鏂瑰紡銆?
+  - 鍥剧墖杩囧ぇ鏃惰嚜鍔ㄥ帇缂╄嚦 `max_image_size` 閰嶇疆鐨勫昂瀵革紙榛樿2048px锛夈€?
+  - API 璋冪敤澶辫触鏃舵姏鍑烘竻鏅伴敊璇紝鍖呭惈 Azure 鐗规湁閿欒鐮併€?
+  - mock 娴嬭瘯瑕嗙洊锛氭甯歌皟鐢ㄣ€佸浘鐗囧帇缂┿€佽秴鏃躲€佽璇佸け璐ョ瓑鍦烘櫙銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_azure_vision_llm.py tests/unit/test_vision_llm_factory.py`銆?
 
 ---
 
-## 阶段 C：Ingestion Pipeline MVP（目标：能把 PDF 样例摄取到本地存储）
+## 闃舵 C锛欼ngestion Pipeline MVP锛堢洰鏍囷細鑳芥妸 PDF 鏍蜂緥鎽勫彇鍒版湰鍦板瓨鍌級
 
-> 注：本阶段严格按 5.4.1 的离线数据流落地，并优先实现“增量跳过（SHA256）”。
+> 娉細鏈樁娈典弗鏍兼寜 5.4.1 鐨勭绾挎暟鎹祦钀藉湴锛屽苟浼樺厛瀹炵幇鈥滃閲忚烦杩囷紙SHA256锛夆€濄€?
 
-### C1：定义核心数据类型/契约（Document/Chunk/ChunkRecord）
-- **目标**：定义全链路（ingestion → retrieval → mcp tools）共用的数据结构/契约，避免散落在各子模块内导致的耦合与重复。
-- **修改文件**：
+### C1锛氬畾涔夋牳蹇冩暟鎹被鍨?濂戠害锛圖ocument/Chunk/ChunkRecord锛?
+- **鐩爣**锛氬畾涔夊叏閾捐矾锛坕ngestion 鈫?retrieval 鈫?mcp tools锛夊叡鐢ㄧ殑鏁版嵁缁撴瀯/濂戠害锛岄伩鍏嶆暎钀藉湪鍚勫瓙妯″潡鍐呭鑷寸殑鑰﹀悎涓庨噸澶嶃€?
+- **淇敼鏂囦欢**锛?
   - `src/core/types.py`
-  - `src/core/__init__.py`（可选：统一 re-export 以简化导入路径）
+  - `src/core/__init__.py`锛堝彲閫夛細缁熶竴 re-export 浠ョ畝鍖栧鍏ヨ矾寰勶級
   - `tests/unit/test_core_types.py`
-- **实现类/函数**（建议）：
+- **瀹炵幇绫?鍑芥暟**锛堝缓璁級锛?
   - `Document(id, text, metadata)`
   - `Chunk(id, text, metadata, start_offset, end_offset, source_ref?)`
-  - `ChunkRecord(id, text, metadata, dense_vector?, sparse_vector?)`（用于存储/检索载体；字段按后续 C8~C12 演进）
-- **验收标准**：
-  - 类型可序列化（dict/json）且字段稳定（单元测试断言）。
-  - `metadata` 约定最少包含 `source_path`，其余字段允许增量扩展但不得破坏兼容。
-  - **`metadata.images` 字段规范**（用于多模态支持）：
-    - 结构：`List[{"id": str, "path": str, "page": int, "text_offset": int, "text_length": int, "position": dict}]`
-    - `id`：全局唯一图片标识符（建议格式：`{doc_hash}_{page}_{seq}`）
-    - `path`：图片文件存储路径（约定：`data/images/{collection}/{image_id}.png`）
-    - `page`：图片在原文档中的页码（可选，适用于PDF等分页文档）
-    - `text_offset`：占位符在 `Document.text` 中的起始字符位置（从0开始计数）
-    - `text_length`：占位符的字符长度（通常为 `len("[IMAGE: {image_id}]")`）
-    - `position`：图片在原文档中的物理位置信息（可选，如PDF坐标、像素位置、尺寸等）
-    - 说明：通过 `text_offset` 和 `text_length` 可精确定位图片在文本中的位置，支持同一图片多次出现的场景
-  - **文本中图片占位符规范**：在 `Document.text` 中，图片位置使用 `[IMAGE: {image_id}]` 格式标记。
-- **测试方法**：`pytest -q tests/unit/test_core_types.py`。
+  - `ChunkRecord(id, text, metadata, dense_vector?, sparse_vector?)`锛堢敤浜庡瓨鍌?妫€绱㈣浇浣擄紱瀛楁鎸夊悗缁?C8~C12 婕旇繘锛?
+- **楠屾敹鏍囧噯**锛?
+  - 绫诲瀷鍙簭鍒楀寲锛坉ict/json锛変笖瀛楁绋冲畾锛堝崟鍏冩祴璇曟柇瑷€锛夈€?
+  - `metadata` 绾﹀畾鏈€灏戝寘鍚?`source_path`锛屽叾浣欏瓧娈靛厑璁稿閲忔墿灞曚絾涓嶅緱鐮村潖鍏煎銆?
+  - **`metadata.images` 瀛楁瑙勮寖**锛堢敤浜庡妯℃€佹敮鎸侊級锛?
+    - 缁撴瀯锛歚List[{"id": str, "path": str, "page": int, "text_offset": int, "text_length": int, "position": dict}]`
+    - `id`锛氬叏灞€鍞竴鍥剧墖鏍囪瘑绗︼紙寤鸿鏍煎紡锛歚{doc_hash}_{page}_{seq}`锛?
+    - `path`锛氬浘鐗囨枃浠跺瓨鍌ㄨ矾寰勶紙绾﹀畾锛歚data/images/{collection}/{image_id}.png`锛?
+    - `page`锛氬浘鐗囧湪鍘熸枃妗ｄ腑鐨勯〉鐮侊紙鍙€夛紝閫傜敤浜嶱DF绛夊垎椤垫枃妗ｏ級
+    - `text_offset`锛氬崰浣嶇鍦?`Document.text` 涓殑璧峰瀛楃浣嶇疆锛堜粠0寮€濮嬭鏁帮級
+    - `text_length`锛氬崰浣嶇鐨勫瓧绗﹂暱搴︼紙閫氬父涓?`len("[IMAGE: {image_id}]")`锛?
+    - `position`锛氬浘鐗囧湪鍘熸枃妗ｄ腑鐨勭墿鐞嗕綅缃俊鎭紙鍙€夛紝濡侾DF鍧愭爣銆佸儚绱犱綅缃€佸昂瀵哥瓑锛?
+    - 璇存槑锛氶€氳繃 `text_offset` 鍜?`text_length` 鍙簿纭畾浣嶅浘鐗囧湪鏂囨湰涓殑浣嶇疆锛屾敮鎸佸悓涓€鍥剧墖澶氭鍑虹幇鐨勫満鏅?
+  - **鏂囨湰涓浘鐗囧崰浣嶇瑙勮寖**锛氬湪 `Document.text` 涓紝鍥剧墖浣嶇疆浣跨敤 `[IMAGE: {image_id}]` 鏍煎紡鏍囪銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_core_types.py`銆?
 
-### C2：文件完整性检查（SHA256）
-- **目标**：在Libs中实现 `file_integrity.py`：计算文件 hash，并提供“是否跳过”的判定接口（使用 SQLite 作为默认存储，支持后续替换为 Redis/PostgreSQL）。
-- **修改文件**：
+### C2锛氭枃浠跺畬鏁存€ф鏌ワ紙SHA256锛?
+- **鐩爣**锛氬湪Libs涓疄鐜?`file_integrity.py`锛氳绠楁枃浠?hash锛屽苟鎻愪緵鈥滄槸鍚﹁烦杩団€濈殑鍒ゅ畾鎺ュ彛锛堜娇鐢?SQLite 浣滀负榛樿瀛樺偍锛屾敮鎸佸悗缁浛鎹负 Redis/PostgreSQL锛夈€?
+- **淇敼鏂囦欢**锛?
   - `src/libs/loader/file_integrity.py`
   - `tests/unit/test_file_integrity.py`
-  - 数据库文件：`data/db/ingestion_history.db`（自动创建）
-- **实现类/函数**：
-  - `FileIntegrityChecker` 类（抽象接口）
-  - `SQLiteIntegrityChecker(FileIntegrityChecker)` 类（默认实现）
+  - 鏁版嵁搴撴枃浠讹細`data/db/ingestion_history.db`锛堣嚜鍔ㄥ垱寤猴級
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `FileIntegrityChecker` 绫伙紙鎶借薄鎺ュ彛锛?
+  - `SQLiteIntegrityChecker(FileIntegrityChecker)` 绫伙紙榛樿瀹炵幇锛?
     - `compute_sha256(path: str) -> str`
     - `should_skip(file_hash: str) -> bool`
     - `mark_success(file_hash: str, file_path: str, ...)`
     - `mark_failed(file_hash: str, error_msg: str)`
-- **验收标准**：
-  - 同一文件多次计算hash结果一致
-  - 标记 success 后，`should_skip` 返回 `True`
-  - 数据库文件正确创建在 `data/db/ingestion_history.db`
-  - 支持并发写入（SQLite WAL模式）
-- **测试方法**：`pytest -q tests/unit/test_file_integrity.py`。
+- **楠屾敹鏍囧噯**锛?
+  - 鍚屼竴鏂囦欢澶氭璁＄畻hash缁撴灉涓€鑷?
+  - 鏍囪 success 鍚庯紝`should_skip` 杩斿洖 `True`
+  - 鏁版嵁搴撴枃浠舵纭垱寤哄湪 `data/db/ingestion_history.db`
+  - 鏀寔骞跺彂鍐欏叆锛圫QLite WAL妯″紡锛?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_file_integrity.py`銆?
 
-### C3：Loader 抽象基类与 PDF Loader 壳子
-- **目标**：在Libs中定义 `BaseLoader`，并实现 `PdfLoader` 的最小行为。
-- **修改文件**：
+### C3锛歀oader 鎶借薄鍩虹被涓?PDF Loader 澹冲瓙
+- **鐩爣**锛氬湪Libs涓畾涔?`BaseLoader`锛屽苟瀹炵幇 `PdfLoader` 鐨勬渶灏忚涓恒€?
+- **淇敼鏂囦欢**锛?
   - `src/libs/loader/base_loader.py`
   - `src/libs/loader/pdf_loader.py`
   - `tests/unit/test_loader_pdf_contract.py`
-- **实现类/函数**：
+- **瀹炵幇绫?鍑芥暟**锛?
   - `BaseLoader.load(path) -> Document`
   - `PdfLoader.load(path)`
-- **验收标准**：
-  - **基础要求**：对 sample PDF（fixtures）能产出 Document，metadata 至少含 `source_path`。
-  - **图片处理要求**（遵循 C1 定义的契约）：
-    - 若 PDF 包含图片，应提取图片并保存到 `data/images/{doc_hash}/` 目录
-    - 在 `Document.text` 中，图片位置插入占位符：`[IMAGE: {image_id}]`
-    - 在 `metadata.images` 中记录图片信息（格式见 C1 规范）
-    - 若 PDF 无图片，`metadata.images` 可为空列表或省略该字段
-  - **降级行为**：图片提取失败不应阻塞文本解析，可在日志中记录警告。
-- **测试方法**：`pytest -q tests/unit/test_loader_pdf_contract.py`。
-- **测试建议**：
-  - 准备两个测试文件：`simple.pdf`（纯文本）和 `with_images.pdf`（包含图片）
-  - 验证纯文本PDF能正常解析
-  - 验证带图片PDF能提取图片并正确插入占位符
+- **楠屾敹鏍囧噯**锛?
+  - **鍩虹瑕佹眰**锛氬 sample PDF锛坒ixtures锛夎兘浜у嚭 Document锛宮etadata 鑷冲皯鍚?`source_path`銆?
+  - **鍥剧墖澶勭悊瑕佹眰**锛堥伒寰?C1 瀹氫箟鐨勫绾︼級锛?
+    - 鑻?PDF 鍖呭惈鍥剧墖锛屽簲鎻愬彇鍥剧墖骞朵繚瀛樺埌 `data/images/{doc_hash}/` 鐩綍
+    - 鍦?`Document.text` 涓紝鍥剧墖浣嶇疆鎻掑叆鍗犱綅绗︼細`[IMAGE: {image_id}]`
+    - 鍦?`metadata.images` 涓褰曞浘鐗囦俊鎭紙鏍煎紡瑙?C1 瑙勮寖锛?
+    - 鑻?PDF 鏃犲浘鐗囷紝`metadata.images` 鍙负绌哄垪琛ㄦ垨鐪佺暐璇ュ瓧娈?
+  - **闄嶇骇琛屼负**锛氬浘鐗囨彁鍙栧け璐ヤ笉搴旈樆濉炴枃鏈В鏋愶紝鍙湪鏃ュ織涓褰曡鍛娿€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_loader_pdf_contract.py`銆?
+- **娴嬭瘯寤鸿**锛?
+  - 鍑嗗涓や釜娴嬭瘯鏂囦欢锛歚simple.pdf`锛堢函鏂囨湰锛夊拰 `with_images.pdf`锛堝寘鍚浘鐗囷級
+  - 楠岃瘉绾枃鏈琍DF鑳芥甯歌В鏋?
+  - 楠岃瘉甯﹀浘鐗嘝DF鑳芥彁鍙栧浘鐗囧苟姝ｇ‘鎻掑叆鍗犱綅绗?
 
-### C4：Splitter 集成（调用 Libs）
-- **目标**：实现 Chunking 模块作为 `libs.splitter` 和 Ingestion Pipeline 之间的**适配器层**，完成 Document→Chunks 的业务对象转换。
-- **核心职责（DocumentChunker 相比 libs.splitter 的增值）**：
-  - **职责边界说明**：
-    - `libs.splitter`：纯文本切分工具（`str → List[str]`），不涉及业务对象
-    - `DocumentChunker`：业务适配器（`Document对象 → List[Chunk对象]`），添加业务逻辑
-  - **6 个增值功能**：
-    1. **Chunk ID 生成**：为每个文本片段生成唯一且确定性的 ID（格式：`{doc_id}_{index:04d}_{hash_8chars}`）
-    2. **元数据继承**：将 Document.metadata 复制到每个 Chunk.metadata（source_path, doc_type, title 等）
-    3. **添加 chunk_index**：记录 chunk 在文档中的序号（从 0 开始），用于排序和定位
-    4. **建立 source_ref**：记录 Chunk.source_ref 指向父 Document.id，支持溯源
-    5. **图片引用按需分发**：扫描每个 chunk 文本中的 `[IMAGE: {id}]` 占位符，从 `Document.metadata["images"]` 中提取该 chunk 实际引用的 ImageRef，写入 `chunk.metadata["images"]`（仅含该 chunk 引用的子集）和 `chunk.metadata["image_refs"]`（image_id 列表）。无占位符的 chunk 不含 `images` 字段。⚠️ 不可简单整体继承或丢弃文档级 `images`，否则下游 C7 ImageCaptioner 将无法定位图片路径。
-    6. **类型转换**：将 libs.splitter 的 `List[str]` 转换为符合 core.types 契约的 `List[Chunk]` 对象
-- **修改文件**：
+### C4锛歋plitter 闆嗘垚锛堣皟鐢?Libs锛?
+- **鐩爣**锛氬疄鐜?Chunking 妯″潡浣滀负 `libs.splitter` 鍜?Ingestion Pipeline 涔嬮棿鐨?*閫傞厤鍣ㄥ眰**锛屽畬鎴?Document鈫扖hunks 鐨勪笟鍔″璞¤浆鎹€?
+- **鏍稿績鑱岃矗锛圖ocumentChunker 鐩告瘮 libs.splitter 鐨勫鍊硷級**锛?
+  - **鑱岃矗杈圭晫璇存槑**锛?
+    - `libs.splitter`锛氱函鏂囨湰鍒囧垎宸ュ叿锛坄str 鈫?List[str]`锛夛紝涓嶆秹鍙婁笟鍔″璞?
+    - `DocumentChunker`锛氫笟鍔￠€傞厤鍣紙`Document瀵硅薄 鈫?List[Chunk瀵硅薄]`锛夛紝娣诲姞涓氬姟閫昏緫
+  - **6 涓鍊煎姛鑳?*锛?
+    1. **Chunk ID 鐢熸垚**锛氫负姣忎釜鏂囨湰鐗囨鐢熸垚鍞竴涓旂‘瀹氭€х殑 ID锛堟牸寮忥細`{doc_id}_{index:04d}_{hash_8chars}`锛?
+    2. **鍏冩暟鎹户鎵?*锛氬皢 Document.metadata 澶嶅埗鍒版瘡涓?Chunk.metadata锛坰ource_path, doc_type, title 绛夛級
+    3. **娣诲姞 chunk_index**锛氳褰?chunk 鍦ㄦ枃妗ｄ腑鐨勫簭鍙凤紙浠?0 寮€濮嬶級锛岀敤浜庢帓搴忓拰瀹氫綅
+    4. **寤虹珛 source_ref**锛氳褰?Chunk.source_ref 鎸囧悜鐖?Document.id锛屾敮鎸佹函婧?
+    5. **鍥剧墖寮曠敤鎸夐渶鍒嗗彂**锛氭壂鎻忔瘡涓?chunk 鏂囨湰涓殑 `[IMAGE: {id}]` 鍗犱綅绗︼紝浠?`Document.metadata["images"]` 涓彁鍙栬 chunk 瀹為檯寮曠敤鐨?ImageRef锛屽啓鍏?`chunk.metadata["images"]`锛堜粎鍚 chunk 寮曠敤鐨勫瓙闆嗭級鍜?`chunk.metadata["image_refs"]`锛坕mage_id 鍒楄〃锛夈€傛棤鍗犱綅绗︾殑 chunk 涓嶅惈 `images` 瀛楁銆傗殸锔?涓嶅彲绠€鍗曟暣浣撶户鎵挎垨涓㈠純鏂囨。绾?`images`锛屽惁鍒欎笅娓?C7 ImageCaptioner 灏嗘棤娉曞畾浣嶅浘鐗囪矾寰勩€?
+    6. **绫诲瀷杞崲**锛氬皢 libs.splitter 鐨?`List[str]` 杞崲涓虹鍚?core.types 濂戠害鐨?`List[Chunk]` 瀵硅薄
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/chunking/document_chunker.py`
   - `src/ingestion/chunking/__init__.py`
   - `tests/unit/test_document_chunker.py`
-- **实现类/函数**：
-  - `DocumentChunker` 类
-  - `__init__(settings: Settings)`：通过 SplitterFactory 获取配置的 splitter 实例
-  - `split_document(document: Document) -> List[Chunk]`：完整的转换流程
-  - `_generate_chunk_id(doc_id: str, index: int, text: str) -> str`：生成稳定 Chunk ID
-  - `_inherit_metadata(document: Document, chunk_index: int, chunk_text: str) -> dict`：元数据继承 + 图片引用按需分发逻辑（需要 chunk_text 来扫描 `[IMAGE: id]` 占位符）
-- **验收标准**：
-  - **配置驱动**：通过修改 settings.yaml 中的 splitter 配置（如 chunk_size），产出的 chunk 数量和长度发生相应变化
-  - **ID 唯一性**：每个 Chunk 的 ID 在整个文档中唯一
-  - **ID 确定性**：同一 Document 对象重复切分产生相同的 Chunk ID 序列
-  - **元数据完整性**：Chunk.metadata 包含所有 Document.metadata 字段 + chunk_index 字段
-  - **图片分发正确性**：含 `[IMAGE: id]` 占位符的 chunk 其 `metadata["images"]` 仅包含该 chunk 引用的图片子集；不含占位符的 chunk 无 `images` 字段；`metadata["image_refs"]` 列表与占位符一致
-  - **溯源链接**：所有 Chunk.source_ref 正确指向父 Document.id
-  - **类型契约**：输出的 Chunk 对象符合 `core/types.py` 中的 Chunk 定义（可序列化、字段完整）
-- **测试方法**：`pytest -q tests/unit/test_document_chunker.py`（使用 FakeSplitter 隔离测试，无需真实 LLM/外部依赖）。
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `DocumentChunker` 绫?
+  - `__init__(settings: Settings)`锛氶€氳繃 SplitterFactory 鑾峰彇閰嶇疆鐨?splitter 瀹炰緥
+  - `split_document(document: Document) -> List[Chunk]`锛氬畬鏁寸殑杞崲娴佺▼
+  - `_generate_chunk_id(doc_id: str, index: int, text: str) -> str`锛氱敓鎴愮ǔ瀹?Chunk ID
+  - `_inherit_metadata(document: Document, chunk_index: int, chunk_text: str) -> dict`锛氬厓鏁版嵁缁ф壙 + 鍥剧墖寮曠敤鎸夐渶鍒嗗彂閫昏緫锛堥渶瑕?chunk_text 鏉ユ壂鎻?`[IMAGE: id]` 鍗犱綅绗︼級
+- **楠屾敹鏍囧噯**锛?
+  - **閰嶇疆椹卞姩**锛氶€氳繃淇敼 settings.yaml 涓殑 splitter 閰嶇疆锛堝 chunk_size锛夛紝浜у嚭鐨?chunk 鏁伴噺鍜岄暱搴﹀彂鐢熺浉搴斿彉鍖?
+  - **ID 鍞竴鎬?*锛氭瘡涓?Chunk 鐨?ID 鍦ㄦ暣涓枃妗ｄ腑鍞竴
+  - **ID 纭畾鎬?*锛氬悓涓€ Document 瀵硅薄閲嶅鍒囧垎浜х敓鐩稿悓鐨?Chunk ID 搴忓垪
+  - **鍏冩暟鎹畬鏁存€?*锛欳hunk.metadata 鍖呭惈鎵€鏈?Document.metadata 瀛楁 + chunk_index 瀛楁
+  - **鍥剧墖鍒嗗彂姝ｇ‘鎬?*锛氬惈 `[IMAGE: id]` 鍗犱綅绗︾殑 chunk 鍏?`metadata["images"]` 浠呭寘鍚 chunk 寮曠敤鐨勫浘鐗囧瓙闆嗭紱涓嶅惈鍗犱綅绗︾殑 chunk 鏃?`images` 瀛楁锛沗metadata["image_refs"]` 鍒楄〃涓庡崰浣嶇涓€鑷?
+  - **婧簮閾炬帴**锛氭墍鏈?Chunk.source_ref 姝ｇ‘鎸囧悜鐖?Document.id
+  - **绫诲瀷濂戠害**锛氳緭鍑虹殑 Chunk 瀵硅薄绗﹀悎 `core/types.py` 涓殑 Chunk 瀹氫箟锛堝彲搴忓垪鍖栥€佸瓧娈靛畬鏁达級
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_document_chunker.py`锛堜娇鐢?FakeSplitter 闅旂娴嬭瘯锛屾棤闇€鐪熷疄 LLM/澶栭儴渚濊禆锛夈€?
 
-### C5：Transform 抽象基类 + ChunkRefiner（规则去噪 + LLM 增强）
-- **目标**：定义 `BaseTransform`；实现 `ChunkRefiner`：先做规则去噪，再通过LLM进行智能增强，并提供失败降级机制（LLM异常时回退到规则结果，不阻塞 ingestion）。
-- **前置条件**（必须准备）：
-  - **必须配置LLM**：在 `config/settings.yaml` 中配置可用的LLM（provider/model/api_key）
-  - **环境变量**：设置对应的API key环境变量（`OPENAI_API_KEY`/`OLLAMA_BASE_URL`等）
-  - **验证目的**：通过真实LLM测试验证配置正确性和refinement效果
-- **修改文件**：
-  - `src/ingestion/transform/base_transform.py`（新增）
-  - `src/ingestion/transform/chunk_refiner.py`（新增）
-  - `src/core/trace/trace_context.py`（新增：最小实现，Phase F 完善）
-  - `config/prompts/chunk_refinement.txt`（已存在，需验证内容并补充 {text} 占位符）
-  - `tests/fixtures/noisy_chunks.json`（新增：8个典型噪声场景）
-  - `tests/unit/test_chunk_refiner.py`（新增：27个单元测试）
-  - `tests/integration/test_chunk_refiner_llm.py`（新增：真实LLM集成测试）
-- **实现类/函数**：
+### C5锛歍ransform 鎶借薄鍩虹被 + ChunkRefiner锛堣鍒欏幓鍣?+ LLM 澧炲己锛?
+- **鐩爣**锛氬畾涔?`BaseTransform`锛涘疄鐜?`ChunkRefiner`锛氬厛鍋氳鍒欏幓鍣紝鍐嶉€氳繃LLM杩涜鏅鸿兘澧炲己锛屽苟鎻愪緵澶辫触闄嶇骇鏈哄埗锛圠LM寮傚父鏃跺洖閫€鍒拌鍒欑粨鏋滐紝涓嶉樆濉?ingestion锛夈€?
+- **鍓嶇疆鏉′欢**锛堝繀椤诲噯澶囷級锛?
+  - **蹇呴』閰嶇疆LLM**锛氬湪 `config/settings.yaml` 涓厤缃彲鐢ㄧ殑LLM锛坧rovider/model/api_key锛?
+  - **鐜鍙橀噺**锛氳缃搴旂殑API key鐜鍙橀噺锛坄OPENAI_API_KEY`/`OLLAMA_BASE_URL`绛夛級
+  - **楠岃瘉鐩殑**锛氶€氳繃鐪熷疄LLM娴嬭瘯楠岃瘉閰嶇疆姝ｇ‘鎬у拰refinement鏁堟灉
+- **淇敼鏂囦欢**锛?
+  - `src/ingestion/transform/base_transform.py`锛堟柊澧烇級
+  - `src/ingestion/transform/chunk_refiner.py`锛堟柊澧烇級
+  - `src/core/trace/trace_context.py`锛堟柊澧烇細鏈€灏忓疄鐜帮紝Phase F 瀹屽杽锛?
+  - `config/prompts/chunk_refinement.txt`锛堝凡瀛樺湪锛岄渶楠岃瘉鍐呭骞惰ˉ鍏?{text} 鍗犱綅绗︼級
+  - `tests/fixtures/noisy_chunks.json`锛堟柊澧烇細8涓吀鍨嬪櫔澹板満鏅級
+  - `tests/unit/test_chunk_refiner.py`锛堟柊澧烇細27涓崟鍏冩祴璇曪級
+  - `tests/integration/test_chunk_refiner_llm.py`锛堟柊澧烇細鐪熷疄LLM闆嗘垚娴嬭瘯锛?
+- **瀹炵幇绫?鍑芥暟**锛?
   - `BaseTransform.transform(chunks, trace) -> List[Chunk]`
   - `ChunkRefiner.__init__(settings, llm?, prompt_path?)`
   - `ChunkRefiner.transform(chunks, trace) -> List[Chunk]`
-  - `ChunkRefiner._rule_based_refine(text) -> str`（去空白/页眉页脚/格式标记/HTML注释）
-  - `ChunkRefiner._llm_refine(text, trace) -> str | None`（可选 LLM 重写，失败返回 None）
-  - `ChunkRefiner._load_prompt(prompt_path?)`（从文件加载prompt模板，支持默认fallback）
-- **实现流程建议**：
-  1. 先创建 `tests/fixtures/noisy_chunks.json`，包含8个典型噪声场景：
-     - typical_noise_scenario: 综合噪声（页眉/页脚/空白）
-     - ocr_errors: OCR错误文本
-     - page_header_footer: 页眉页脚模式
-     - excessive_whitespace: 多余空白
-     - format_markers: HTML/Markdown标记
-     - clean_text: 干净文本（验证不过度清理）
-     - code_blocks: 代码块（验证保留内部格式）
-     - mixed_noise: 真实混合场景
-  2. 创建 `TraceContext` 占位实现（uuid生成trace_id，record_stage存储阶段数据）
-  3. 实现 `BaseTransform` 抽象接口
-  4. 实现 `ChunkRefiner._rule_based_refine` 规则去噪逻辑（正则匹配+分段处理）
-  5. 编写规则模式单元测试（使用 fixtures 断言清洗效果）
-  6. 实现 `_llm_refine` 可选增强（读取 prompt、调用 LLM、错误处理）
-  7. 编写 LLM 模式单元测试（mock LLM 断言调用与输出）
-  8. 编写降级场景测试（LLM 失败时回退到规则结果，标记 metadata）
-  9. **编写真实LLM集成测试并执行验证**（必须执行，验证LLM配置）
-- **验收标准**：
-  - **单元测试（快速反馈循环）**：
-    - 规则模式：对 fixtures 噪声样例能正确去噪（连续空白/页眉页脚/格式标记/分隔线）
-    - 保留能力：代码块内部格式不被破坏，Markdown结构完整保留
-    - LLM 模式：mock LLM 时能正确调用并返回重写结果，metadata 标记 `refined_by: "llm"`
-    - 降级行为：LLM 失败时回退到规则结果，metadata 标记 `refined_by: "rule"` 和 fallback 原因
-    - 配置开关：通过 `settings.yaml` 的 `ingestion.chunk_refiner.use_llm` 控制行为
-    - 异常处理：单个chunk处理异常不影响其他chunk，保留原文
-  - **集成测试（验收必须项）**：
-    - ✅ **必须验证真实LLM调用成功**：使用前置条件中配置的LLM进行真实refinement
-    - ✅ **必须验证输出质量**：LLM refined文本确实更干净（噪声减少、内容保留）
-    - ✅ **必须验证降级机制**：无效模型名称时优雅降级到rule-based，不崩溃
-    - 说明：这是验证"前置条件中准备的LLM配置是否正确"的必要步骤
-- **测试方法**：
-  - **阶段1-单元测试（开发中快速迭代）**：
+  - `ChunkRefiner._rule_based_refine(text) -> str`锛堝幓绌虹櫧/椤电湁椤佃剼/鏍煎紡鏍囪/HTML娉ㄩ噴锛?
+  - `ChunkRefiner._llm_refine(text, trace) -> str | None`锛堝彲閫?LLM 閲嶅啓锛屽け璐ヨ繑鍥?None锛?
+  - `ChunkRefiner._load_prompt(prompt_path?)`锛堜粠鏂囦欢鍔犺浇prompt妯℃澘锛屾敮鎸侀粯璁allback锛?
+- **瀹炵幇娴佺▼寤鸿**锛?
+  1. 鍏堝垱寤?`tests/fixtures/noisy_chunks.json`锛屽寘鍚?涓吀鍨嬪櫔澹板満鏅細
+     - typical_noise_scenario: 缁煎悎鍣０锛堥〉鐪?椤佃剼/绌虹櫧锛?
+     - ocr_errors: OCR閿欒鏂囨湰
+     - page_header_footer: 椤电湁椤佃剼妯″紡
+     - excessive_whitespace: 澶氫綑绌虹櫧
+     - format_markers: HTML/Markdown鏍囪
+     - clean_text: 骞插噣鏂囨湰锛堥獙璇佷笉杩囧害娓呯悊锛?
+     - code_blocks: 浠ｇ爜鍧楋紙楠岃瘉淇濈暀鍐呴儴鏍煎紡锛?
+     - mixed_noise: 鐪熷疄娣峰悎鍦烘櫙
+  2. 鍒涘缓 `TraceContext` 鍗犱綅瀹炵幇锛坲uid鐢熸垚trace_id锛宺ecord_stage瀛樺偍闃舵鏁版嵁锛?
+  3. 瀹炵幇 `BaseTransform` 鎶借薄鎺ュ彛
+  4. 瀹炵幇 `ChunkRefiner._rule_based_refine` 瑙勫垯鍘诲櫔閫昏緫锛堟鍒欏尮閰?鍒嗘澶勭悊锛?
+  5. 缂栧啓瑙勫垯妯″紡鍗曞厓娴嬭瘯锛堜娇鐢?fixtures 鏂█娓呮礂鏁堟灉锛?
+  6. 瀹炵幇 `_llm_refine` 鍙€夊寮猴紙璇诲彇 prompt銆佽皟鐢?LLM銆侀敊璇鐞嗭級
+  7. 缂栧啓 LLM 妯″紡鍗曞厓娴嬭瘯锛坢ock LLM 鏂█璋冪敤涓庤緭鍑猴級
+  8. 缂栧啓闄嶇骇鍦烘櫙娴嬭瘯锛圠LM 澶辫触鏃跺洖閫€鍒拌鍒欑粨鏋滐紝鏍囪 metadata锛?
+  9. **缂栧啓鐪熷疄LLM闆嗘垚娴嬭瘯骞舵墽琛岄獙璇?*锛堝繀椤绘墽琛岋紝楠岃瘉LLM閰嶇疆锛?
+- **楠屾敹鏍囧噯**锛?
+  - **鍗曞厓娴嬭瘯锛堝揩閫熷弽棣堝惊鐜級**锛?
+    - 瑙勫垯妯″紡锛氬 fixtures 鍣０鏍蜂緥鑳芥纭幓鍣紙杩炵画绌虹櫧/椤电湁椤佃剼/鏍煎紡鏍囪/鍒嗛殧绾匡級
+    - 淇濈暀鑳藉姏锛氫唬鐮佸潡鍐呴儴鏍煎紡涓嶈鐮村潖锛孧arkdown缁撴瀯瀹屾暣淇濈暀
+    - LLM 妯″紡锛歮ock LLM 鏃惰兘姝ｇ‘璋冪敤骞惰繑鍥為噸鍐欑粨鏋滐紝metadata 鏍囪 `refined_by: "llm"`
+    - 闄嶇骇琛屼负锛歀LM 澶辫触鏃跺洖閫€鍒拌鍒欑粨鏋滐紝metadata 鏍囪 `refined_by: "rule"` 鍜?fallback 鍘熷洜
+    - 閰嶇疆寮€鍏筹細閫氳繃 `settings.yaml` 鐨?`ingestion.chunk_refiner.use_llm` 鎺у埗琛屼负
+    - 寮傚父澶勭悊锛氬崟涓猚hunk澶勭悊寮傚父涓嶅奖鍝嶅叾浠朿hunk锛屼繚鐣欏師鏂?
+  - **闆嗘垚娴嬭瘯锛堥獙鏀跺繀椤婚」锛?*锛?
+    - 鉁?**蹇呴』楠岃瘉鐪熷疄LLM璋冪敤鎴愬姛**锛氫娇鐢ㄥ墠缃潯浠朵腑閰嶇疆鐨凩LM杩涜鐪熷疄refinement
+    - 鉁?**蹇呴』楠岃瘉杈撳嚭璐ㄩ噺**锛歀LM refined鏂囨湰纭疄鏇村共鍑€锛堝櫔澹板噺灏戙€佸唴瀹逛繚鐣欙級
+    - 鉁?**蹇呴』楠岃瘉闄嶇骇鏈哄埗**锛氭棤鏁堟ā鍨嬪悕绉版椂浼橀泤闄嶇骇鍒皉ule-based锛屼笉宕╂簝
+    - 璇存槑锛氳繖鏄獙璇?鍓嶇疆鏉′欢涓噯澶囩殑LLM閰嶇疆鏄惁姝ｇ‘"鐨勫繀瑕佹楠?
+- **娴嬭瘯鏂规硶**锛?
+  - **闃舵1-鍗曞厓娴嬭瘯锛堝紑鍙戜腑蹇€熻凯浠ｏ級**锛?
     ```bash
     pytest tests/unit/test_chunk_refiner.py -v
-    # ✅ 27个测试全部通过，使用Mock隔离，无需真实API
+    # 鉁?27涓祴璇曞叏閮ㄩ€氳繃锛屼娇鐢∕ock闅旂锛屾棤闇€鐪熷疄API
     ```
-  - **阶段2-集成测试（验收必须执行）**：
+  - **闃舵2-闆嗘垚娴嬭瘯锛堥獙鏀跺繀椤绘墽琛岋級**锛?
     ```bash
-    # 1. 运行真实LLM集成测试（必须）
+    # 1. 杩愯鐪熷疄LLM闆嗘垚娴嬭瘯锛堝繀椤伙級
     pytest tests/integration/test_chunk_refiner_llm.py -v -s
-    # ✅ 验证LLM配置正确，refinement效果符合预期
-    # ⚠️ 会产生真实API调用与费用
+    # 鉁?楠岃瘉LLM閰嶇疆姝ｇ‘锛宺efinement鏁堟灉绗﹀悎棰勬湡
+    # 鈿狅笍 浼氫骇鐢熺湡瀹濧PI璋冪敤涓庤垂鐢?
     
-    # 2. Review打印输出，确认精炼质量
-    # - 噪声是否被有效去除？
-    # - 有效内容是否完整保留？
-    # - 降级机制是否正常工作？
+    # 2. Review鎵撳嵃杈撳嚭锛岀‘璁ょ簿鐐艰川閲?
+    # - 鍣０鏄惁琚湁鏁堝幓闄わ紵
+    # - 鏈夋晥鍐呭鏄惁瀹屾暣淇濈暀锛?
+    # - 闄嶇骇鏈哄埗鏄惁姝ｅ父宸ヤ綔锛?
     ```
-  - **测试分层逻辑**：
-    - 单元测试：验证代码逻辑正确
-    - 集成测试：验证系统可用性
-    - 两者互补，缺一不可
+  - **娴嬭瘯鍒嗗眰閫昏緫**锛?
+    - 鍗曞厓娴嬭瘯锛氶獙璇佷唬鐮侀€昏緫姝ｇ‘
+    - 闆嗘垚娴嬭瘯锛氶獙璇佺郴缁熷彲鐢ㄦ€?
+    - 涓よ€呬簰琛ワ紝缂轰竴涓嶅彲
 
-### C6：MetadataEnricher（规则增强 + 可选 LLM 增强 + 降级）
-- **目标**：实现元数据增强模块：提供规则增强的默认实现，并重点支持 LLM 增强（配置已就绪，LLM 开关打开）。利用 LLM 对 chunk 进行高质量的 title 生成、summary 摘要和 tags 提取。同时保留失败降级机制，确保不阻塞 ingestion。
-- **修改文件**：
+### C6锛歁etadataEnricher锛堣鍒欏寮?+ 鍙€?LLM 澧炲己 + 闄嶇骇锛?
+- **鐩爣**锛氬疄鐜板厓鏁版嵁澧炲己妯″潡锛氭彁渚涜鍒欏寮虹殑榛樿瀹炵幇锛屽苟閲嶇偣鏀寔 LLM 澧炲己锛堥厤缃凡灏辩华锛孡LM 寮€鍏虫墦寮€锛夈€傚埄鐢?LLM 瀵?chunk 杩涜楂樿川閲忕殑 title 鐢熸垚銆乻ummary 鎽樿鍜?tags 鎻愬彇銆傚悓鏃朵繚鐣欏け璐ラ檷绾ф満鍒讹紝纭繚涓嶉樆濉?ingestion銆?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/transform/metadata_enricher.py`
   - `tests/unit/test_metadata_enricher_contract.py`
-- **验收标准**：
-  - 规则模式：作为兜底逻辑，输出 metadata 必须包含 `title/summary/tags`（至少非空）。
-  - **LLM 模式（核心）**：在 LLM 打开的情况下，确保真实调用 LLM（或高质量 Mock）并生成语义丰富的 metadata。需验证在有真实 LLM 配置下的连通性与效果。
-  - 降级行为：LLM 调用失败时回退到规则模式结果（可在 metadata 标记降级原因，但不抛出致命异常）。
-- **测试方法**：`pytest -q tests/unit/test_metadata_enricher_contract.py`，并确保包含开启 LLM 的集成测试用例。
+- **楠屾敹鏍囧噯**锛?
+  - 瑙勫垯妯″紡锛氫綔涓哄厹搴曢€昏緫锛岃緭鍑?metadata 蹇呴』鍖呭惈 `title/summary/tags`锛堣嚦灏戦潪绌猴級銆?
+  - **LLM 妯″紡锛堟牳蹇冿級**锛氬湪 LLM 鎵撳紑鐨勬儏鍐典笅锛岀‘淇濈湡瀹炶皟鐢?LLM锛堟垨楂樿川閲?Mock锛夊苟鐢熸垚璇箟涓板瘜鐨?metadata銆傞渶楠岃瘉鍦ㄦ湁鐪熷疄 LLM 閰嶇疆涓嬬殑杩為€氭€т笌鏁堟灉銆?
+  - 闄嶇骇琛屼负锛歀LM 璋冪敤澶辫触鏃跺洖閫€鍒拌鍒欐ā寮忕粨鏋滐紙鍙湪 metadata 鏍囪闄嶇骇鍘熷洜锛屼絾涓嶆姏鍑鸿嚧鍛藉紓甯革級銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_metadata_enricher_contract.py`锛屽苟纭繚鍖呭惈寮€鍚?LLM 鐨勯泦鎴愭祴璇曠敤渚嬨€?
 
-### C7：ImageCaptioner（可选生成 caption + 降级不阻塞）
-- **目标**：实现 `image_captioner.py`：当启用 Vision LLM 且存在 image_refs 时生成 caption 并写回 chunk metadata；当禁用/不可用/异常时走降级路径，不阻塞 ingestion。
-- **修改文件**：
+### C7锛欼mageCaptioner锛堝彲閫夌敓鎴?caption + 闄嶇骇涓嶉樆濉烇級
+- **鐩爣**锛氬疄鐜?`image_captioner.py`锛氬綋鍚敤 Vision LLM 涓斿瓨鍦?image_refs 鏃剁敓鎴?caption 骞跺啓鍥?chunk metadata锛涘綋绂佺敤/涓嶅彲鐢?寮傚父鏃惰蛋闄嶇骇璺緞锛屼笉闃诲 ingestion銆?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/transform/image_captioner.py`
-  - `config/prompts/image_captioning.txt`（作为默认 prompt 来源；可在测试中注入替代文本）
+  - `config/prompts/image_captioning.txt`锛堜綔涓洪粯璁?prompt 鏉ユ簮锛涘彲鍦ㄦ祴璇曚腑娉ㄥ叆鏇夸唬鏂囨湰锛?
   - `tests/unit/test_image_captioner_fallback.py`
-- **验收标准**：
-  - 启用模式：存在 image_refs 时会生成 caption 并写入 metadata（测试中用 mock Vision LLM 断言调用与输出）。
-  - 降级模式：当配置禁用或异常时，chunk 保留 image_refs，但不生成 caption 且标记 `has_unprocessed_images`。
-- **测试方法**：`pytest -q tests/unit/test_image_captioner_fallback.py`。
+- **楠屾敹鏍囧噯**锛?
+  - 鍚敤妯″紡锛氬瓨鍦?image_refs 鏃朵細鐢熸垚 caption 骞跺啓鍏?metadata锛堟祴璇曚腑鐢?mock Vision LLM 鏂█璋冪敤涓庤緭鍑猴級銆?
+  - 闄嶇骇妯″紡锛氬綋閰嶇疆绂佺敤鎴栧紓甯告椂锛宑hunk 淇濈暀 image_refs锛屼絾涓嶇敓鎴?caption 涓旀爣璁?`has_unprocessed_images`銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_image_captioner_fallback.py`銆?
 
-### C8：DenseEncoder（依赖 libs.embedding）
-- **目标**：实现 `dense_encoder.py`，把 chunks.text 批量送入 `BaseEmbedding`。
-- **修改文件**：
+### C8锛欴enseEncoder锛堜緷璧?libs.embedding锛?
+- **鐩爣**锛氬疄鐜?`dense_encoder.py`锛屾妸 chunks.text 鎵归噺閫佸叆 `BaseEmbedding`銆?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/embedding/dense_encoder.py`
   - `tests/unit/test_dense_encoder.py`
-- **验收标准**：encoder 输出向量数量与 chunks 数量一致，维度一致。
-- **测试方法**：`pytest -q tests/unit/test_dense_encoder.py`。
+- **楠屾敹鏍囧噯**锛歟ncoder 杈撳嚭鍚戦噺鏁伴噺涓?chunks 鏁伴噺涓€鑷达紝缁村害涓€鑷淬€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_dense_encoder.py`銆?
 
-### C9：SparseEncoder（BM25 统计与输出契约）
-- **目标**：实现 `sparse_encoder.py`：对 chunks 建立 BM25 所需统计（可先仅输出 term weights 结构，索引落地下一步做）。
-- **修改文件**：
+### C9锛歋parseEncoder锛圔M25 缁熻涓庤緭鍑哄绾︼級
+- **鐩爣**锛氬疄鐜?`sparse_encoder.py`锛氬 chunks 寤虹珛 BM25 鎵€闇€缁熻锛堝彲鍏堜粎杈撳嚭 term weights 缁撴瀯锛岀储寮曡惤鍦颁笅涓€姝ュ仛锛夈€?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/embedding/sparse_encoder.py`
   - `tests/unit/test_sparse_encoder.py`
-- **验收标准**：输出结构可用于 bm25_indexer；对空文本有明确行为。
-- **测试方法**：`pytest -q tests/unit/test_sparse_encoder.py`。
+- **楠屾敹鏍囧噯**锛氳緭鍑虹粨鏋勫彲鐢ㄤ簬 bm25_indexer锛涘绌烘枃鏈湁鏄庣‘琛屼负銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_sparse_encoder.py`銆?
 
-### C10：BatchProcessor（批处理编排）
-- **目标**：实现 `batch_processor.py`：将 chunks 分 batch，驱动 dense/sparse 编码，记录批次耗时（为 trace 预留）。
-- **修改文件**：
+### C10锛欱atchProcessor锛堟壒澶勭悊缂栨帓锛?
+- **鐩爣**锛氬疄鐜?`batch_processor.py`锛氬皢 chunks 鍒?batch锛岄┍鍔?dense/sparse 缂栫爜锛岃褰曟壒娆¤€楁椂锛堜负 trace 棰勭暀锛夈€?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/embedding/batch_processor.py`
   - `tests/unit/test_batch_processor.py`
-- **验收标准**：batch_size=2 时对 5 chunks 分成 3 批，且顺序稳定。
-- **测试方法**：`pytest -q tests/unit/test_batch_processor.py`。
+- **楠屾敹鏍囧噯**锛歜atch_size=2 鏃跺 5 chunks 鍒嗘垚 3 鎵癸紝涓旈『搴忕ǔ瀹氥€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_batch_processor.py`銆?
 
 ---
 
-**━━━━ 存储阶段分界线：以下任务负责将编码结果持久化 ━━━━**
+**鈹佲攣鈹佲攣 瀛樺偍闃舵鍒嗙晫绾匡細浠ヤ笅浠诲姟璐熻矗灏嗙紪鐮佺粨鏋滄寔涔呭寲 鈹佲攣鈹佲攣**
 
-> **说明**：C8-C10完成了Dense和Sparse的编码工作，C11-C13负责将编码结果存储到不同的后端。
-> - **C11 (BM25Indexer)**：处理Sparse编码结果 → 构建倒排索引 → 存储到文件系统
-> - **C12 (VectorUpserter)**：处理Dense编码结果 → 生成稳定ID → 存储到向量数据库
-> - **C13 (ImageStorage)**：处理图片数据 → 文件存储 + 索引映射
+> **璇存槑**锛欳8-C10瀹屾垚浜咲ense鍜孲parse鐨勭紪鐮佸伐浣滐紝C11-C13璐熻矗灏嗙紪鐮佺粨鏋滃瓨鍌ㄥ埌涓嶅悓鐨勫悗绔€?
+> - **C11 (BM25Indexer)**锛氬鐞哠parse缂栫爜缁撴灉 鈫?鏋勫缓鍊掓帓绱㈠紩 鈫?瀛樺偍鍒版枃浠剁郴缁?
+> - **C12 (VectorUpserter)**锛氬鐞咲ense缂栫爜缁撴灉 鈫?鐢熸垚绋冲畾ID 鈫?瀛樺偍鍒板悜閲忔暟鎹簱
+> - **C13 (ImageStorage)**锛氬鐞嗗浘鐗囨暟鎹?鈫?鏂囦欢瀛樺偍 + 绱㈠紩鏄犲皠
 
 ---
 
-### C11：BM25Indexer（倒排索引构建与持久化）
-- **目标**：实现 `bm25_indexer.py`：接收 SparseEncoder 的term statistics输出，计算IDF，构建倒排索引，并持久化到 `data/db/bm25/`。
-- **核心功能**：
-  - 计算 IDF (Inverse Document Frequency)：`IDF(term) = log((N - df + 0.5) / (df + 0.5))`
-  - 构建倒排索引结构：`{term: {idf, postings: [{chunk_id, tf, doc_length}]}}`
-  - 索引序列化与加载（支持增量更新与重建）
-- **修改文件**：
+### C11锛欱M25Indexer锛堝€掓帓绱㈠紩鏋勫缓涓庢寔涔呭寲锛?
+- **鐩爣**锛氬疄鐜?`bm25_indexer.py`锛氭帴鏀?SparseEncoder 鐨則erm statistics杈撳嚭锛岃绠桰DF锛屾瀯寤哄€掓帓绱㈠紩锛屽苟鎸佷箙鍖栧埌 `data/db/bm25/`銆?
+- **鏍稿績鍔熻兘**锛?
+  - 璁＄畻 IDF (Inverse Document Frequency)锛歚IDF(term) = log((N - df + 0.5) / (df + 0.5))`
+  - 鏋勫缓鍊掓帓绱㈠紩缁撴瀯锛歚{term: {idf, postings: [{chunk_id, tf, doc_length}]}}`
+  - 绱㈠紩搴忓垪鍖栦笌鍔犺浇锛堟敮鎸佸閲忔洿鏂颁笌閲嶅缓锛?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/storage/bm25_indexer.py`
   - `tests/unit/test_bm25_indexer_roundtrip.py`
-- **验收标准**：
-  - build 后能 load 并对同一语料查询返回稳定 top ids
-  - IDF计算准确（可用已知语料对比验证）
-  - 支持索引重建与增量更新
-- **测试方法**：`pytest -q tests/unit/test_bm25_indexer_roundtrip.py`。
-- **备注**：本任务完成Sparse路径的最后一环，为D3 (SparseRetriever) 提供可查询的BM25索引。
+- **楠屾敹鏍囧噯**锛?
+  - build 鍚庤兘 load 骞跺鍚屼竴璇枡鏌ヨ杩斿洖绋冲畾 top ids
+  - IDF璁＄畻鍑嗙‘锛堝彲鐢ㄥ凡鐭ヨ鏂欏姣旈獙璇侊級
+  - 鏀寔绱㈠紩閲嶅缓涓庡閲忔洿鏂?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_bm25_indexer_roundtrip.py`銆?
+- **澶囨敞**锛氭湰浠诲姟瀹屾垚Sparse璺緞鐨勬渶鍚庝竴鐜紝涓篋3 (SparseRetriever) 鎻愪緵鍙煡璇㈢殑BM25绱㈠紩銆?
 
-### C12：VectorUpserter（向量存储与幂等性保证）
-- **目标**：实现 `vector_upserter.py`：接收 DenseEncoder 的向量输出，生成稳定的 `chunk_id`，并调用 VectorStore 进行幂等写入。
-- **核心功能**：
-  - 生成确定性 chunk_id：`hash(source_path + chunk_index + content_hash[:8])`
-  - 调用 `BaseVectorStore.upsert()` 写入向量数据库
-  - 保证幂等性：同一内容重复写入不产生重复记录
-- **修改文件**：
+### C12锛歏ectorUpserter锛堝悜閲忓瓨鍌ㄤ笌骞傜瓑鎬т繚璇侊級
+- **鐩爣**锛氬疄鐜?`vector_upserter.py`锛氭帴鏀?DenseEncoder 鐨勫悜閲忚緭鍑猴紝鐢熸垚绋冲畾鐨?`chunk_id`锛屽苟璋冪敤 VectorStore 杩涜骞傜瓑鍐欏叆銆?
+- **鏍稿績鍔熻兘**锛?
+  - 鐢熸垚纭畾鎬?chunk_id锛歚hash(source_path + chunk_index + content_hash[:8])`
+  - 璋冪敤 `BaseVectorStore.upsert()` 鍐欏叆鍚戦噺鏁版嵁搴?
+  - 淇濊瘉骞傜瓑鎬э細鍚屼竴鍐呭閲嶅鍐欏叆涓嶄骇鐢熼噸澶嶈褰?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/storage/vector_upserter.py`
   - `tests/unit/test_vector_upserter_idempotency.py`
-- **验收标准**：
-  - 同一 chunk 两次 upsert 产生相同 id
-  - 内容变更时 id 变更
-  - 支持批量 upsert 且保持顺序
-- **测试方法**：`pytest -q tests/unit/test_vector_upserter_idempotency.py`。
-- **备注**：本任务完成Dense路径的最后一环，为D2 (DenseRetriever) 提供可查询的向量数据库。
+- **楠屾敹鏍囧噯**锛?
+  - 鍚屼竴 chunk 涓ゆ upsert 浜х敓鐩稿悓 id
+  - 鍐呭鍙樻洿鏃?id 鍙樻洿
+  - 鏀寔鎵归噺 upsert 涓斾繚鎸侀『搴?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_vector_upserter_idempotency.py`銆?
+- **澶囨敞**锛氭湰浠诲姟瀹屾垚Dense璺緞鐨勬渶鍚庝竴鐜紝涓篋2 (DenseRetriever) 鎻愪緵鍙煡璇㈢殑鍚戦噺鏁版嵁搴撱€?
 
-### C13：ImageStorage（图片文件存储与索引表契约）
-- **目标**：实现 `image_storage.py`：保存图片到 `data/images/{collection}/`，并使用 **SQLite** 记录 image_id→path 映射。
-- **修改文件**：
+### C13锛欼mageStorage锛堝浘鐗囨枃浠跺瓨鍌ㄤ笌绱㈠紩琛ㄥ绾︼級
+- **鐩爣**锛氬疄鐜?`image_storage.py`锛氫繚瀛樺浘鐗囧埌 `data/images/{collection}/`锛屽苟浣跨敤 **SQLite** 璁板綍 image_id鈫抪ath 鏄犲皠銆?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/storage/image_storage.py`
   - `tests/unit/test_image_storage.py`
-- **验收标准**：保存后文件存在；查找 image_id 返回正确路径；映射关系持久化在 `data/db/image_index.db`。
-- **技术方案**：
-  - 复用项目已有的 SQLite 架构模式（参考 `file_integrity.py` 的 `SQLiteIntegrityChecker`）
-  - 数据库表结构：
+- **楠屾敹鏍囧噯**锛氫繚瀛樺悗鏂囦欢瀛樺湪锛涙煡鎵?image_id 杩斿洖姝ｇ‘璺緞锛涙槧灏勫叧绯绘寔涔呭寲鍦?`data/db/image_index.db`銆?
+- **鎶€鏈柟妗?*锛?
+  - 澶嶇敤椤圭洰宸叉湁鐨?SQLite 鏋舵瀯妯″紡锛堝弬鑰?`file_integrity.py` 鐨?`SQLiteIntegrityChecker`锛?
+  - 鏁版嵁搴撹〃缁撴瀯锛?
     ```sql
     CREATE TABLE image_index (
         image_id TEXT PRIMARY KEY,
@@ -2636,588 +2636,588 @@ dashboard:
     CREATE INDEX idx_collection ON image_index(collection);
     CREATE INDEX idx_doc_hash ON image_index(doc_hash);
     ```
-  - 提供并发安全访问（WAL 模式）
-  - 支持按 collection 批量查询
-- **测试方法**：`pytest -q tests/unit/test_image_storage.py`。
+  - 鎻愪緵骞跺彂瀹夊叏璁块棶锛圵AL 妯″紡锛?
+  - 鏀寔鎸?collection 鎵归噺鏌ヨ
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_image_storage.py`銆?
 
-### C14：Pipeline 编排（MVP 串起来）
-- **目标**：实现 `pipeline.py`：串行执行（integrity→load→split→transform→encode→store），并对失败步骤做清晰异常。
-- **修改文件**：
+### C14锛歅ipeline 缂栨帓锛圡VP 涓茶捣鏉ワ級
+- **鐩爣**锛氬疄鐜?`pipeline.py`锛氫覆琛屾墽琛岋紙integrity鈫抣oad鈫抯plit鈫抰ransform鈫抏ncode鈫抯tore锛夛紝骞跺澶辫触姝ラ鍋氭竻鏅板紓甯搞€?
+- **淇敼鏂囦欢**锛?
   - `src/ingestion/pipeline.py`
   - `tests/integration/test_ingestion_pipeline.py`
-- **测试数据**：
-  - **主测试文档**：`tests/fixtures/sample_documents/complex_technical_doc.pdf`
-    - 8章节技术文档（~21KB）
-    - 包含3张嵌入图片（需测试图片提取和描述）
-    - 包含5个表格（测试表格内容解析）
-    - 多页多段落（测试完整分块流程）
-  - **辅助测试**：`tests/fixtures/sample_documents/simple.pdf`（简单场景回归）
-- **验收标准**：
-  - 对 `complex_technical_doc.pdf` 跑完整 pipeline，成功输出：
-    - 向量索引文件到 ChromaDB
-    - BM25 索引文件到 `data/db/bm25/`
-    - 提取的图片到 `data/images/` (SHA256命名)
-  - Pipeline 日志清晰展示各阶段进度
-  - 失败步骤抛出明确异常信息
-- **测试方法**：`pytest -v tests/integration/test_ingestion_pipeline.py`。
+- **娴嬭瘯鏁版嵁**锛?
+  - **涓绘祴璇曟枃妗?*锛歚tests/fixtures/sample_documents/complex_technical_doc.pdf`
+    - 8绔犺妭鎶€鏈枃妗ｏ紙~21KB锛?
+    - 鍖呭惈3寮犲祵鍏ュ浘鐗囷紙闇€娴嬭瘯鍥剧墖鎻愬彇鍜屾弿杩帮級
+    - 鍖呭惈5涓〃鏍硷紙娴嬭瘯琛ㄦ牸鍐呭瑙ｆ瀽锛?
+    - 澶氶〉澶氭钀斤紙娴嬭瘯瀹屾暣鍒嗗潡娴佺▼锛?
+  - **杈呭姪娴嬭瘯**锛歚tests/fixtures/sample_documents/simple.pdf`锛堢畝鍗曞満鏅洖褰掞級
+- **楠屾敹鏍囧噯**锛?
+  - 瀵?`complex_technical_doc.pdf` 璺戝畬鏁?pipeline锛屾垚鍔熻緭鍑猴細
+    - 鍚戦噺绱㈠紩鏂囦欢鍒?ChromaDB
+    - BM25 绱㈠紩鏂囦欢鍒?`data/db/bm25/`
+    - 鎻愬彇鐨勫浘鐗囧埌 `data/images/` (SHA256鍛藉悕)
+  - Pipeline 鏃ュ織娓呮櫚灞曠ず鍚勯樁娈佃繘搴?
+  - 澶辫触姝ラ鎶涘嚭鏄庣‘寮傚父淇℃伅
+- **娴嬭瘯鏂规硶**锛歚pytest -v tests/integration/test_ingestion_pipeline.py`銆?
 
-### C15：脚本入口 ingest.py（离线可用）
-- **目标**：实现 `scripts/ingest.py`，支持 `--collection`、`--path`、`--force`，并调用 pipeline。
-- **修改文件**：
+### C15锛氳剼鏈叆鍙?ingest.py锛堢绾垮彲鐢級
+- **鐩爣**锛氬疄鐜?`scripts/ingest.py`锛屾敮鎸?`--collection`銆乣--path`銆乣--force`锛屽苟璋冪敤 pipeline銆?
+- **淇敼鏂囦欢**锛?
   - `scripts/ingest.py`
   - `tests/e2e/test_data_ingestion.py`
-- **验收标准**：命令行可运行并在 `data/db` 产生产物；重复运行在未变更时跳过。
-- **测试方法**：`pytest -q tests/e2e/test_data_ingestion.py`（尽量用临时目录）。
+- **楠屾敹鏍囧噯**锛氬懡浠よ鍙繍琛屽苟鍦?`data/db` 浜х敓浜х墿锛涢噸澶嶈繍琛屽湪鏈彉鏇存椂璺宠繃銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/e2e/test_data_ingestion.py`锛堝敖閲忕敤涓存椂鐩綍锛夈€?
 
 ---
 
-## 阶段 D：Retrieval MVP（目标：能 query 并返回 Top-K chunks）
+## 闃舵 D锛歊etrieval MVP锛堢洰鏍囷細鑳?query 骞惰繑鍥?Top-K chunks锛?
 
-### D1：QueryProcessor（关键词提取 + filters 结构）
-- **目标**：实现 `query_processor.py`：关键词提取（先规则/分词），并解析通用 filters 结构（可空实现）。
-- **修改文件**：
+### D1锛歈ueryProcessor锛堝叧閿瘝鎻愬彇 + filters 缁撴瀯锛?
+- **鐩爣**锛氬疄鐜?`query_processor.py`锛氬叧閿瘝鎻愬彇锛堝厛瑙勫垯/鍒嗚瘝锛夛紝骞惰В鏋愰€氱敤 filters 缁撴瀯锛堝彲绌哄疄鐜帮級銆?
+- **淇敼鏂囦欢**锛?
   - `src/core/query_engine/query_processor.py`
   - `tests/unit/test_query_processor.py`
-- **验收标准**：对输入 query 输出 `keywords` 非空（可根据停用词策略），filters 为 dict。
-- **测试方法**：`pytest -q tests/unit/test_query_processor.py`。
+- **楠屾敹鏍囧噯**锛氬杈撳叆 query 杈撳嚭 `keywords` 闈炵┖锛堝彲鏍规嵁鍋滅敤璇嶇瓥鐣ワ級锛宖ilters 涓?dict銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_query_processor.py`銆?
 
-### D2：DenseRetriever（调用 VectorStore.query）
-- **目标**：实现 `dense_retriever.py`，组合 `EmbeddingClient`（query 向量化）+ `VectorStore`（向量检索），完成语义召回。
-- **前置任务**：
-  1. 需先在 `src/core/types.py` 中定义 `RetrievalResult` 类型（包含 `chunk_id`, `score`, `text`, `metadata` 字段）
-  2. 需确认 ChromaStore.query() 返回结果包含 text（当前存储在 documents 字段，需补充返回）
-- **修改文件**：
-  - `src/core/types.py`（新增 `RetrievalResult` 类型）
-  - `src/libs/vector_store/chroma_store.py`（修复：query 返回结果需包含 text 字段）
+### D2锛欴enseRetriever锛堣皟鐢?VectorStore.query锛?
+- **鐩爣**锛氬疄鐜?`dense_retriever.py`锛岀粍鍚?`EmbeddingClient`锛坬uery 鍚戦噺鍖栵級+ `VectorStore`锛堝悜閲忔绱級锛屽畬鎴愯涔夊彫鍥炪€?
+- **鍓嶇疆浠诲姟**锛?
+  1. 闇€鍏堝湪 `src/core/types.py` 涓畾涔?`RetrievalResult` 绫诲瀷锛堝寘鍚?`chunk_id`, `score`, `text`, `metadata` 瀛楁锛?
+  2. 闇€纭 ChromaStore.query() 杩斿洖缁撴灉鍖呭惈 text锛堝綋鍓嶅瓨鍌ㄥ湪 documents 瀛楁锛岄渶琛ュ厖杩斿洖锛?
+- **淇敼鏂囦欢**锛?
+  - `src/core/types.py`锛堟柊澧?`RetrievalResult` 绫诲瀷锛?
+  - `src/libs/vector_store/chroma_store.py`锛堜慨澶嶏細query 杩斿洖缁撴灉闇€鍖呭惈 text 瀛楁锛?
   - `src/core/query_engine/dense_retriever.py`
   - `tests/unit/test_dense_retriever.py`
-- **实现类/函数**：
-  - `RetrievalResult` dataclass：`chunk_id: str`, `score: float`, `text: str`, `metadata: Dict`
-  - `DenseRetriever.__init__(settings, embedding_client?, vector_store?)`：支持依赖注入用于测试
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `RetrievalResult` dataclass锛歚chunk_id: str`, `score: float`, `text: str`, `metadata: Dict`
+  - `DenseRetriever.__init__(settings, embedding_client?, vector_store?)`锛氭敮鎸佷緷璧栨敞鍏ョ敤浜庢祴璇?
   - `DenseRetriever.retrieve(query: str, top_k: int, filters?: dict, trace?) -> List[RetrievalResult]`
-  - 内部流程：`query → embedding_client.embed([query]) → vector_store.query(vector, top_k, filters) → 从返回结果提取 text → 规范化结果`
-- **验收标准**：
-  - `RetrievalResult` 类型已定义并可序列化
-  - ChromaStore.query() 返回结果包含 `text` 字段
-  - 对输入 query 能生成 embedding 并调用 VectorStore 检索
-  - 返回结果包含 `chunk_id`、`score`、`text`、`metadata`
-  - mock EmbeddingClient 和 VectorStore 时能正确编排调用
-- **测试方法**：`pytest -q tests/unit/test_dense_retriever.py`（mock embedding + vector store）。
+  - 鍐呴儴娴佺▼锛歚query 鈫?embedding_client.embed([query]) 鈫?vector_store.query(vector, top_k, filters) 鈫?浠庤繑鍥炵粨鏋滄彁鍙?text 鈫?瑙勮寖鍖栫粨鏋渀
+- **楠屾敹鏍囧噯**锛?
+  - `RetrievalResult` 绫诲瀷宸插畾涔夊苟鍙簭鍒楀寲
+  - ChromaStore.query() 杩斿洖缁撴灉鍖呭惈 `text` 瀛楁
+  - 瀵硅緭鍏?query 鑳界敓鎴?embedding 骞惰皟鐢?VectorStore 妫€绱?
+  - 杩斿洖缁撴灉鍖呭惈 `chunk_id`銆乣score`銆乣text`銆乣metadata`
+  - mock EmbeddingClient 鍜?VectorStore 鏃惰兘姝ｇ‘缂栨帓璋冪敤
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_dense_retriever.py`锛坢ock embedding + vector store锛夈€?
 
-### D3：SparseRetriever（BM25 查询）
-- **目标**：实现 `sparse_retriever.py`：从 `data/db/bm25/` 载入索引并查询。
-- **前置任务**：需在 `BaseVectorStore` 和 `ChromaStore` 中添加 `get_by_ids()` 方法，用于根据 chunk_id 批量获取 text 和 metadata
-- **修改文件**：
-  - `src/libs/vector_store/base_vector_store.py`（新增 `get_by_ids()` 抽象方法）
-  - `src/libs/vector_store/chroma_store.py`（实现 `get_by_ids()` 方法）
+### D3锛歋parseRetriever锛圔M25 鏌ヨ锛?
+- **鐩爣**锛氬疄鐜?`sparse_retriever.py`锛氫粠 `data/db/bm25/` 杞藉叆绱㈠紩骞舵煡璇€?
+- **鍓嶇疆浠诲姟**锛氶渶鍦?`BaseVectorStore` 鍜?`ChromaStore` 涓坊鍔?`get_by_ids()` 鏂规硶锛岀敤浜庢牴鎹?chunk_id 鎵归噺鑾峰彇 text 鍜?metadata
+- **淇敼鏂囦欢**锛?
+  - `src/libs/vector_store/base_vector_store.py`锛堟柊澧?`get_by_ids()` 鎶借薄鏂规硶锛?
+  - `src/libs/vector_store/chroma_store.py`锛堝疄鐜?`get_by_ids()` 鏂规硶锛?
   - `src/core/query_engine/sparse_retriever.py`
   - `tests/unit/test_sparse_retriever.py`
-- **实现类/函数**：
-  - `BaseVectorStore.get_by_ids(ids: List[str]) -> List[Dict]`：根据 ID 批量获取记录
-  - `ChromaStore.get_by_ids(ids: List[str]) -> List[Dict]`：调用 ChromaDB 的 get 方法
-  - `SparseRetriever.__init__(settings, bm25_indexer?, vector_store?)`：支持依赖注入用于测试
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `BaseVectorStore.get_by_ids(ids: List[str]) -> List[Dict]`锛氭牴鎹?ID 鎵归噺鑾峰彇璁板綍
+  - `ChromaStore.get_by_ids(ids: List[str]) -> List[Dict]`锛氳皟鐢?ChromaDB 鐨?get 鏂规硶
+  - `SparseRetriever.__init__(settings, bm25_indexer?, vector_store?)`锛氭敮鎸佷緷璧栨敞鍏ョ敤浜庢祴璇?
   - `SparseRetriever.retrieve(keywords: List[str], top_k: int, trace?) -> List[RetrievalResult]`
-  - 内部流程：
-    1. `keywords → bm25_indexer.query(keywords, top_k) → [{chunk_id, score}]`
-    2. `chunk_ids → vector_store.get_by_ids(chunk_ids) → [{id, text, metadata}]`
-    3. 合并 score 与 text/metadata，组装为 `RetrievalResult` 列表
-  - 注意：keywords 来自 `QueryProcessor.process()` 的 `ProcessedQuery.keywords`
-- **验收标准**：
-  - `BaseVectorStore.get_by_ids()` 和 `ChromaStore.get_by_ids()` 已实现
-  - 对已构建索引的 fixtures 语料，关键词检索命中预期 chunk_id
-  - 返回结果包含完整的 text 和 metadata
-- **测试方法**：`pytest -q tests/unit/test_sparse_retriever.py`。
+  - 鍐呴儴娴佺▼锛?
+    1. `keywords 鈫?bm25_indexer.query(keywords, top_k) 鈫?[{chunk_id, score}]`
+    2. `chunk_ids 鈫?vector_store.get_by_ids(chunk_ids) 鈫?[{id, text, metadata}]`
+    3. 鍚堝苟 score 涓?text/metadata锛岀粍瑁呬负 `RetrievalResult` 鍒楄〃
+  - 娉ㄦ剰锛歬eywords 鏉ヨ嚜 `QueryProcessor.process()` 鐨?`ProcessedQuery.keywords`
+- **楠屾敹鏍囧噯**锛?
+  - `BaseVectorStore.get_by_ids()` 鍜?`ChromaStore.get_by_ids()` 宸插疄鐜?
+  - 瀵瑰凡鏋勫缓绱㈠紩鐨?fixtures 璇枡锛屽叧閿瘝妫€绱㈠懡涓鏈?chunk_id
+  - 杩斿洖缁撴灉鍖呭惈瀹屾暣鐨?text 鍜?metadata
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_sparse_retriever.py`銆?
 
-### D4：Fusion（RRF 实现）
-- **目标**：实现 `fusion.py`：RRF 融合 dense/sparse 排名并输出统一排序。
-- **修改文件**：
+### D4锛欶usion锛圧RF 瀹炵幇锛?
+- **鐩爣**锛氬疄鐜?`fusion.py`锛歊RF 铻嶅悎 dense/sparse 鎺掑悕骞惰緭鍑虹粺涓€鎺掑簭銆?
+- **淇敼鏂囦欢**锛?
   - `src/core/query_engine/fusion.py`
   - `tests/unit/test_fusion_rrf.py`
-- **验收标准**：对构造的排名输入输出 deterministic；k 参数可配置。
-- **测试方法**：`pytest -q tests/unit/test_fusion_rrf.py`。
+- **楠屾敹鏍囧噯**锛氬鏋勯€犵殑鎺掑悕杈撳叆杈撳嚭 deterministic锛沰 鍙傛暟鍙厤缃€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_fusion_rrf.py`銆?
 
-### D5：HybridSearch 编排
-- **目标**：实现 `hybrid_search.py`：编排 Dense + Sparse + Fusion 的完整混合检索流程，并集成 Metadata 过滤逻辑。
-- **前置依赖**：D1（QueryProcessor）、D2（DenseRetriever）、D3（SparseRetriever）、D4（Fusion）
-- **修改文件**：
+### D5锛欻ybridSearch 缂栨帓
+- **鐩爣**锛氬疄鐜?`hybrid_search.py`锛氱紪鎺?Dense + Sparse + Fusion 鐨勫畬鏁存贩鍚堟绱㈡祦绋嬶紝骞堕泦鎴?Metadata 杩囨护閫昏緫銆?
+- **鍓嶇疆渚濊禆**锛欴1锛圦ueryProcessor锛夈€丏2锛圖enseRetriever锛夈€丏3锛圫parseRetriever锛夈€丏4锛團usion锛?
+- **淇敼鏂囦欢**锛?
   - `src/core/query_engine/hybrid_search.py`
   - `tests/integration/test_hybrid_search.py`
-- **实现类/函数**：
+- **瀹炵幇绫?鍑芥暟**锛?
   - `HybridSearch.__init__(settings, query_processor, dense_retriever, sparse_retriever, fusion)`
   - `HybridSearch.search(query: str, top_k: int, filters?: dict, trace?) -> List[RetrievalResult]`
-  - `HybridSearch._apply_metadata_filters(candidates, filters) -> List[RetrievalResult]`：后置过滤兜底
-  - 内部流程：`query_processor.process() → 并行(dense.retrieve + sparse.retrieve) → fusion.fuse() → metadata_filter → Top-K`
-- **验收标准**：
-  - 对 fixtures 数据，能返回 Top-K（包含 chunk 文本与 metadata）
-  - 支持 filters 参数（如 `collection`、`doc_type`）进行过滤
-  - Dense/Sparse 任一路径失败时能降级到单路结果
-- **测试方法**：`pytest -q tests/integration/test_hybrid_search.py`。
+  - `HybridSearch._apply_metadata_filters(candidates, filters) -> List[RetrievalResult]`锛氬悗缃繃婊ゅ厹搴?
+  - 鍐呴儴娴佺▼锛歚query_processor.process() 鈫?骞惰(dense.retrieve + sparse.retrieve) 鈫?fusion.fuse() 鈫?metadata_filter 鈫?Top-K`
+- **楠屾敹鏍囧噯**锛?
+  - 瀵?fixtures 鏁版嵁锛岃兘杩斿洖 Top-K锛堝寘鍚?chunk 鏂囨湰涓?metadata锛?
+  - 鏀寔 filters 鍙傛暟锛堝 `collection`銆乣doc_type`锛夎繘琛岃繃婊?
+  - Dense/Sparse 浠讳竴璺緞澶辫触鏃惰兘闄嶇骇鍒板崟璺粨鏋?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_hybrid_search.py`銆?
 
-### D6：Reranker（Core 层编排 + fallback）
-- **目标**：实现 `core/query_engine/reranker.py`：接入 `libs.reranker` 后端，失败/超时回退 fusion 排名。
-- **修改文件**：
+### D6锛歊eranker锛圕ore 灞傜紪鎺?+ fallback锛?
+- **鐩爣**锛氬疄鐜?`core/query_engine/reranker.py`锛氭帴鍏?`libs.reranker` 鍚庣锛屽け璐?瓒呮椂鍥為€€ fusion 鎺掑悕銆?
+- **淇敼鏂囦欢**锛?
   - `src/core/query_engine/reranker.py`
-  - `config/prompts/rerank.txt`（仅当启用 LLM Rerank 后端时使用）
+  - `config/prompts/rerank.txt`锛堜粎褰撳惎鐢?LLM Rerank 鍚庣鏃朵娇鐢級
   - `tests/unit/test_reranker_fallback.py`
-- **验收标准**：模拟后端异常时不影响最终返回，且标记 fallback=true。
-- **测试方法**：`pytest -q tests/unit/test_reranker_fallback.py`。
+- **楠屾敹鏍囧噯**锛氭ā鎷熷悗绔紓甯告椂涓嶅奖鍝嶆渶缁堣繑鍥烇紝涓旀爣璁?fallback=true銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_reranker_fallback.py`銆?
 
-### D7：脚本入口 query.py（查询可用）
-- **目标**：实现 `scripts/query.py`，作为在线查询的命令行入口，调用完整的 HybridSearch + Reranker 流程并输出检索结果。
-- **前置依赖**：D5（HybridSearch）、D6（Reranker）
-- **修改文件**：
+### D7锛氳剼鏈叆鍙?query.py锛堟煡璇㈠彲鐢級
+- **鐩爣**锛氬疄鐜?`scripts/query.py`锛屼綔涓哄湪绾挎煡璇㈢殑鍛戒护琛屽叆鍙ｏ紝璋冪敤瀹屾暣鐨?HybridSearch + Reranker 娴佺▼骞惰緭鍑烘绱㈢粨鏋溿€?
+- **鍓嶇疆渚濊禆**锛欴5锛圚ybridSearch锛夈€丏6锛圧eranker锛?
+- **淇敼鏂囦欢**锛?
   - `scripts/query.py`
-- **实现功能**：
-  - **参数支持**：
-    - `--query "问题"`：必填，查询文本
-    - `--top-k 10`：可选，返回结果数量（默认 10）
-    - `--collection xxx`：可选，限定检索集合
-    - `--verbose`：可选，显示各阶段中间结果
-    - `--no-rerank`：可选，跳过 Reranker 阶段
-  - **输出内容**：
-    - 默认模式：Top-K 结果（序号、score、文本摘要、来源文件、页码）
-    - Verbose 模式：额外显示 Dense 召回结果、Sparse 召回结果、Fusion 结果、Rerank 结果
-  - **内部流程**：
-    1. 加载配置 `Settings`
-    2. 初始化组件（EmbeddingClient、VectorStore、BM25Indexer、Reranker）
-    3. 创建 `QueryProcessor`、`DenseRetriever`、`SparseRetriever`、`HybridSearch` 实例
-    4. 调用 `HybridSearch.search()` 获取候选结果
-    5. 调用 `Reranker.rerank()` 进行精排（除非 `--no-rerank`）
-    6. 格式化输出结果
-- **验收标准**：
-  - 命令行可运行：`python scripts/query.py --query "如何配置 Azure？"`
-  - 返回格式化的 Top-K 检索结果
-  - `--verbose` 模式显示各阶段中间结果（便于调试）
-  - 无数据时返回友好提示（如"未找到相关文档，请先运行 ingest.py 摄取数据"）
-- **测试方法**：手动运行 `python scripts/query.py --query "测试查询" --verbose`（依赖已摄取的数据）。
-- **与 MCP Tool 的关系**：
-  - `scripts/query.py` 是开发调试用的命令行工具
-  - `E3 query_knowledge_hub` 是生产环境的 MCP Tool
-  - 两者共享 Core 层逻辑（HybridSearch + Reranker），但入口和输出格式不同
+- **瀹炵幇鍔熻兘**锛?
+  - **鍙傛暟鏀寔**锛?
+    - `--query "闂"`锛氬繀濉紝鏌ヨ鏂囨湰
+    - `--top-k 10`锛氬彲閫夛紝杩斿洖缁撴灉鏁伴噺锛堥粯璁?10锛?
+    - `--collection xxx`锛氬彲閫夛紝闄愬畾妫€绱㈤泦鍚?
+    - `--verbose`锛氬彲閫夛紝鏄剧ず鍚勯樁娈典腑闂寸粨鏋?
+    - `--no-rerank`锛氬彲閫夛紝璺宠繃 Reranker 闃舵
+  - **杈撳嚭鍐呭**锛?
+    - 榛樿妯″紡锛歍op-K 缁撴灉锛堝簭鍙枫€乻core銆佹枃鏈憳瑕併€佹潵婧愭枃浠躲€侀〉鐮侊級
+    - Verbose 妯″紡锛氶澶栨樉绀?Dense 鍙洖缁撴灉銆丼parse 鍙洖缁撴灉銆丗usion 缁撴灉銆丷erank 缁撴灉
+  - **鍐呴儴娴佺▼**锛?
+    1. 鍔犺浇閰嶇疆 `Settings`
+    2. 鍒濆鍖栫粍浠讹紙EmbeddingClient銆乂ectorStore銆丅M25Indexer銆丷eranker锛?
+    3. 鍒涘缓 `QueryProcessor`銆乣DenseRetriever`銆乣SparseRetriever`銆乣HybridSearch` 瀹炰緥
+    4. 璋冪敤 `HybridSearch.search()` 鑾峰彇鍊欓€夌粨鏋?
+    5. 璋冪敤 `Reranker.rerank()` 杩涜绮炬帓锛堥櫎闈?`--no-rerank`锛?
+    6. 鏍煎紡鍖栬緭鍑虹粨鏋?
+- **楠屾敹鏍囧噯**锛?
+  - 鍛戒护琛屽彲杩愯锛歚python scripts/query.py --query "濡備綍閰嶇疆 Azure锛?`
+  - 杩斿洖鏍煎紡鍖栫殑 Top-K 妫€绱㈢粨鏋?
+  - `--verbose` 妯″紡鏄剧ず鍚勯樁娈典腑闂寸粨鏋滐紙渚夸簬璋冭瘯锛?
+  - 鏃犳暟鎹椂杩斿洖鍙嬪ソ鎻愮ず锛堝"鏈壘鍒扮浉鍏虫枃妗ｏ紝璇峰厛杩愯 ingest.py 鎽勫彇鏁版嵁"锛?
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄨ繍琛?`python scripts/query.py --query "娴嬭瘯鏌ヨ" --verbose`锛堜緷璧栧凡鎽勫彇鐨勬暟鎹級銆?
+- **涓?MCP Tool 鐨勫叧绯?*锛?
+  - `scripts/query.py` 鏄紑鍙戣皟璇曠敤鐨勫懡浠よ宸ュ叿
+  - `E3 query_knowledge_hub` 鏄敓浜х幆澧冪殑 MCP Tool
+  - 涓よ€呭叡浜?Core 灞傞€昏緫锛圚ybridSearch + Reranker锛夛紝浣嗗叆鍙ｅ拰杈撳嚭鏍煎紡涓嶅悓
 
 ---
 
-## 阶段 E：MCP Server 层与 Tools（目标：对外可用的 MCP tools）
+## 闃舵 E锛歁CP Server 灞備笌 Tools锛堢洰鏍囷細瀵瑰鍙敤鐨?MCP tools锛?
 
-### E1：MCP Server 入口与 Stdio 约束
-- **目标**：实现 `mcp_server/server.py`：遵循"stdout 只输出 MCP 消息，日志到 stderr"。
-- **修改文件**：
+### E1锛歁CP Server 鍏ュ彛涓?Stdio 绾︽潫
+- **鐩爣**锛氬疄鐜?`mcp_server/server.py`锛氶伒寰?stdout 鍙緭鍑?MCP 娑堟伅锛屾棩蹇楀埌 stderr"銆?
+- **淇敼鏂囦欢**锛?
   - `src/mcp_server/server.py`
   - `tests/integration/test_mcp_server.py`
-- **验收标准**：启动 server 能完成 initialize；stderr 有日志但 stdout 不污染。
-- **测试方法**：`pytest -q tests/integration/test_mcp_server.py`（子进程方式）。
+- **楠屾敹鏍囧噯**锛氬惎鍔?server 鑳藉畬鎴?initialize锛泂tderr 鏈夋棩蹇椾絾 stdout 涓嶆薄鏌撱€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_mcp_server.py`锛堝瓙杩涚▼鏂瑰紡锛夈€?
 
-### E2：Protocol Handler 协议解析与能力协商
-- **目标**：实现 `mcp_server/protocol_handler.py`：封装 JSON-RPC 2.0 协议解析，处理 `initialize`、`tools/list`、`tools/call` 三类核心方法，并实现规范的错误处理。
-- **修改文件**：
+### E2锛歅rotocol Handler 鍗忚瑙ｆ瀽涓庤兘鍔涘崗鍟?
+- **鐩爣**锛氬疄鐜?`mcp_server/protocol_handler.py`锛氬皝瑁?JSON-RPC 2.0 鍗忚瑙ｆ瀽锛屽鐞?`initialize`銆乣tools/list`銆乣tools/call` 涓夌被鏍稿績鏂规硶锛屽苟瀹炵幇瑙勮寖鐨勯敊璇鐞嗐€?
+- **淇敼鏂囦欢**锛?
   - `src/mcp_server/protocol_handler.py`
   - `tests/unit/test_protocol_handler.py`
-- **实现要点**：
-  - **ProtocolHandler 类**：
-    - `handle_initialize(params)` → 返回 server capabilities（支持的 tools 列表、版本信息）
-    - `handle_tools_list()` → 返回已注册的 tool schema（name, description, inputSchema）
-    - `handle_tools_call(name, arguments)` → 路由到具体 tool 执行，捕获异常并转换为 JSON-RPC error
-  - **错误码规范**：遵循 JSON-RPC 2.0（-32600 Invalid Request, -32601 Method not found, -32602 Invalid params, -32603 Internal error）
-  - **能力协商**：在 `initialize` 响应中声明 `capabilities.tools`
-- **验收标准**：
-  - 发送 `initialize` 请求能返回正确的 `serverInfo` 和 `capabilities`
-  - 发送 `tools/list` 能返回已注册 tools 的 schema
-  - 发送 `tools/call` 能正确路由并返回结果或规范错误
-  - **错误处理**：无效方法返回 -32601，参数错误返回 -32602，内部异常返回 -32603 且不泄露堆栈
-- **测试方法**：`pytest -q tests/unit/test_protocol_handler.py`。
+- **瀹炵幇瑕佺偣**锛?
+  - **ProtocolHandler 绫?*锛?
+    - `handle_initialize(params)` 鈫?杩斿洖 server capabilities锛堟敮鎸佺殑 tools 鍒楄〃銆佺増鏈俊鎭級
+    - `handle_tools_list()` 鈫?杩斿洖宸叉敞鍐岀殑 tool schema锛坣ame, description, inputSchema锛?
+    - `handle_tools_call(name, arguments)` 鈫?璺敱鍒板叿浣?tool 鎵ц锛屾崟鑾峰紓甯稿苟杞崲涓?JSON-RPC error
+  - **閿欒鐮佽鑼?*锛氶伒寰?JSON-RPC 2.0锛?32600 Invalid Request, -32601 Method not found, -32602 Invalid params, -32603 Internal error锛?
+  - **鑳藉姏鍗忓晢**锛氬湪 `initialize` 鍝嶅簲涓０鏄?`capabilities.tools`
+- **楠屾敹鏍囧噯**锛?
+  - 鍙戦€?`initialize` 璇锋眰鑳借繑鍥炴纭殑 `serverInfo` 鍜?`capabilities`
+  - 鍙戦€?`tools/list` 鑳借繑鍥炲凡娉ㄥ唽 tools 鐨?schema
+  - 鍙戦€?`tools/call` 鑳芥纭矾鐢卞苟杩斿洖缁撴灉鎴栬鑼冮敊璇?
+  - **閿欒澶勭悊**锛氭棤鏁堟柟娉曡繑鍥?-32601锛屽弬鏁伴敊璇繑鍥?-32602锛屽唴閮ㄥ紓甯歌繑鍥?-32603 涓斾笉娉勯湶鍫嗘爤
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_protocol_handler.py`銆?
 
-### E3：实现 tool：query_knowledge_hub
-- **目标**：实现 `tools/query_knowledge_hub.py`：调用 HybridSearch + Reranker，构建带引用的响应，返回 Markdown + structured citations。
-- **前置依赖**：D5（HybridSearch）、D6（Reranker）、E1（Server）、E2（Protocol Handler）
-- **修改文件**：
+### E3锛氬疄鐜?tool锛歲uery_knowledge_hub
+- **鐩爣**锛氬疄鐜?`tools/query_knowledge_hub.py`锛氳皟鐢?HybridSearch + Reranker锛屾瀯寤哄甫寮曠敤鐨勫搷搴旓紝杩斿洖 Markdown + structured citations銆?
+- **鍓嶇疆渚濊禆**锛欴5锛圚ybridSearch锛夈€丏6锛圧eranker锛夈€丒1锛圫erver锛夈€丒2锛圥rotocol Handler锛?
+- **淇敼鏂囦欢**锛?
   - `src/mcp_server/tools/query_knowledge_hub.py`
-  - `src/core/response/response_builder.py`（新增：构建 MCP 响应格式）
-  - `src/core/response/citation_generator.py`（新增：生成引用信息）
-  - `tests/unit/test_response_builder.py`（新增）
-  - `tests/integration/test_mcp_server.py`（补用例）
-- **实现类/函数**：
-  - `ResponseBuilder.build(retrieval_results, query) -> MCPResponse`：构建 MCP 格式响应
-  - `CitationGenerator.generate(retrieval_results) -> List[Citation]`：生成引用列表
-  - `query_knowledge_hub(query, top_k?, collection?) -> MCPToolResult`：Tool 入口函数
-- **验收标准**：
-  - tool 返回 `content[0]` 为可读 Markdown（含 `[1]`、`[2]` 等引用标注）
-  - `structuredContent.citations` 包含 `source`/`page`/`chunk_id`/`score` 字段
-  - 无结果时返回友好提示而非空数组
-- **测试方法**：`pytest -q tests/integration/test_mcp_server.py -k query_knowledge_hub`。
+  - `src/core/response/response_builder.py`锛堟柊澧烇細鏋勫缓 MCP 鍝嶅簲鏍煎紡锛?
+  - `src/core/response/citation_generator.py`锛堟柊澧烇細鐢熸垚寮曠敤淇℃伅锛?
+  - `tests/unit/test_response_builder.py`锛堟柊澧烇級
+  - `tests/integration/test_mcp_server.py`锛堣ˉ鐢ㄤ緥锛?
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `ResponseBuilder.build(retrieval_results, query) -> MCPResponse`锛氭瀯寤?MCP 鏍煎紡鍝嶅簲
+  - `CitationGenerator.generate(retrieval_results) -> List[Citation]`锛氱敓鎴愬紩鐢ㄥ垪琛?
+  - `query_knowledge_hub(query, top_k?, collection?) -> MCPToolResult`锛歍ool 鍏ュ彛鍑芥暟
+- **楠屾敹鏍囧噯**锛?
+  - tool 杩斿洖 `content[0]` 涓哄彲璇?Markdown锛堝惈 `[1]`銆乣[2]` 绛夊紩鐢ㄦ爣娉級
+  - `structuredContent.citations` 鍖呭惈 `source`/`page`/`chunk_id`/`score` 瀛楁
+  - 鏃犵粨鏋滄椂杩斿洖鍙嬪ソ鎻愮ず鑰岄潪绌烘暟缁?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_mcp_server.py -k query_knowledge_hub`銆?
 
-### E4：实现 tool：list_collections
-- **目标**：实现 `tools/list_collections.py`：列出 `data/documents/` 下集合并附带统计（可延后到下一步）。
-- **修改文件**：
+### E4锛氬疄鐜?tool锛歭ist_collections
+- **鐩爣**锛氬疄鐜?`tools/list_collections.py`锛氬垪鍑?`data/documents/` 涓嬮泦鍚堝苟闄勫甫缁熻锛堝彲寤跺悗鍒颁笅涓€姝ワ級銆?
+- **淇敼鏂囦欢**锛?
   - `src/mcp_server/tools/list_collections.py`
   - `tests/unit/test_list_collections.py`
-- **验收标准**：对 fixtures 中的目录结构能返回集合名列表。
-- **测试方法**：`pytest -q tests/unit/test_list_collections.py`。
+- **楠屾敹鏍囧噯**锛氬 fixtures 涓殑鐩綍缁撴瀯鑳借繑鍥為泦鍚堝悕鍒楄〃銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_list_collections.py`銆?
 
-### E5：实现 tool：get_document_summary
-- **目标**：实现 `tools/get_document_summary.py`：按 doc_id 返回 title/summary/tags（可先从 metadata/缓存取）。
-- **修改文件**：
+### E5锛氬疄鐜?tool锛歡et_document_summary
+- **鐩爣**锛氬疄鐜?`tools/get_document_summary.py`锛氭寜 doc_id 杩斿洖 title/summary/tags锛堝彲鍏堜粠 metadata/缂撳瓨鍙栵級銆?
+- **淇敼鏂囦欢**锛?
   - `src/mcp_server/tools/get_document_summary.py`
   - `tests/unit/test_get_document_summary.py`
-- **验收标准**：对不存在 doc_id 返回规范错误；存在时返回结构化信息。
-- **测试方法**：`pytest -q tests/unit/test_get_document_summary.py`。
+- **楠屾敹鏍囧噯**锛氬涓嶅瓨鍦?doc_id 杩斿洖瑙勮寖閿欒锛涘瓨鍦ㄦ椂杩斿洖缁撴瀯鍖栦俊鎭€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_get_document_summary.py`銆?
 
-### E6：多模态返回组装（Text + Image）
-- **目标**：实现 `multimodal_assembler.py`：命中 chunk 含 image_refs 时读取图片并 base64 返回 ImageContent。
-- **修改文件**：
+### E6锛氬妯℃€佽繑鍥炵粍瑁咃紙Text + Image锛?
+- **鐩爣**锛氬疄鐜?`multimodal_assembler.py`锛氬懡涓?chunk 鍚?image_refs 鏃惰鍙栧浘鐗囧苟 base64 杩斿洖 ImageContent銆?
+- **淇敼鏂囦欢**锛?
   - `src/core/response/multimodal_assembler.py`
-  - `tests/integration/test_mcp_server.py`（补图像返回用例）
-- **验收标准**：返回 content 中包含 image type，mimeType 正确，data 为 base64 字符串。
-- **测试方法**：`pytest -q tests/integration/test_mcp_server.py -k image`。
+  - `tests/integration/test_mcp_server.py`锛堣ˉ鍥惧儚杩斿洖鐢ㄤ緥锛?
+- **楠屾敹鏍囧噯**锛氳繑鍥?content 涓寘鍚?image type锛宮imeType 姝ｇ‘锛宒ata 涓?base64 瀛楃涓层€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_mcp_server.py -k image`銆?
 
 ---
 
-## 阶段 F：Trace 基础设施与打点（目标：Ingestion + Query 双链路可追踪）
+## 闃舵 F锛歍race 鍩虹璁炬柦涓庢墦鐐癸紙鐩爣锛欼ngestion + Query 鍙岄摼璺彲杩借釜锛?
 
-### F1：TraceContext 增强（finish + 耗时统计 + trace_type）
-- **目标**：增强已有的 `TraceContext`（C5 已实现基础版），添加 `finish()` 方法、耗时统计、`trace_type` 字段（区分 query/ingestion）、`to_dict()` 序列化功能。
-- **修改文件**：
-  - `src/core/trace/trace_context.py`（增强：添加 trace_type/finish/elapsed_ms/to_dict）
-  - `src/core/trace/trace_collector.py`（新增：收集并持久化 trace）
-  - `tests/unit/test_trace_context.py`（补充 finish/to_dict 相关测试）
-- **实现类/函数**：
-  - `TraceContext.__init__(trace_type: str = "query")`：支持 `"query"` 或 `"ingestion"` 类型
-  - `TraceContext.finish() -> None`：标记 trace 结束，计算总耗时
-  - `TraceContext.elapsed_ms(stage_name?) -> float`：获取指定阶段或总耗时
-  - `TraceContext.to_dict() -> dict`：序列化为可 JSON 输出的字典（含 trace_type）
-  - `TraceCollector.collect(trace: TraceContext) -> None`：收集 trace 并触发持久化
-- **验收标准**：
-  - `record_stage` 追加阶段数据（已有）
-  - `finish()` 后 `to_dict()` 输出包含 `trace_id`、`trace_type`、`started_at`、`finished_at`、`total_elapsed_ms`、`stages`
-  - 输出 dict 可直接 `json.dumps()` 序列化
-- **测试方法**：`pytest -q tests/unit/test_trace_context.py`。
+### F1锛歍raceContext 澧炲己锛坒inish + 鑰楁椂缁熻 + trace_type锛?
+- **鐩爣**锛氬寮哄凡鏈夌殑 `TraceContext`锛圕5 宸插疄鐜板熀纭€鐗堬級锛屾坊鍔?`finish()` 鏂规硶銆佽€楁椂缁熻銆乣trace_type` 瀛楁锛堝尯鍒?query/ingestion锛夈€乣to_dict()` 搴忓垪鍖栧姛鑳姐€?
+- **淇敼鏂囦欢**锛?
+  - `src/core/trace/trace_context.py`锛堝寮猴細娣诲姞 trace_type/finish/elapsed_ms/to_dict锛?
+  - `src/core/trace/trace_collector.py`锛堟柊澧烇細鏀堕泦骞舵寔涔呭寲 trace锛?
+  - `tests/unit/test_trace_context.py`锛堣ˉ鍏?finish/to_dict 鐩稿叧娴嬭瘯锛?
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `TraceContext.__init__(trace_type: str = "query")`锛氭敮鎸?`"query"` 鎴?`"ingestion"` 绫诲瀷
+  - `TraceContext.finish() -> None`锛氭爣璁?trace 缁撴潫锛岃绠楁€昏€楁椂
+  - `TraceContext.elapsed_ms(stage_name?) -> float`锛氳幏鍙栨寚瀹氶樁娈垫垨鎬昏€楁椂
+  - `TraceContext.to_dict() -> dict`锛氬簭鍒楀寲涓哄彲 JSON 杈撳嚭鐨勫瓧鍏革紙鍚?trace_type锛?
+  - `TraceCollector.collect(trace: TraceContext) -> None`锛氭敹闆?trace 骞惰Е鍙戞寔涔呭寲
+- **楠屾敹鏍囧噯**锛?
+  - `record_stage` 杩藉姞闃舵鏁版嵁锛堝凡鏈夛級
+  - `finish()` 鍚?`to_dict()` 杈撳嚭鍖呭惈 `trace_id`銆乣trace_type`銆乣started_at`銆乣finished_at`銆乣total_elapsed_ms`銆乣stages`
+  - 杈撳嚭 dict 鍙洿鎺?`json.dumps()` 搴忓垪鍖?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_trace_context.py`銆?
 
 
-### F2：结构化日志 logger（JSON Lines）
-- **目标**：增强 `observability/logger.py`，支持 JSON Lines 格式输出，并实现 trace 持久化到 `logs/traces.jsonl`。
-- **修改文件**：
-  - `src/observability/logger.py`（增强：添加 JSONFormatter + FileHandler）
+### F2锛氱粨鏋勫寲鏃ュ織 logger锛圝SON Lines锛?
+- **鐩爣**锛氬寮?`observability/logger.py`锛屾敮鎸?JSON Lines 鏍煎紡杈撳嚭锛屽苟瀹炵幇 trace 鎸佷箙鍖栧埌 `logs/traces.jsonl`銆?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/logger.py`锛堝寮猴細娣诲姞 JSONFormatter + FileHandler锛?
   - `tests/unit/test_jsonl_logger.py`
-- **实现类/函数**：
-  - `JSONFormatter`：自定义 logging Formatter，输出 JSON 格式
-  - `get_trace_logger() -> logging.Logger`：获取配置了 JSON Lines 输出的 logger
-  - `write_trace(trace_dict: dict) -> None`：将 trace 字典写入 `logs/traces.jsonl`
-- **与 F1 的分工**：
-  - F1 负责 TraceContext 的数据结构（含 `trace_type`）和 `finish()` 方法
-  - F2 负责将 `trace.to_dict()` 的结果持久化到文件
-- **验收标准**：写入一条 trace 后文件新增一行合法 JSON，包含 `trace_type` 字段。
-- **测试方法**：`pytest -q tests/unit/test_jsonl_logger.py`。
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `JSONFormatter`锛氳嚜瀹氫箟 logging Formatter锛岃緭鍑?JSON 鏍煎紡
+  - `get_trace_logger() -> logging.Logger`锛氳幏鍙栭厤缃簡 JSON Lines 杈撳嚭鐨?logger
+  - `write_trace(trace_dict: dict) -> None`锛氬皢 trace 瀛楀吀鍐欏叆 `logs/traces.jsonl`
+- **涓?F1 鐨勫垎宸?*锛?
+  - F1 璐熻矗 TraceContext 鐨勬暟鎹粨鏋勶紙鍚?`trace_type`锛夊拰 `finish()` 鏂规硶
+  - F2 璐熻矗灏?`trace.to_dict()` 鐨勭粨鏋滄寔涔呭寲鍒版枃浠?
+- **楠屾敹鏍囧噯**锛氬啓鍏ヤ竴鏉?trace 鍚庢枃浠舵柊澧炰竴琛屽悎娉?JSON锛屽寘鍚?`trace_type` 瀛楁銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_jsonl_logger.py`銆?
 
-### F3：在 Query 链路打点
-- **目标**：在 HybridSearch/Rerank 中注入 TraceContext（`trace_type="query"`），利用 B 阶段抽象接口中预留的 `trace` 参数，显式调用 `trace.record_stage()` 记录各阶段数据。
-- **前置依赖**：D5（HybridSearch）、D6（Reranker）、F1（TraceContext 增强）、F2（结构化日志）
-- **修改文件**：
-  - `src/core/query_engine/hybrid_search.py`（增加 trace 记录：dense/sparse/fusion 阶段）
-  - `src/core/query_engine/reranker.py`（增加 trace 记录：rerank 阶段）
-  - `tests/integration/test_hybrid_search.py`（断言 trace 中存在各阶段）
-- **说明**：B 阶段的接口已预留 `trace: TraceContext | None = None` 参数，本任务负责在调用时传入实际的 TraceContext 实例，并在各阶段记录 `method`/`provider`/`details` 字段。
-- **验收标准**：
-  - 一次查询生成 trace，包含 `query_processing`/`dense_retrieval`/`sparse_retrieval`/`fusion`/`rerank` 阶段
-  - 每个阶段记录 `elapsed_ms` 耗时字段和 `method` 字段
-  - `trace.to_dict()` 中 `trace_type == "query"`
-- **测试方法**：`pytest -q tests/integration/test_hybrid_search.py`。
+### F3锛氬湪 Query 閾捐矾鎵撶偣
+- **鐩爣**锛氬湪 HybridSearch/Rerank 涓敞鍏?TraceContext锛坄trace_type="query"`锛夛紝鍒╃敤 B 闃舵鎶借薄鎺ュ彛涓鐣欑殑 `trace` 鍙傛暟锛屾樉寮忚皟鐢?`trace.record_stage()` 璁板綍鍚勯樁娈垫暟鎹€?
+- **鍓嶇疆渚濊禆**锛欴5锛圚ybridSearch锛夈€丏6锛圧eranker锛夈€丗1锛圱raceContext 澧炲己锛夈€丗2锛堢粨鏋勫寲鏃ュ織锛?
+- **淇敼鏂囦欢**锛?
+  - `src/core/query_engine/hybrid_search.py`锛堝鍔?trace 璁板綍锛歞ense/sparse/fusion 闃舵锛?
+  - `src/core/query_engine/reranker.py`锛堝鍔?trace 璁板綍锛歳erank 闃舵锛?
+  - `tests/integration/test_hybrid_search.py`锛堟柇瑷€ trace 涓瓨鍦ㄥ悇闃舵锛?
+- **璇存槑**锛欱 闃舵鐨勬帴鍙ｅ凡棰勭暀 `trace: TraceContext | None = None` 鍙傛暟锛屾湰浠诲姟璐熻矗鍦ㄨ皟鐢ㄦ椂浼犲叆瀹為檯鐨?TraceContext 瀹炰緥锛屽苟鍦ㄥ悇闃舵璁板綍 `method`/`provider`/`details` 瀛楁銆?
+- **楠屾敹鏍囧噯**锛?
+  - 涓€娆℃煡璇㈢敓鎴?trace锛屽寘鍚?`query_processing`/`dense_retrieval`/`sparse_retrieval`/`fusion`/`rerank` 闃舵
+  - 姣忎釜闃舵璁板綍 `elapsed_ms` 鑰楁椂瀛楁鍜?`method` 瀛楁
+  - `trace.to_dict()` 涓?`trace_type == "query"`
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_hybrid_search.py`銆?
 
-### F4：在 Ingestion 链路打点
-- **目标**：在 IngestionPipeline 中注入 TraceContext（`trace_type="ingestion"`），记录各摄取阶段的处理数据。
-- **前置依赖**：C5（Pipeline）、F1（TraceContext 增强）、F2（结构化日志）
-- **修改文件**：
-  - `src/ingestion/pipeline.py`（增加 trace 传递：load/split/transform/embed/upsert 阶段）
-  - `tests/integration/test_ingestion_pipeline.py`（断言 trace 中存在各阶段）
-- **验收标准**：
-  - 一次摄取生成 trace，包含 `load`/`split`/`transform`/`embed`/`upsert` 阶段
-  - 每个阶段记录 `elapsed_ms`、`method`（如 markitdown/recursive/chroma）和处理详情
-  - `trace.to_dict()` 中 `trace_type == "ingestion"`
-- **测试方法**：`pytest -q tests/integration/test_ingestion_pipeline.py`。
+### F4锛氬湪 Ingestion 閾捐矾鎵撶偣
+- **鐩爣**锛氬湪 IngestionPipeline 涓敞鍏?TraceContext锛坄trace_type="ingestion"`锛夛紝璁板綍鍚勬憚鍙栭樁娈电殑澶勭悊鏁版嵁銆?
+- **鍓嶇疆渚濊禆**锛欳5锛圥ipeline锛夈€丗1锛圱raceContext 澧炲己锛夈€丗2锛堢粨鏋勫寲鏃ュ織锛?
+- **淇敼鏂囦欢**锛?
+  - `src/ingestion/pipeline.py`锛堝鍔?trace 浼犻€掞細load/split/transform/embed/upsert 闃舵锛?
+  - `tests/integration/test_ingestion_pipeline.py`锛堟柇瑷€ trace 涓瓨鍦ㄥ悇闃舵锛?
+- **楠屾敹鏍囧噯**锛?
+  - 涓€娆℃憚鍙栫敓鎴?trace锛屽寘鍚?`load`/`split`/`transform`/`embed`/`upsert` 闃舵
+  - 姣忎釜闃舵璁板綍 `elapsed_ms`銆乣method`锛堝 markitdown/recursive/chroma锛夊拰澶勭悊璇︽儏
+  - `trace.to_dict()` 涓?`trace_type == "ingestion"`
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_ingestion_pipeline.py`銆?
 
-### F5：Pipeline 进度回调 (on_progress)
-- **目标**：在 `IngestionPipeline.run()` 方法中新增可选 `on_progress` 回调参数，支持外部实时获取处理进度。
-- **前置依赖**：F4（Ingestion 打点）
-- **修改文件**：
-  - `src/ingestion/pipeline.py`（在各阶段调用 `on_progress(stage_name, current, total)`）
-  - `tests/unit/test_pipeline_progress.py`（新增：验证回调被正确调用）
-- **实现要点**：
-  - 回调签名：`on_progress(stage_name: str, current: int, total: int)`
-  - `on_progress` 为 `None` 时完全不影响现有行为
-  - 各阶段在处理每个 batch 或完成时触发回调
-- **验收标准**：Pipeline 运行时传入 mock 回调，断言各阶段均被调用且参数正确。
-- **测试方法**：`pytest -q tests/unit/test_pipeline_progress.py`。
+### F5锛歅ipeline 杩涘害鍥炶皟 (on_progress)
+- **鐩爣**锛氬湪 `IngestionPipeline.run()` 鏂规硶涓柊澧炲彲閫?`on_progress` 鍥炶皟鍙傛暟锛屾敮鎸佸閮ㄥ疄鏃惰幏鍙栧鐞嗚繘搴︺€?
+- **鍓嶇疆渚濊禆**锛欶4锛圛ngestion 鎵撶偣锛?
+- **淇敼鏂囦欢**锛?
+  - `src/ingestion/pipeline.py`锛堝湪鍚勯樁娈佃皟鐢?`on_progress(stage_name, current, total)`锛?
+  - `tests/unit/test_pipeline_progress.py`锛堟柊澧烇細楠岃瘉鍥炶皟琚纭皟鐢級
+- **瀹炵幇瑕佺偣**锛?
+  - 鍥炶皟绛惧悕锛歚on_progress(stage_name: str, current: int, total: int)`
+  - `on_progress` 涓?`None` 鏃跺畬鍏ㄤ笉褰卞搷鐜版湁琛屼负
+  - 鍚勯樁娈靛湪澶勭悊姣忎釜 batch 鎴栧畬鎴愭椂瑙﹀彂鍥炶皟
+- **楠屾敹鏍囧噯**锛歅ipeline 杩愯鏃朵紶鍏?mock 鍥炶皟锛屾柇瑷€鍚勯樁娈靛潎琚皟鐢ㄤ笖鍙傛暟姝ｇ‘銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_pipeline_progress.py`銆?
 
 ---
 
-## 阶段 G：可视化管理平台 Dashboard（目标：六页面完整可视化管理）
+## 闃舵 G锛氬彲瑙嗗寲绠＄悊骞冲彴 Dashboard锛堢洰鏍囷細鍏〉闈㈠畬鏁村彲瑙嗗寲绠＄悊锛?
 
-### G1：Dashboard 基础架构与系统总览页
-- **目标**：搭建 Streamlit 多页面应用框架，实现系统总览页面（展示组件配置与数据统计）。
-- **前置依赖**：F1-F2（Trace 基础设施）
-- **修改文件**：
-  - `src/observability/dashboard/app.py`（重写：多页面导航架构）
-  - `src/observability/dashboard/pages/overview.py`（新增：系统总览页面）
-  - `src/observability/dashboard/services/config_service.py`（新增：配置读取服务）
-  - `scripts/start_dashboard.py`（新增：Dashboard 启动脚本）
-- **实现要点**：
-  - `app.py` 使用 `st.navigation()` 注册六个页面（未完成的页面显示占位提示）
-  - Overview 页面：读取 `Settings` 展示组件卡片，调用 `ChromaStore.get_collection_stats()` 展示数据统计
-  - `ConfigService`：封装 Settings 读取，格式化组件配置信息
-- **验收标准**：`streamlit run src/observability/dashboard/app.py` 可启动，总览页展示当前配置信息。
-- **测试方法**：手动运行 `python scripts/start_dashboard.py` 并验证页面渲染。
+### G1锛欴ashboard 鍩虹鏋舵瀯涓庣郴缁熸€昏椤?
+- **鐩爣**锛氭惌寤?Streamlit 澶氶〉闈㈠簲鐢ㄦ鏋讹紝瀹炵幇绯荤粺鎬昏椤甸潰锛堝睍绀虹粍浠堕厤缃笌鏁版嵁缁熻锛夈€?
+- **鍓嶇疆渚濊禆**锛欶1-F2锛圱race 鍩虹璁炬柦锛?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/dashboard/app.py`锛堥噸鍐欙細澶氶〉闈㈠鑸灦鏋勶級
+  - `src/observability/dashboard/pages/overview.py`锛堟柊澧烇細绯荤粺鎬昏椤甸潰锛?
+  - `src/observability/dashboard/services/config_service.py`锛堟柊澧烇細閰嶇疆璇诲彇鏈嶅姟锛?
+  - `scripts/start_dashboard.py`锛堟柊澧烇細Dashboard 鍚姩鑴氭湰锛?
+- **瀹炵幇瑕佺偣**锛?
+  - `app.py` 浣跨敤 `st.navigation()` 娉ㄥ唽鍏釜椤甸潰锛堟湭瀹屾垚鐨勯〉闈㈡樉绀哄崰浣嶆彁绀猴級
+  - Overview 椤甸潰锛氳鍙?`Settings` 灞曠ず缁勪欢鍗＄墖锛岃皟鐢?`ChromaStore.get_collection_stats()` 灞曠ず鏁版嵁缁熻
+  - `ConfigService`锛氬皝瑁?Settings 璇诲彇锛屾牸寮忓寲缁勪欢閰嶇疆淇℃伅
+- **楠屾敹鏍囧噯**锛歚streamlit run src/observability/dashboard/app.py` 鍙惎鍔紝鎬昏椤靛睍绀哄綋鍓嶉厤缃俊鎭€?
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄨ繍琛?`python scripts/start_dashboard.py` 骞堕獙璇侀〉闈㈡覆鏌撱€?
 
-### G2：DocumentManager 实现
-- **目标**：实现 `src/ingestion/document_manager.py`：跨存储的文档生命周期管理（list/delete/stats）。
-- **前置依赖**：C5（Pipeline + 各存储模块已就绪）
-- **修改文件**：
-  - `src/ingestion/document_manager.py`（新增）
-  - `src/libs/vector_store/chroma_store.py`（增强：添加 `delete_by_metadata`）
-  - `src/ingestion/storage/bm25_indexer.py`（增强：添加 `remove_document`）
-  - `src/libs/loader/file_integrity.py`（增强：添加 `remove_record` + `list_processed`）
-  - `tests/unit/test_document_manager.py`（新增）
-- **实现类/函数**：
+### G2锛欴ocumentManager 瀹炵幇
+- **鐩爣**锛氬疄鐜?`src/ingestion/document_manager.py`锛氳法瀛樺偍鐨勬枃妗ｇ敓鍛藉懆鏈熺鐞嗭紙list/delete/stats锛夈€?
+- **鍓嶇疆渚濊禆**锛欳5锛圥ipeline + 鍚勫瓨鍌ㄦā鍧楀凡灏辩华锛?
+- **淇敼鏂囦欢**锛?
+  - `src/ingestion/document_manager.py`锛堟柊澧烇級
+  - `src/libs/vector_store/chroma_store.py`锛堝寮猴細娣诲姞 `delete_by_metadata`锛?
+  - `src/ingestion/storage/bm25_indexer.py`锛堝寮猴細娣诲姞 `remove_document`锛?
+  - `src/libs/loader/file_integrity.py`锛堝寮猴細娣诲姞 `remove_record` + `list_processed`锛?
+  - `tests/unit/test_document_manager.py`锛堟柊澧烇級
+- **瀹炵幇绫?鍑芥暟**锛?
   - `DocumentManager.__init__(chroma_store, bm25_indexer, image_storage, file_integrity)`
   - `DocumentManager.list_documents(collection?) -> List[DocumentInfo]`
   - `DocumentManager.get_document_detail(doc_id) -> DocumentDetail`
   - `DocumentManager.delete_document(source_path, collection) -> DeleteResult`
   - `DocumentManager.get_collection_stats(collection?) -> CollectionStats`
-- **验收标准**：
-  - `list_documents` 返回已摄入文档列表（source、chunk 数、图片数）
-  - `delete_document` 协调删除 Chroma + BM25 + ImageStorage + FileIntegrity 四个存储
-  - 删除后再次 list 不包含已删除文档
-- **测试方法**：`pytest -q tests/unit/test_document_manager.py`。
+- **楠屾敹鏍囧噯**锛?
+  - `list_documents` 杩斿洖宸叉憚鍏ユ枃妗ｅ垪琛紙source銆乧hunk 鏁般€佸浘鐗囨暟锛?
+  - `delete_document` 鍗忚皟鍒犻櫎 Chroma + BM25 + ImageStorage + FileIntegrity 鍥涗釜瀛樺偍
+  - 鍒犻櫎鍚庡啀娆?list 涓嶅寘鍚凡鍒犻櫎鏂囨。
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_document_manager.py`銆?
 
-### G3：数据浏览器页面
-- **目标**：实现 Dashboard 数据浏览器页面（查看文档列表、Chunk 详情、图片预览）。
-- **前置依赖**：G1（Dashboard 架构）、G2（DocumentManager）
-- **修改文件**：
-  - `src/observability/dashboard/pages/data_browser.py`（新增）
-  - `src/observability/dashboard/services/data_service.py`（新增：封装 ChromaStore/ImageStorage 读取）
-- **实现要点**：
-  - 文档列表视图：展示 source_path、集合、chunk 数、摄入时间；支持集合筛选
-  - Chunk 详情视图：点击文档展开所有 chunk，显示内容（可折叠）、metadata 字段、关联图片
-  - `DataService`：封装 `ChromaStore.get_by_metadata()` 和 `ImageStorage.list_images()` 调用
-- **验收标准**：可在 Dashboard 中浏览已摄入的文档和 chunk 详情。
-- **测试方法**：手动验证（先 ingest 样例数据，再在 Dashboard 浏览）。
+### G3锛氭暟鎹祻瑙堝櫒椤甸潰
+- **鐩爣**锛氬疄鐜?Dashboard 鏁版嵁娴忚鍣ㄩ〉闈紙鏌ョ湅鏂囨。鍒楄〃銆丆hunk 璇︽儏銆佸浘鐗囬瑙堬級銆?
+- **鍓嶇疆渚濊禆**锛欸1锛圖ashboard 鏋舵瀯锛夈€丟2锛圖ocumentManager锛?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/dashboard/pages/data_browser.py`锛堟柊澧烇級
+  - `src/observability/dashboard/services/data_service.py`锛堟柊澧烇細灏佽 ChromaStore/ImageStorage 璇诲彇锛?
+- **瀹炵幇瑕佺偣**锛?
+  - 鏂囨。鍒楄〃瑙嗗浘锛氬睍绀?source_path銆侀泦鍚堛€乧hunk 鏁般€佹憚鍏ユ椂闂达紱鏀寔闆嗗悎绛涢€?
+  - Chunk 璇︽儏瑙嗗浘锛氱偣鍑绘枃妗ｅ睍寮€鎵€鏈?chunk锛屾樉绀哄唴瀹癸紙鍙姌鍙狅級銆乵etadata 瀛楁銆佸叧鑱斿浘鐗?
+  - `DataService`锛氬皝瑁?`ChromaStore.get_by_metadata()` 鍜?`ImageStorage.list_images()` 璋冪敤
+- **楠屾敹鏍囧噯**锛氬彲鍦?Dashboard 涓祻瑙堝凡鎽勫叆鐨勬枃妗ｅ拰 chunk 璇︽儏銆?
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄩ獙璇侊紙鍏?ingest 鏍蜂緥鏁版嵁锛屽啀鍦?Dashboard 娴忚锛夈€?
 
-### G4：Ingestion 管理页面
-- **目标**：实现 Dashboard Ingestion 管理页面（文件上传触发摄取、进度展示、文档删除）。
-- **前置依赖**：G2（DocumentManager）、G3（DataService）、F5（on_progress 回调）
-- **修改文件**：
-  - `src/observability/dashboard/pages/ingestion_manager.py`（新增）
-- **实现要点**：
-  - 文件上传：`st.file_uploader` 选择文件 + 集合选择
-  - 摄取触发：调用 `IngestionPipeline.run(on_progress=...)` + `st.progress()` 实时进度
-  - 文档删除：在文档列表中提供删除按钮，调用 `DocumentManager.delete_document()`
-- **验收标准**：可在 Dashboard 中上传文件触发摄取、看到实时进度条、删除已有文档。
-- **测试方法**：手动验证（上传 PDF → 观察进度 → 删除 → 确认已移除）。
+### G4锛欼ngestion 绠＄悊椤甸潰
+- **鐩爣**锛氬疄鐜?Dashboard Ingestion 绠＄悊椤甸潰锛堟枃浠朵笂浼犺Е鍙戞憚鍙栥€佽繘搴﹀睍绀恒€佹枃妗ｅ垹闄わ級銆?
+- **鍓嶇疆渚濊禆**锛欸2锛圖ocumentManager锛夈€丟3锛圖ataService锛夈€丗5锛坥n_progress 鍥炶皟锛?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/dashboard/pages/ingestion_manager.py`锛堟柊澧烇級
+- **瀹炵幇瑕佺偣**锛?
+  - 鏂囦欢涓婁紶锛歚st.file_uploader` 閫夋嫨鏂囦欢 + 闆嗗悎閫夋嫨
+  - 鎽勫彇瑙﹀彂锛氳皟鐢?`IngestionPipeline.run(on_progress=...)` + `st.progress()` 瀹炴椂杩涘害
+  - 鏂囨。鍒犻櫎锛氬湪鏂囨。鍒楄〃涓彁渚涘垹闄ゆ寜閽紝璋冪敤 `DocumentManager.delete_document()`
+- **楠屾敹鏍囧噯**锛氬彲鍦?Dashboard 涓笂浼犳枃浠惰Е鍙戞憚鍙栥€佺湅鍒板疄鏃惰繘搴︽潯銆佸垹闄ゅ凡鏈夋枃妗ｃ€?
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄩ獙璇侊紙涓婁紶 PDF 鈫?瑙傚療杩涘害 鈫?鍒犻櫎 鈫?纭宸茬Щ闄わ級銆?
 
-### G5：Ingestion 追踪页面
-- **目标**：实现 Dashboard Ingestion 追踪页面（摄取历史列表、阶段耗时瀑布图）。
-- **前置依赖**：F4（Ingestion 打点）、G1（Dashboard 架构）
-- **修改文件**：
-  - `src/observability/dashboard/pages/ingestion_traces.py`（新增）
-  - `src/observability/dashboard/services/trace_service.py`（新增：解析 traces.jsonl）
-- **实现要点**：
-  - 历史列表：按时间倒序展示 `trace_type == "ingestion"` 记录
-  - 详情页：横向条形图展示 load/split/transform/embed/upsert 耗时分布
-  - `TraceService`：读取 `logs/traces.jsonl`，解析为 Trace 对象列表
-- **验收标准**：执行 ingest 后，Dashboard 显示对应的追踪记录与耗时瀑布图。
-- **测试方法**：手动验证（先 ingest → 打开 Dashboard → 查看追踪）。
+### G5锛欼ngestion 杩借釜椤甸潰
+- **鐩爣**锛氬疄鐜?Dashboard Ingestion 杩借釜椤甸潰锛堟憚鍙栧巻鍙插垪琛ㄣ€侀樁娈佃€楁椂鐎戝竷鍥撅級銆?
+- **鍓嶇疆渚濊禆**锛欶4锛圛ngestion 鎵撶偣锛夈€丟1锛圖ashboard 鏋舵瀯锛?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/dashboard/pages/ingestion_traces.py`锛堟柊澧烇級
+  - `src/observability/dashboard/services/trace_service.py`锛堟柊澧烇細瑙ｆ瀽 traces.jsonl锛?
+- **瀹炵幇瑕佺偣**锛?
+  - 鍘嗗彶鍒楄〃锛氭寜鏃堕棿鍊掑簭灞曠ず `trace_type == "ingestion"` 璁板綍
+  - 璇︽儏椤碉細妯悜鏉″舰鍥惧睍绀?load/split/transform/embed/upsert 鑰楁椂鍒嗗竷
+  - `TraceService`锛氳鍙?`logs/traces.jsonl`锛岃В鏋愪负 Trace 瀵硅薄鍒楄〃
+- **楠屾敹鏍囧噯**锛氭墽琛?ingest 鍚庯紝Dashboard 鏄剧ず瀵瑰簲鐨勮拷韪褰曚笌鑰楁椂鐎戝竷鍥俱€?
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄩ獙璇侊紙鍏?ingest 鈫?鎵撳紑 Dashboard 鈫?鏌ョ湅杩借釜锛夈€?
 
-### G6：Query 追踪页面
-- **目标**：实现 Dashboard Query 追踪页面（查询历史、Dense/Sparse 对比、Rerank 变化）。
-- **前置依赖**：F3（Query 打点）、G1（Dashboard 架构）、G5（TraceService 已实现）
-- **修改文件**：
-  - `src/observability/dashboard/pages/query_traces.py`（新增）
-- **实现要点**：
-  - 历史列表：按时间倒序展示 `trace_type == "query"` 记录，支持按 Query 关键词搜索
-  - 详情页：耗时瀑布图 + Dense vs Sparse 并列对比 + Rerank 前后排名变化
-- **验收标准**：执行 query 后，Dashboard 显示查询追踪详情与各阶段对比。
-- **测试方法**：手动验证（先 query → 打开 Dashboard → 查看追踪）。
+### G6锛歈uery 杩借釜椤甸潰
+- **鐩爣**锛氬疄鐜?Dashboard Query 杩借釜椤甸潰锛堟煡璇㈠巻鍙层€丏ense/Sparse 瀵规瘮銆丷erank 鍙樺寲锛夈€?
+- **鍓嶇疆渚濊禆**锛欶3锛圦uery 鎵撶偣锛夈€丟1锛圖ashboard 鏋舵瀯锛夈€丟5锛圱raceService 宸插疄鐜帮級
+- **淇敼鏂囦欢**锛?
+  - `src/observability/dashboard/pages/query_traces.py`锛堟柊澧烇級
+- **瀹炵幇瑕佺偣**锛?
+  - 鍘嗗彶鍒楄〃锛氭寜鏃堕棿鍊掑簭灞曠ず `trace_type == "query"` 璁板綍锛屾敮鎸佹寜 Query 鍏抽敭璇嶆悳绱?
+  - 璇︽儏椤碉細鑰楁椂鐎戝竷鍥?+ Dense vs Sparse 骞跺垪瀵规瘮 + Rerank 鍓嶅悗鎺掑悕鍙樺寲
+- **楠屾敹鏍囧噯**锛氭墽琛?query 鍚庯紝Dashboard 鏄剧ず鏌ヨ杩借釜璇︽儏涓庡悇闃舵瀵规瘮銆?
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄩ獙璇侊紙鍏?query 鈫?鎵撳紑 Dashboard 鈫?鏌ョ湅杩借釜锛夈€?
 
 ---
 
-## 阶段 H：评估体系（目标：可插拔评估 + 可量化回归）
+## 闃舵 H锛氳瘎浼颁綋绯伙紙鐩爣锛氬彲鎻掓嫈璇勪及 + 鍙噺鍖栧洖褰掞級
 
-### H1：RagasEvaluator 实现
-- **目标**：实现 `ragas_evaluator.py`：封装 Ragas 框架，实现 `BaseEvaluator` 接口。
-- **修改文件**：
-  - `src/observability/evaluation/ragas_evaluator.py`（新增）
-  - `src/libs/evaluator/evaluator_factory.py`（注册 ragas provider）
-  - `tests/unit/test_ragas_evaluator.py`（新增）
-- **实现类/函数**：
-  - `RagasEvaluator(BaseEvaluator)`：实现 `evaluate()` 方法
-  - 支持指标：Faithfulness, Answer Relevancy, Context Precision
-  - 优雅降级：Ragas 未安装时抛出明确的 `ImportError` 提示
-- **验收标准**：mock LLM 环境下，`evaluate()` 返回包含 faithfulness/answer_relevancy 的 metrics 字典。
-- **测试方法**：`pytest -q tests/unit/test_ragas_evaluator.py`。
+### H1锛歊agasEvaluator 瀹炵幇
+- **鐩爣**锛氬疄鐜?`ragas_evaluator.py`锛氬皝瑁?Ragas 妗嗘灦锛屽疄鐜?`BaseEvaluator` 鎺ュ彛銆?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/evaluation/ragas_evaluator.py`锛堟柊澧烇級
+  - `src/libs/evaluator/evaluator_factory.py`锛堟敞鍐?ragas provider锛?
+  - `tests/unit/test_ragas_evaluator.py`锛堟柊澧烇級
+- **瀹炵幇绫?鍑芥暟**锛?
+  - `RagasEvaluator(BaseEvaluator)`锛氬疄鐜?`evaluate()` 鏂规硶
+  - 鏀寔鎸囨爣锛欶aithfulness, Answer Relevancy, Context Precision
+  - 浼橀泤闄嶇骇锛歊agas 鏈畨瑁呮椂鎶涘嚭鏄庣‘鐨?`ImportError` 鎻愮ず
+- **楠屾敹鏍囧噯**锛歮ock LLM 鐜涓嬶紝`evaluate()` 杩斿洖鍖呭惈 faithfulness/answer_relevancy 鐨?metrics 瀛楀吀銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_ragas_evaluator.py`銆?
 
-### H2：CompositeEvaluator 实现
-- **目标**：实现 `composite_evaluator.py`：组合多个 Evaluator 并行执行，汇总结果。
-- **修改文件**：
-  - `src/observability/evaluation/composite_evaluator.py`（新增）
-  - `tests/unit/test_composite_evaluator.py`（新增）
-- **实现类/函数**：
+### H2锛欳ompositeEvaluator 瀹炵幇
+- **鐩爣**锛氬疄鐜?`composite_evaluator.py`锛氱粍鍚堝涓?Evaluator 骞惰鎵ц锛屾眹鎬荤粨鏋溿€?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/evaluation/composite_evaluator.py`锛堟柊澧烇級
+  - `tests/unit/test_composite_evaluator.py`锛堟柊澧烇級
+- **瀹炵幇绫?鍑芥暟**锛?
   - `CompositeEvaluator.__init__(evaluators: List[BaseEvaluator])`
-  - `CompositeEvaluator.evaluate() -> dict`：并行执行所有 evaluator，合并 metrics
-  - 配置驱动：`evaluation.backends: [ragas, custom]` → 工厂自动组合
-- **验收标准**：配置两个 evaluator 时，返回的 metrics 包含两者的指标。
-- **测试方法**：`pytest -q tests/unit/test_composite_evaluator.py`。
+  - `CompositeEvaluator.evaluate() -> dict`锛氬苟琛屾墽琛屾墍鏈?evaluator锛屽悎骞?metrics
+  - 閰嶇疆椹卞姩锛歚evaluation.backends: [ragas, custom]` 鈫?宸ュ巶鑷姩缁勫悎
+- **楠屾敹鏍囧噯**锛氶厤缃袱涓?evaluator 鏃讹紝杩斿洖鐨?metrics 鍖呭惈涓よ€呯殑鎸囨爣銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/unit/test_composite_evaluator.py`銆?
 
-### H3：EvalRunner + Golden Test Set
-- **目标**：实现 `eval_runner.py`：读取 `tests/fixtures/golden_test_set.json`，跑 retrieval 并产出 metrics。
-- **前置依赖**：D5（HybridSearch）、H1-H2（评估器）
-- **修改文件**：
-  - `src/observability/evaluation/eval_runner.py`（新增）
-  - `tests/fixtures/golden_test_set.json`（新增：黄金测试集）
-  - `scripts/evaluate.py`（新增：评估运行脚本）
-- **实现类/函数**：
+### H3锛欵valRunner + Golden Test Set
+- **鐩爣**锛氬疄鐜?`eval_runner.py`锛氳鍙?`tests/fixtures/golden_test_set.json`锛岃窇 retrieval 骞朵骇鍑?metrics銆?
+- **鍓嶇疆渚濊禆**锛欴5锛圚ybridSearch锛夈€丠1-H2锛堣瘎浼板櫒锛?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/evaluation/eval_runner.py`锛堟柊澧烇級
+  - `tests/fixtures/golden_test_set.json`锛堟柊澧烇細榛勯噾娴嬭瘯闆嗭級
+  - `scripts/evaluate.py`锛堟柊澧烇細璇勪及杩愯鑴氭湰锛?
+- **瀹炵幇绫?鍑芥暟**锛?
   - `EvalRunner.__init__(settings, hybrid_search, evaluator)`
-  - `EvalRunner.run(test_set_path) -> EvalReport`：运行评估并返回报告
-  - `EvalReport`：包含 hit_rate, mrr, 各 query 结果详情
-- **golden_test_set.json 格式**：
+  - `EvalRunner.run(test_set_path) -> EvalReport`锛氳繍琛岃瘎浼板苟杩斿洖鎶ュ憡
+  - `EvalReport`锛氬寘鍚?hit_rate, mrr, 鍚?query 缁撴灉璇︽儏
+- **golden_test_set.json 鏍煎紡**锛?
   ```json
   {
     "test_cases": [
       {
-        "query": "如何配置 Azure OpenAI？",
+        "query": "濡備綍閰嶇疆 Azure OpenAI锛?,
         "expected_chunk_ids": ["chunk_abc_001", "chunk_abc_002"],
         "expected_sources": ["config_guide.pdf"]
       }
     ]
   }
   ```
-- **验收标准**：`python scripts/evaluate.py` 可运行，输出 metrics。
-- **测试方法**：`pytest -q tests/integration/test_hybrid_search.py` 或 `python scripts/evaluate.py`。
+- **楠屾敹鏍囧噯**锛歚python scripts/evaluate.py` 鍙繍琛岋紝杈撳嚭 metrics銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/integration/test_hybrid_search.py` 鎴?`python scripts/evaluate.py`銆?
 
-### H4：评估面板页面
-- **目标**：实现 Dashboard 评估面板页面（运行评估、查看指标、历史对比）。
-- **前置依赖**：H3（EvalRunner）、G1（Dashboard 架构）
-- **修改文件**：
-  - `src/observability/dashboard/pages/evaluation_panel.py`（实现：替换占位提示）
-- **实现要点**：
-  - 选择评估后端与 golden test set
-  - 点击运行，展示评估结果（hit_rate、mrr、各 query 明细）
-  - 可选：历史评估结果对比图
-- **验收标准**：可在 Dashboard 中运行评估并查看指标。
-- **测试方法**：手动验证。
+### H4锛氳瘎浼伴潰鏉块〉闈?
+- **鐩爣**锛氬疄鐜?Dashboard 璇勪及闈㈡澘椤甸潰锛堣繍琛岃瘎浼般€佹煡鐪嬫寚鏍囥€佸巻鍙插姣旓級銆?
+- **鍓嶇疆渚濊禆**锛欻3锛圗valRunner锛夈€丟1锛圖ashboard 鏋舵瀯锛?
+- **淇敼鏂囦欢**锛?
+  - `src/observability/dashboard/pages/evaluation_panel.py`锛堝疄鐜帮細鏇挎崲鍗犱綅鎻愮ず锛?
+- **瀹炵幇瑕佺偣**锛?
+  - 閫夋嫨璇勪及鍚庣涓?golden test set
+  - 鐐瑰嚮杩愯锛屽睍绀鸿瘎浼扮粨鏋滐紙hit_rate銆乵rr銆佸悇 query 鏄庣粏锛?
+  - 鍙€夛細鍘嗗彶璇勪及缁撴灉瀵规瘮鍥?
+- **楠屾敹鏍囧噯**锛氬彲鍦?Dashboard 涓繍琛岃瘎浼板苟鏌ョ湅鎸囨爣銆?
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄩ獙璇併€?
 
-### H5：Recall 回归测试（E2E）
-- **目标**：实现 `tests/e2e/test_recall.py`：基于 golden set 做最小召回阈值（例如 hit@k）。
-- **前置依赖**：H3（EvalRunner + golden_test_set）
-- **修改文件**：
-  - `tests/e2e/test_recall.py`（新增）
-  - `tests/fixtures/golden_test_set.json`（补齐若干条）
-- **验收标准**：hit@k 达到阈值（阈值写死在测试里，便于回归）。
-- **测试方法**：`pytest -q tests/e2e/test_recall.py`。
+### H5锛歊ecall 鍥炲綊娴嬭瘯锛圗2E锛?
+- **鐩爣**锛氬疄鐜?`tests/e2e/test_recall.py`锛氬熀浜?golden set 鍋氭渶灏忓彫鍥為槇鍊硷紙渚嬪 hit@k锛夈€?
+- **鍓嶇疆渚濊禆**锛欻3锛圗valRunner + golden_test_set锛?
+- **淇敼鏂囦欢**锛?
+  - `tests/e2e/test_recall.py`锛堟柊澧烇級
+  - `tests/fixtures/golden_test_set.json`锛堣ˉ榻愯嫢骞叉潯锛?
+- **楠屾敹鏍囧噯**锛歨it@k 杈惧埌闃堝€硷紙闃堝€煎啓姝诲湪娴嬭瘯閲岋紝渚夸簬鍥炲綊锛夈€?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/e2e/test_recall.py`銆?
 
 ---
 
-## 阶段 I：端到端验收与文档收口（目标：开箱即用的"可复现"工程）
+## 闃舵 I锛氱鍒扮楠屾敹涓庢枃妗ｆ敹鍙ｏ紙鐩爣锛氬紑绠卞嵆鐢ㄧ殑"鍙鐜?宸ョ▼锛?
 
-### I1：E2E：MCP Client 侧调用模拟
-- **目标**：实现 `tests/e2e/test_mcp_client.py`：以子进程启动 server，模拟 tools/list + tools/call。
-- **修改文件**：
+### I1锛欵2E锛歁CP Client 渚ц皟鐢ㄦā鎷?
+- **鐩爣**锛氬疄鐜?`tests/e2e/test_mcp_client.py`锛氫互瀛愯繘绋嬪惎鍔?server锛屾ā鎷?tools/list + tools/call銆?
+- **淇敼鏂囦欢**锛?
   - `tests/e2e/test_mcp_client.py`
-- **验收标准**：完整走通 query_knowledge_hub 并返回 citations。
-- **测试方法**：`pytest -q tests/e2e/test_mcp_client.py`。
+- **楠屾敹鏍囧噯**锛氬畬鏁磋蛋閫?query_knowledge_hub 骞惰繑鍥?citations銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/e2e/test_mcp_client.py`銆?
 
-### I2：E2E：Dashboard 冒烟测试
-- **目标**：验证 Dashboard 各页面在有数据时可正常渲染、无 Python 异常。
-- **修改文件**：
-  - `tests/e2e/test_dashboard_smoke.py`（新增）
-- **实现要点**：
-  - 使用 Streamlit 的 `AppTest` 框架进行自动化冒烟测试
-  - 验证 6 个页面均可加载、不抛异常
-- **验收标准**：所有页面冒烟测试通过。
-- **测试方法**：`pytest -q tests/e2e/test_dashboard_smoke.py`。
+### I2锛欵2E锛欴ashboard 鍐掔儫娴嬭瘯
+- **鐩爣**锛氶獙璇?Dashboard 鍚勯〉闈㈠湪鏈夋暟鎹椂鍙甯告覆鏌撱€佹棤 Python 寮傚父銆?
+- **淇敼鏂囦欢**锛?
+  - `tests/e2e/test_dashboard_smoke.py`锛堟柊澧烇級
+- **瀹炵幇瑕佺偣**锛?
+  - 浣跨敤 Streamlit 鐨?`AppTest` 妗嗘灦杩涜鑷姩鍖栧啋鐑熸祴璇?
+  - 楠岃瘉 6 涓〉闈㈠潎鍙姞杞姐€佷笉鎶涘紓甯?
+- **楠屾敹鏍囧噯**锛氭墍鏈夐〉闈㈠啋鐑熸祴璇曢€氳繃銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q tests/e2e/test_dashboard_smoke.py`銆?
 
-### I3：完善 README（运行说明 + 测试说明 + MCP 配置 + Dashboard 使用）
-- **目标**：让新用户能在 10 分钟内跑通 ingest + query + dashboard + tests，并能在 Copilot/Claude 中使用。
-- **修改文件**：
+### I3锛氬畬鍠?README锛堣繍琛岃鏄?+ 娴嬭瘯璇存槑 + MCP 閰嶇疆 + Dashboard 浣跨敤锛?
+- **鐩爣**锛氳鏂扮敤鎴疯兘鍦?10 鍒嗛挓鍐呰窇閫?ingest + query + dashboard + tests锛屽苟鑳藉湪 Copilot/Claude 涓娇鐢ㄣ€?
+- **淇敼鏂囦欢**锛?
   - `README.md`
-- **验收标准**：README 包含以下章节：
-  - **快速开始**：安装依赖、配置 API Key、运行首次摄取
-  - **配置说明**：`settings.yaml` 各字段含义
-  - **MCP 配置示例**：GitHub Copilot `mcp.json` 与 Claude Desktop `claude_desktop_config.json`
-  - **Dashboard 使用指南**：启动命令、各页面功能说明、截图示例
-  - **运行测试**：单元测试、集成测试、E2E 测试命令
-  - **常见问题**：API Key 配置、依赖安装、连接问题排查
-- **测试方法**：按 README 手动走一遍。
+- **楠屾敹鏍囧噯**锛歊EADME 鍖呭惈浠ヤ笅绔犺妭锛?
+  - **蹇€熷紑濮?*锛氬畨瑁呬緷璧栥€侀厤缃?API Key銆佽繍琛岄娆℃憚鍙?
+  - **閰嶇疆璇存槑**锛歚settings.yaml` 鍚勫瓧娈靛惈涔?
+  - **MCP 閰嶇疆绀轰緥**锛欸itHub Copilot `mcp.json` 涓?Claude Desktop `claude_desktop_config.json`
+  - **Dashboard 浣跨敤鎸囧崡**锛氬惎鍔ㄥ懡浠ゃ€佸悇椤甸潰鍔熻兘璇存槑銆佹埅鍥剧ず渚?
+  - **杩愯娴嬭瘯**锛氬崟鍏冩祴璇曘€侀泦鎴愭祴璇曘€丒2E 娴嬭瘯鍛戒护
+  - **甯歌闂**锛欰PI Key 閰嶇疆銆佷緷璧栧畨瑁呫€佽繛鎺ラ棶棰樻帓鏌?
+- **娴嬭瘯鏂规硶**锛氭寜 README 鎵嬪姩璧颁竴閬嶃€?
 
-### I4：清理接口一致性（契约测试补齐）
-- **目标**：为关键抽象（VectorStore / Reranker / Evaluator / DocumentManager）补齐契约测试。
-- **修改文件**：
-  - `tests/unit/test_vector_store_contract.py`（补齐 delete_by_metadata 边界）
-  - `tests/unit/test_reranker_factory.py`（补齐边界）
-  - `tests/unit/test_custom_evaluator.py`（补齐边界）
-- **验收标准**：`pytest -q` 全绿，且 contract tests 覆盖主要输入输出形状。
-- **测试方法**：`pytest -q`。
+### I4锛氭竻鐞嗘帴鍙ｄ竴鑷存€э紙濂戠害娴嬭瘯琛ラ綈锛?
+- **鐩爣**锛氫负鍏抽敭鎶借薄锛圴ectorStore / Reranker / Evaluator / DocumentManager锛夎ˉ榻愬绾︽祴璇曘€?
+- **淇敼鏂囦欢**锛?
+  - `tests/unit/test_vector_store_contract.py`锛堣ˉ榻?delete_by_metadata 杈圭晫锛?
+  - `tests/unit/test_reranker_factory.py`锛堣ˉ榻愯竟鐣岋級
+  - `tests/unit/test_custom_evaluator.py`锛堣ˉ榻愯竟鐣岋級
+- **楠屾敹鏍囧噯**锛歚pytest -q` 鍏ㄧ豢锛屼笖 contract tests 瑕嗙洊涓昏杈撳叆杈撳嚭褰㈢姸銆?
+- **娴嬭瘯鏂规硶**锛歚pytest -q`銆?
 
-### I5：全链路 E2E 验收
-- **目标**：执行完整的端到端验收流程：ingest → query via MCP → Dashboard 可视化 → evaluate。
-- **修改文件**：无新文件，验收已有功能
-- **验收标准**：
-  - `python scripts/ingest.py --path tests/fixtures/sample_documents/ --collection test` 成功
-  - `python scripts/query.py --query "测试查询" --verbose` 返回结果
-  - Dashboard 可展示摄取与查询追踪
-  - `python scripts/evaluate.py` 输出评估指标
-- **测试方法**：手动全链路走通 + `pytest -q` 全量测试。
+### I5锛氬叏閾捐矾 E2E 楠屾敹
+- **鐩爣**锛氭墽琛屽畬鏁寸殑绔埌绔獙鏀舵祦绋嬶細ingest 鈫?query via MCP 鈫?Dashboard 鍙鍖?鈫?evaluate銆?
+- **淇敼鏂囦欢**锛氭棤鏂版枃浠讹紝楠屾敹宸叉湁鍔熻兘
+- **楠屾敹鏍囧噯**锛?
+  - `python scripts/ingest.py --path tests/fixtures/sample_documents/ --collection test` 鎴愬姛
+  - `python scripts/query.py --query "娴嬭瘯鏌ヨ" --verbose` 杩斿洖缁撴灉
+  - Dashboard 鍙睍绀烘憚鍙栦笌鏌ヨ杩借釜
+  - `python scripts/evaluate.py` 杈撳嚭璇勪及鎸囨爣
+- **娴嬭瘯鏂规硶**锛氭墜鍔ㄥ叏閾捐矾璧伴€?+ `pytest -q` 鍏ㄩ噺娴嬭瘯銆?
 
 ---
 
-### 交付里程碑（建议）
+### 浜や粯閲岀▼纰戯紙寤鸿锛?
 
-- **M1（完成阶段 A+B）**：工程可测 + 可插拔抽象层就绪，后续实现可并行推进。
-- **M2（完成阶段 C）**：离线摄取链路可用，能构建本地索引。
-- **M3（完成阶段 D+E）**：在线查询 + MCP tools 可用，可在 Copilot/Claude 中调用。
-- **M4（完成阶段 F）**：Ingestion + Query 双链路可追踪，JSON Lines 持久化。
-- **M5（完成阶段 G）**：六页面可视化管理平台就绪（评估面板为占位），数据可浏览、可管理、链路可追踪。
-- **M6（完成阶段 H+I）**：评估体系完整 + E2E 验收通过 + 文档完善，形成"面试/教学/演示"可复现项目。
+- **M1锛堝畬鎴愰樁娈?A+B锛?*锛氬伐绋嬪彲娴?+ 鍙彃鎷旀娊璞″眰灏辩华锛屽悗缁疄鐜板彲骞惰鎺ㄨ繘銆?
+- **M2锛堝畬鎴愰樁娈?C锛?*锛氱绾挎憚鍙栭摼璺彲鐢紝鑳芥瀯寤烘湰鍦扮储寮曘€?
+- **M3锛堝畬鎴愰樁娈?D+E锛?*锛氬湪绾挎煡璇?+ MCP tools 鍙敤锛屽彲鍦?Copilot/Claude 涓皟鐢ㄣ€?
+- **M4锛堝畬鎴愰樁娈?F锛?*锛欼ngestion + Query 鍙岄摼璺彲杩借釜锛孞SON Lines 鎸佷箙鍖栥€?
+- **M5锛堝畬鎴愰樁娈?G锛?*锛氬叚椤甸潰鍙鍖栫鐞嗗钩鍙板氨缁紙璇勪及闈㈡澘涓哄崰浣嶏級锛屾暟鎹彲娴忚銆佸彲绠＄悊銆侀摼璺彲杩借釜銆?
+- **M6锛堝畬鎴愰樁娈?H+I锛?*锛氳瘎浼颁綋绯诲畬鏁?+ E2E 楠屾敹閫氳繃 + 鏂囨。瀹屽杽锛屽舰鎴?闈㈣瘯/鏁欏/婕旂ず"鍙鐜伴」鐩€?
 
 
 
-## 7. 可扩展性与未来展望
+## 7. 鍙墿灞曟€т笌鏈潵灞曟湜
 
-### 7.1 云端部署与后端架构学习
-虽然当前阶段我们主要采用“本地运行”模式，但本项目的架构设计完全支持向云端迁移。这也是一个极佳的学习后端工程化的切入点。
-- **Server 容器化**：计划编写 Dockerfile，将 MCP Server 打包为容器。这让我们有机会深入理解 Python 环境隔离、依赖管理以及 Docker 的最佳实践。
-- **云端接入**：未来可以将 Server 部署至 Azure Container Apps 或 AWS Lambda。
-    - **挑战与学习点**：处理网络延时、配置 API Gateway、增加 AuthN/AuthZ 鉴权机制（保护私有数据不被公开访问）。
-- **多租户与并发**：从单用户本地服务转变为支持团队共享的服务。
-    - **学习点**：在 Chroma 中实现 Namespace 隔离、处理并发请求锁、优化 embedding 缓存策略。
+### 7.1 浜戠閮ㄧ讲涓庡悗绔灦鏋勫涔?
+铏界劧褰撳墠闃舵鎴戜滑涓昏閲囩敤鈥滄湰鍦拌繍琛屸€濇ā寮忥紝浣嗘湰椤圭洰鐨勬灦鏋勮璁″畬鍏ㄦ敮鎸佸悜浜戠杩佺Щ銆傝繖涔熸槸涓€涓瀬浣崇殑瀛︿範鍚庣宸ョ▼鍖栫殑鍒囧叆鐐广€?
+- **Server 瀹瑰櫒鍖?*锛氳鍒掔紪鍐?Dockerfile锛屽皢 MCP Server 鎵撳寘涓哄鍣ㄣ€傝繖璁╂垜浠湁鏈轰細娣卞叆鐞嗚В Python 鐜闅旂銆佷緷璧栫鐞嗕互鍙?Docker 鐨勬渶浣冲疄璺点€?
+- **浜戠鎺ュ叆**锛氭湭鏉ュ彲浠ュ皢 Server 閮ㄧ讲鑷?Azure Container Apps 鎴?AWS Lambda銆?
+    - **鎸戞垬涓庡涔犵偣**锛氬鐞嗙綉缁滃欢鏃躲€侀厤缃?API Gateway銆佸鍔?AuthN/AuthZ 閴存潈鏈哄埗锛堜繚鎶ょ鏈夋暟鎹笉琚叕寮€璁块棶锛夈€?
+- **澶氱鎴蜂笌骞跺彂**锛氫粠鍗曠敤鎴锋湰鍦版湇鍔¤浆鍙樹负鏀寔鍥㈤槦鍏变韩鐨勬湇鍔°€?
+    - **瀛︿範鐐?*锛氬湪 Chroma 涓疄鐜?Namespace 闅旂銆佸鐞嗗苟鍙戣姹傞攣銆佷紭鍖?embedding 缂撳瓨绛栫暐銆?
 
-### 7.2 业务深耕：从"通用"到"垂直" (Vertical Domain Adaptation)
-RAG 系统的上限取决于其对特定业务数据的理解深度。未来的核心扩展方向是将通用的技术框架与具体的业务场景深度结合。在将本项目应用到实际生产环境时，识别并解决以下“最后一公里”的难题，将是提升系统价值的关键：
+### 7.2 涓氬姟娣辫€曪細浠?閫氱敤"鍒?鍨傜洿" (Vertical Domain Adaptation)
+RAG 绯荤粺鐨勪笂闄愬彇鍐充簬鍏跺鐗瑰畾涓氬姟鏁版嵁鐨勭悊瑙ｆ繁搴︺€傛湭鏉ョ殑鏍稿績鎵╁睍鏂瑰悜鏄皢閫氱敤鐨勬妧鏈鏋朵笌鍏蜂綋鐨勪笟鍔″満鏅繁搴︾粨鍚堛€傚湪灏嗘湰椤圭洰搴旂敤鍒板疄闄呯敓浜х幆澧冩椂锛岃瘑鍒苟瑙ｅ喅浠ヤ笅鈥滄渶鍚庝竴鍏噷鈥濈殑闅鹃锛屽皢鏄彁鍗囩郴缁熶环鍊肩殑鍏抽敭锛?
 
-- **多源异构数据的复杂适配**：
-    - 现实业务中不仅有 PDF，还大量存在 PPTX, DOCX, XLSX 甚至 HTML 数据。
-    - **挑战**：如何处理不同格式的特有语义？例如 PPT 中的演讲者备注往往比正文更关键，Excel 中的公式逻辑与跨行关联如何保留？目前的通用处理方式容易丢失这些“隐性知识”，未来需要针对每种格式探索更深度的解析能力。
+- **澶氭簮寮傛瀯鏁版嵁鐨勫鏉傞€傞厤**锛?
+    - 鐜板疄涓氬姟涓笉浠呮湁 PDF锛岃繕澶ч噺瀛樺湪 PPTX, DOCX, XLSX 鐢氳嚦 HTML 鏁版嵁銆?
+    - **鎸戞垬**锛氬浣曞鐞嗕笉鍚屾牸寮忕殑鐗规湁璇箟锛熶緥濡?PPT 涓殑婕旇鑰呭娉ㄥ線寰€姣旀鏂囨洿鍏抽敭锛孍xcel 涓殑鍏紡閫昏緫涓庤法琛屽叧鑱斿浣曚繚鐣欙紵鐩墠鐨勯€氱敤澶勭悊鏂瑰紡瀹规槗涓㈠け杩欎簺鈥滈殣鎬х煡璇嗏€濓紝鏈潵闇€瑕侀拡瀵规瘡绉嶆牸寮忔帰绱㈡洿娣卞害鐨勮В鏋愯兘鍔涖€?
 
-- **复杂结构化数据的精确理解**：
-    - 简单的文本切分（Chunking）在处理表格、层级列表时往往会破坏语义。
-    - **挑战**：
-        - **表格理解**：如何处理跨页长表格、合并单元格以及含有复杂表头的财务报表？如果切分不当，检索时只能找到数字却不知道对应的列名（指标含义）。
-        - **上下文断裂**：当一个完整的逻辑段落（如合同条款）被切分到两个 chunk 时，如何保证检索其中一段时能感知到整体的上下文约束？
+- **澶嶆潅缁撴瀯鍖栨暟鎹殑绮剧‘鐞嗚В**锛?
+    - 绠€鍗曠殑鏂囨湰鍒囧垎锛圕hunking锛夊湪澶勭悊琛ㄦ牸銆佸眰绾у垪琛ㄦ椂寰€寰€浼氱牬鍧忚涔夈€?
+    - **鎸戞垬**锛?
+        - **琛ㄦ牸鐞嗚В**锛氬浣曞鐞嗚法椤甸暱琛ㄦ牸銆佸悎骞跺崟鍏冩牸浠ュ強鍚湁澶嶆潅琛ㄥご鐨勮储鍔℃姤琛紵濡傛灉鍒囧垎涓嶅綋锛屾绱㈡椂鍙兘鎵惧埌鏁板瓧鍗翠笉鐭ラ亾瀵瑰簲鐨勫垪鍚嶏紙鎸囨爣鍚箟锛夈€?
+        - **涓婁笅鏂囨柇瑁?*锛氬綋涓€涓畬鏁寸殑閫昏緫娈佃惤锛堝鍚堝悓鏉℃锛夎鍒囧垎鍒颁袱涓?chunk 鏃讹紝濡備綍淇濊瘉妫€绱㈠叾涓竴娈垫椂鑳芥劅鐭ュ埌鏁翠綋鐨勪笂涓嬫枃绾︽潫锛?
 
-- **业务逻辑驱动的生成控制**：
-    - 仅仅根据“相似度”召回文档在企业级场景中往往不够。
-    - **挑战**：
-        - **时效性与版本管理**：当知识库中同时存在“2023版”和“2024版”规章时，如何确保系统不会混淆历史数据与最新标准？
-        - **权限与受众适配**：面对内部员工与外部客户，如何控制生成答案的详略程度与敏感信息披露？
-        - **拒答机制**：当召回内容的置信度不足时，如何让系统诚实地回答“不知道”而不是基于相关性较低的片段强行拼凑答案（幻觉问题）？
+- **涓氬姟閫昏緫椹卞姩鐨勭敓鎴愭帶鍒?*锛?
+    - 浠呬粎鏍规嵁鈥滅浉浼煎害鈥濆彫鍥炴枃妗ｅ湪浼佷笟绾у満鏅腑寰€寰€涓嶅銆?
+    - **鎸戞垬**锛?
+        - **鏃舵晥鎬т笌鐗堟湰绠＄悊**锛氬綋鐭ヨ瘑搴撲腑鍚屾椂瀛樺湪鈥?023鐗堚€濆拰鈥?024鐗堚€濊绔犳椂锛屽浣曠‘淇濈郴缁熶笉浼氭贩娣嗗巻鍙叉暟鎹笌鏈€鏂版爣鍑嗭紵
+        - **鏉冮檺涓庡彈浼楅€傞厤**锛氶潰瀵瑰唴閮ㄥ憳宸ヤ笌澶栭儴瀹㈡埛锛屽浣曟帶鍒剁敓鎴愮瓟妗堢殑璇︾暐绋嬪害涓庢晱鎰熶俊鎭姭闇诧紵
+        - **鎷掔瓟鏈哄埗**锛氬綋鍙洖鍐呭鐨勭疆淇″害涓嶈冻鏃讹紝濡備綍璁╃郴缁熻瘹瀹炲湴鍥炵瓟鈥滀笉鐭ラ亾鈥濊€屼笉鏄熀浜庣浉鍏虫€ц緝浣庣殑鐗囨寮鸿鎷煎噾绛旀锛堝够瑙夐棶棰橈級锛?
 
-### 7.3 迈向自主智能：Agentic RAG 的演进路径
-当前的 RAG 架构主要遵循“一次检索-一次生成”的固有范式，但在面对极其复杂的问题（如跨文档对比、多步推理）时，单一的线性流程往往力不从心。本项目作为标准的 MCP Server，天然具备向 **Agentic RAG（代理式 RAG）** 演进的潜力。这不需要重写现有代码，而是通过在 Server 端提供更细粒度的工具，赋能 Client 端的 Agent 具备更强的自主性：
+### 7.3 杩堝悜鑷富鏅鸿兘锛欰gentic RAG 鐨勬紨杩涜矾寰?
+褰撳墠鐨?RAG 鏋舵瀯涓昏閬靛惊鈥滀竴娆℃绱?涓€娆＄敓鎴愨€濈殑鍥烘湁鑼冨紡锛屼絾鍦ㄩ潰瀵规瀬鍏跺鏉傜殑闂锛堝璺ㄦ枃妗ｅ姣斻€佸姝ユ帹鐞嗭級鏃讹紝鍗曚竴鐨勭嚎鎬ф祦绋嬪線寰€鍔涗笉浠庡績銆傛湰椤圭洰浣滀负鏍囧噯鐨?MCP Server锛屽ぉ鐒跺叿澶囧悜 **Agentic RAG锛堜唬鐞嗗紡 RAG锛?* 婕旇繘鐨勬綔鍔涖€傝繖涓嶉渶瑕侀噸鍐欑幇鏈変唬鐮侊紝鑰屾槸閫氳繃鍦?Server 绔彁渚涙洿缁嗙矑搴︾殑宸ュ叿锛岃祴鑳?Client 绔殑 Agent 鍏峰鏇村己鐨勮嚜涓绘€э細
 
-- **从“单步检索”到“多步决策”**：
-    - 目前 Agent 可能只调用一个通用的 `search` 工具。
-    - **未来演进**：Server 可以暴露如 `list_directory`（查看目录结构）、`preview_document`（预览摘要）、`verify_fact`（事实核查）等更原子化的工具。Agent 可以像人类研究员一样，先看目录圈定范围，再针对性阅读，最后交叉验证信息，从而解决复杂问题。
-- **让 Agent 具备“反思”能力**：
-    - **未来演进**：利用现有的评估模块，Server 可以提供一个 `self_check` 接口。Agent 在生成答案后，可以自主调用该接口检测是否存在幻觉，或者检索结果是否真正支撑了论点。如果发现不足，Agent 可以自主决定进行第二轮更深度的搜索。
-- **动态策略选择**：
-    - **未来演进**：不再硬编码使用混合检索。Server 可以将 `keyword_search` 和 `semantic_search` 作为独立工具暴露。Agent 可以根据用户意图自主判断：如果是搜人名，只用关键词搜；如果是搜概念，通过语义搜。这种工具使用的灵活性正是 Agentic RAG 的核心魅力。
+- **浠庘€滃崟姝ユ绱⑩€濆埌鈥滃姝ュ喅绛栤€?*锛?
+    - 鐩墠 Agent 鍙兘鍙皟鐢ㄤ竴涓€氱敤鐨?`search` 宸ュ叿銆?
+    - **鏈潵婕旇繘**锛歋erver 鍙互鏆撮湶濡?`list_directory`锛堟煡鐪嬬洰褰曠粨鏋勶級銆乣preview_document`锛堥瑙堟憳瑕侊級銆乣verify_fact`锛堜簨瀹炴牳鏌ワ級绛夋洿鍘熷瓙鍖栫殑宸ュ叿銆侫gent 鍙互鍍忎汉绫荤爺绌跺憳涓€鏍凤紝鍏堢湅鐩綍鍦堝畾鑼冨洿锛屽啀閽堝鎬ч槄璇伙紝鏈€鍚庝氦鍙夐獙璇佷俊鎭紝浠庤€岃В鍐冲鏉傞棶棰樸€?
+- **璁?Agent 鍏峰鈥滃弽鎬濃€濊兘鍔?*锛?
+    - **鏈潵婕旇繘**锛氬埄鐢ㄧ幇鏈夌殑璇勪及妯″潡锛孲erver 鍙互鎻愪緵涓€涓?`self_check` 鎺ュ彛銆侫gent 鍦ㄧ敓鎴愮瓟妗堝悗锛屽彲浠ヨ嚜涓昏皟鐢ㄨ鎺ュ彛妫€娴嬫槸鍚﹀瓨鍦ㄥ够瑙夛紝鎴栬€呮绱㈢粨鏋滄槸鍚︾湡姝ｆ敮鎾戜簡璁虹偣銆傚鏋滃彂鐜颁笉瓒筹紝Agent 鍙互鑷富鍐冲畾杩涜绗簩杞洿娣卞害鐨勬悳绱€?
+- **鍔ㄦ€佺瓥鐣ラ€夋嫨**锛?
+    - **鏈潵婕旇繘**锛氫笉鍐嶇‖缂栫爜浣跨敤娣峰悎妫€绱€係erver 鍙互灏?`keyword_search` 鍜?`semantic_search` 浣滀负鐙珛宸ュ叿鏆撮湶銆侫gent 鍙互鏍规嵁鐢ㄦ埛鎰忓浘鑷富鍒ゆ柇锛氬鏋滄槸鎼滀汉鍚嶏紝鍙敤鍏抽敭璇嶆悳锛涘鏋滄槸鎼滄蹇碉紝閫氳繃璇箟鎼溿€傝繖绉嶅伐鍏蜂娇鐢ㄧ殑鐏垫椿鎬ф鏄?Agentic RAG 鐨勬牳蹇冮瓍鍔涖€?
 
-这种演进方向将把本项目从一个“智能搜索引擎”升级为一个“智能研究助理”的基础设施底座。
+杩欑婕旇繘鏂瑰悜灏嗘妸鏈」鐩粠涓€涓€滄櫤鑳芥悳绱㈠紩鎿庘€濆崌绾т负涓€涓€滄櫤鑳界爺绌跺姪鐞嗏€濈殑鍩虹璁炬柦搴曞骇銆?
 
 
