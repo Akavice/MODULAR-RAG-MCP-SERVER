@@ -187,3 +187,70 @@
     - "config/settings.yaml"
     - "tests/unit/test_dense_encoder.py"
   failures: []
+
+- phase: C9-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: SparseEncoder implementation verified (BM25-style term weighting, stopword filtering, config override, trace metrics)
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_sparse_encoder.py"
+  result: "unit: 7 passed"
+  files:
+    - "src/ingestion/embedding/sparse_encoder.py"
+    - "src/ingestion/embedding/__init__.py"
+    - "config/settings.yaml"
+    - "tests/unit/test_sparse_encoder.py"
+  failures: []
+
+- phase: C8-C9-recheck-1
+  date: 2026-05-26
+  status: FAIL
+  summary: Added extra adversarial tests; found DenseEncoder dimension-consistency contract gap
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dense_encoder.py tests/unit/test_sparse_encoder.py tests/unit/test_dense_sparse_encoder_contract_extra.py"
+  result: "1 failed, 16 passed"
+  files:
+    - "src/ingestion/embedding/dense_encoder.py"
+    - "src/ingestion/embedding/sparse_encoder.py"
+    - "tests/unit/test_dense_sparse_encoder_contract_extra.py"
+  failures:
+    - test: "test_dense_encoder_rejects_inconsistent_vector_dimensions"
+      error: "Failed: DID NOT RAISE <class 'ValueError'>"
+      cause: "DenseEncoder accepts mixed-length vectors and forwards them into ChunkRecord without dimension-consistency validation"
+      locations:
+        - "src/ingestion/embedding/dense_encoder.py:53"
+
+- phase: C8-C10-recheck-1
+  date: 2026-05-26
+  status: FAIL
+  summary: C8 fix verified; C10 has eager-initialization bug when a path is disabled
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dense_encoder.py tests/unit/test_sparse_encoder.py tests/unit/test_dense_sparse_encoder_contract_extra.py tests/unit/test_batch_processor.py"
+  result: "1 failed, 25 passed"
+  files:
+    - "src/ingestion/embedding/dense_encoder.py"
+    - "src/ingestion/embedding/batch_processor.py"
+    - "tests/unit/test_dense_sparse_encoder_contract_extra.py"
+    - "tests/unit/test_batch_processor.py"
+  failures:
+    - test: "test_init_does_not_require_dense_encoder_when_dense_disabled"
+      error: "ValueError: Missing required setting: embedding"
+      cause: "BatchProcessor.__init__ always initializes DenseEncoder even when enable_dense=False"
+      locations:
+        - "src/ingestion/embedding/batch_processor.py:35"
+
+- phase: C10-retest-1
+  date: 2026-05-26
+  status: PASS
+  summary: C10 eager-initialization bug fixed; added extra init/config edge-case tests and verified full C8/C9/C10 suite
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dense_encoder.py tests/unit/test_sparse_encoder.py tests/unit/test_dense_sparse_encoder_contract_extra.py tests/unit/test_batch_processor.py tests/unit/test_batch_processor_contract_extra.py"
+  result: "28 passed"
+  files:
+    - "src/ingestion/embedding/batch_processor.py"
+    - "src/ingestion/embedding/dense_encoder.py"
+    - "src/ingestion/embedding/sparse_encoder.py"
+    - "tests/unit/test_batch_processor.py"
+    - "tests/unit/test_batch_processor_contract_extra.py"
+    - "tests/unit/test_dense_sparse_encoder_contract_extra.py"
+  failures: []

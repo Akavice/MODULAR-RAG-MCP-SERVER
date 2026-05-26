@@ -39,3 +39,12 @@ ingestion:
     prompt_path: config/prompts/image_captioning.txt
   dense_encoder:
     batch_size: 32
+  sparse_encoder:
+    k1: 1.5
+    b: 0.75
+    min_token_length: 2
+    remove_stopwords: true
+  batch_processor:
+    batch_size: 32
+    enable_dense: true
+    enable_sparse: true

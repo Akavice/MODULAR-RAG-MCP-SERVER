@@ -1988,8 +1988,8 @@ dashboard:
 | C6 | MetadataEnricher | [x] | 2026-05-25 | Implemented `MetadataEnricher` (rule-based metadata + optional LLM enrichment + graceful fallback); review recheck passed (unit 10 passed, fallback_count repro fixed). |
 | C7 | ImageCaptioner | [x] | 2026-05-25 | Implemented `ImageCaptioner` (optional vision LLM captioning + graceful fallback for disabled/unavailable/error paths); C7 review passed with `tests/unit/test_image_captioner_fallback.py` (6 passed). |
 | C8 | DenseEncoder | [x] | 2026-05-26 | Implemented `DenseEncoder` (batch embedding via `libs.embedding`, `ChunkRecord` output, configurable `batch_size`, trace metrics); C8 review passed with `tests/unit/test_dense_encoder.py` (7 passed). |
-| C9 | SparseEncoder | [ ] | | |
-| C10 | BatchProcessor | [ ] | | |
+| C9 | SparseEncoder | [x] | 2026-05-26 | Implemented `SparseEncoder` (BM25-style sparse term weights, configurable `k1/b/min_token_length/remove_stopwords`, trace metrics); C9 review passed with `tests/unit/test_sparse_encoder.py` (7 passed). |
+| C10 | BatchProcessor | [x] | 2026-05-26 | Implemented `BatchProcessor` (batch orchestration for dense/sparse encoders, per-batch elapsed metrics, merge validation); recheck passed with extended C8/C9/C10 suite (`28 passed`). |
 | C11 | BM25Indexer（倒排索引+IDF计算） | [ ] | | |
 | C12 | VectorUpserter（幂等upsert） | [ ] | | |
 | C13 | ImageStorage（图片存储+SQLite索引） | [ ] | | |

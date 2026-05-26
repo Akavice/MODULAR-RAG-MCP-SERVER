@@ -63,6 +63,11 @@ class DenseEncoder:
                 )
                 if record.dense_vector is not None and not vector_dim:
                     vector_dim = len(record.dense_vector)
+                if record.dense_vector is not None and len(record.dense_vector) != vector_dim:
+                    raise ValueError(
+                        "embedding output dimension mismatch: "
+                        f"expected {vector_dim}, got {len(record.dense_vector)}"
+                    )
                 chunk_records.append(record)
 
         if trace is not None and hasattr(trace, "record_stage"):
