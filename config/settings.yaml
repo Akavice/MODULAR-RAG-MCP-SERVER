@@ -50,3 +50,6 @@ ingestion:
     enable_sparse: true
   bm25_indexer:
     index_dir: data/db/bm25
+  image_storage:
+    image_root: data/images
+    db_path: data/db/image_index.db

@@ -269,3 +269,53 @@
     - "tests/unit/test_bm25_indexer_roundtrip.py"
     - "tests/unit/test_bm25_indexer_contract_extra.py"
   failures: []
+
+- phase: C12-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: VectorUpserter idempotency and upsert-contract behavior verified; added extra order/trace contract tests
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_vector_upserter_idempotency.py tests/unit/test_vector_upserter_contract_extra.py"
+  result: "7 passed"
+  files:
+    - "src/ingestion/storage/vector_upserter.py"
+    - "src/ingestion/storage/__init__.py"
+    - "tests/unit/test_vector_upserter_idempotency.py"
+    - "tests/unit/test_vector_upserter_contract_extra.py"
+  failures: []
+
+- phase: C13-review-1
+  date: 2026-05-26
+  status: FAIL
+  summary: ImageStorage main tests pass, but extra contract tests found 2 logic gaps (negative page_num accepted; stale file leak on image_id path migration)
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_image_storage.py tests/unit/test_image_storage_contract_extra.py"
+  result: "2 failed, 6 passed"
+  files:
+    - "src/ingestion/storage/image_storage.py"
+    - "tests/unit/test_image_storage.py"
+    - "tests/unit/test_image_storage_contract_extra.py"
+  failures:
+    - test: "test_save_image_rejects_negative_page_num"
+      error: "Failed: DID NOT RAISE <class 'ValueError'>"
+      cause: "save_image validates page_num type but not non-negative range"
+      locations:
+        - "src/ingestion/storage/image_storage.py:46"
+    - test: "test_upsert_existing_image_id_removes_old_file_when_path_changes"
+      error: "AssertionError: old file still exists"
+      cause: "upsert on same image_id updates DB path but does not delete previous on-disk file when collection/suffix changes"
+      locations:
+        - "src/ingestion/storage/image_storage.py:58"
+
+- phase: C13-retest-1
+  date: 2026-05-26
+  status: PASS
+  summary: C13 fixes verified; added stricter page_num/type and same-path overwrite safety tests
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_image_storage.py tests/unit/test_image_storage_contract_extra.py"
+  result: "10 passed"
+  files:
+    - "src/ingestion/storage/image_storage.py"
+    - "tests/unit/test_image_storage.py"
+    - "tests/unit/test_image_storage_contract_extra.py"
+  failures: []
