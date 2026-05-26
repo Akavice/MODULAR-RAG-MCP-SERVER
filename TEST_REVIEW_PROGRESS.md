@@ -449,3 +449,17 @@
     - "tests/integration/test_hybrid_search.py"
     - "tests/integration/test_hybrid_search_contract_extra.py"
   failures: []
+
+- phase: D6-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: Core Reranker orchestration verified with extra contract tests for malformed backend outputs, unmatched/duplicate ids, and field coalescing fallback
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_query_processor.py tests/unit/test_query_processor_contract_extra.py tests/unit/test_dense_retriever.py tests/unit/test_dense_retriever_contract_extra.py tests/unit/test_sparse_retriever.py tests/unit/test_sparse_retriever_contract_extra.py tests/unit/test_fusion_rrf.py tests/unit/test_fusion_rrf_contract_extra.py tests/integration/test_hybrid_search.py tests/integration/test_hybrid_search_contract_extra.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py"
+  result: "9 passed (D6 suite); 52 passed (D1-D6 regression)"
+  files:
+    - "src/core/query_engine/reranker.py"
+    - "tests/unit/test_reranker_fallback.py"
+    - "tests/unit/test_reranker_fallback_contract_extra.py"
+  failures: []

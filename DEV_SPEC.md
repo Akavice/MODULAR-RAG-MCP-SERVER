@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!-- Dev specification skeleton for the project. Fill sections with details later. -->
+﻿﻿﻿﻿﻿<!-- Dev specification skeleton for the project. Fill sections with details later. -->
 
 # Developer Specification (DEV_SPEC)
 
@@ -4011,7 +4011,7 @@ dashboard:
 
 | D5 | HybridSearch 编排 | [x] | 2026-05-26 | Implemented `HybridSearch` orchestration (`query_processor -> dense/sparse -> fusion -> metadata post-filter`), with single-path degradation when one retriever fails and hard fail when both fail; added `tests/integration/test_hybrid_search.py` (`4 passed`). |
 
-| D6 | Reranker（Core 层编排 + Fallback） | [ ] | | |
+| D6 | Reranker（Core 层编排 + Fallback） | [x] | 2026-05-26 | Implemented core `Reranker` orchestration (optional enable switch, provider invocation via `RerankerFactory`, backend-init/backend-runtime graceful fallback to fused order, trace payload with `fallback` reason); validated by `tests/unit/test_reranker_fallback.py` + `tests/unit/test_reranker_fallback_contract_extra.py` (`9 passed`). |
 
 | D7 | 脚本入口 query.py（查询可用） | [ ] | | |
 
@@ -4139,7 +4139,7 @@ dashboard:
 
 | 阶段 C | 15 | 15 | 100% |
 
-| 阶段 D | 7 | 5 | 71% |
+| 阶段 D | 7 | 6 | 86% |
 
 | 阶段 E | 6 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **39** | **57%** |
+| **总计** | **68** | **40** | **59%** |
 
 
 
