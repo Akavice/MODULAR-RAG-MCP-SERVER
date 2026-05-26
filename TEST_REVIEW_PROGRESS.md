@@ -319,3 +319,15 @@
     - "tests/unit/test_image_storage.py"
     - "tests/unit/test_image_storage_contract_extra.py"
   failures: []
+
+- phase: C14-recheck-1
+  date: 2026-05-26
+  status: PASS
+  summary: IngestionPipeline logic rechecked with additional force-skip and missing-image non-blocking scenarios
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_ingestion_pipeline.py"
+  result: "5 passed"
+  files:
+    - "src/ingestion/pipeline.py"
+    - "tests/integration/test_ingestion_pipeline.py"
+  failures: []

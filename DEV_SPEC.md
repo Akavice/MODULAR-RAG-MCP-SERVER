@@ -3987,7 +3987,7 @@ dashboard:
 | C12 | VectorUpserter???upsert? | [x] | 2026-05-26 | Implemented `VectorUpserter` (stable id passthrough, in-call dedup, dense-vector payload mapping, vector-store upsert + trace metrics); review passed with idempotency + extra contract tests (7 passed). |
 
 | C13 | ImageStorage?????+SQLite??? | [x] | 2026-05-26 | Implemented `ImageStorage` (filesystem save + SQLite image_id index + filter/list/delete APIs); recheck passed with extended contract tests (`10 passed`). |
-| C14 | Pipeline 编排（MVP 串起来） | [ ] | | |
+| C14 | Pipeline 编排（MVP 串起来） | [x] | 2026-05-26 | Implemented `IngestionPipeline` (integrity→load→split→transform→encode→store orchestration, skip/force, stage-scoped errors, progress callback, image persistence + metadata patch); passed `tests/integration/test_ingestion_pipeline.py` (3 passed). |
 
 | C15 | 脚本入口 ingest.py | [ ] | | |
 
