@@ -37,3 +37,5 @@ ingestion:
   image_captioner:
     use_vision_llm: false
     prompt_path: config/prompts/image_captioning.txt
+  dense_encoder:
+    batch_size: 32

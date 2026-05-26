@@ -1987,7 +1987,7 @@ dashboard:
 | C5 | Transform base + ChunkRefiner | [x] | 2026-05-25 | Implemented `BaseTransform` + `ChunkRefiner` (rule cleanup, optional LLM refine, graceful fallback); unified run result: unit 26 passed, integration 2 skipped (missing OPENAI_API_KEY). |
 | C6 | MetadataEnricher | [x] | 2026-05-25 | Implemented `MetadataEnricher` (rule-based metadata + optional LLM enrichment + graceful fallback); review recheck passed (unit 10 passed, fallback_count repro fixed). |
 | C7 | ImageCaptioner | [x] | 2026-05-25 | Implemented `ImageCaptioner` (optional vision LLM captioning + graceful fallback for disabled/unavailable/error paths); C7 review passed with `tests/unit/test_image_captioner_fallback.py` (6 passed). |
-| C8 | DenseEncoder | [ ] | | |
+| C8 | DenseEncoder | [x] | 2026-05-26 | Implemented `DenseEncoder` (batch embedding via `libs.embedding`, `ChunkRecord` output, configurable `batch_size`, trace metrics); C8 review passed with `tests/unit/test_dense_encoder.py` (7 passed). |
 | C9 | SparseEncoder | [ ] | | |
 | C10 | BatchProcessor | [ ] | | |
 | C11 | BM25Indexer（倒排索引+IDF计算） | [ ] | | |

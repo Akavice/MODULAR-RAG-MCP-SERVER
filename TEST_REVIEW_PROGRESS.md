@@ -173,3 +173,17 @@
     - "config/prompts/image_captioning.txt"
     - "tests/unit/test_image_captioner_fallback.py"
   failures: []
+
+- phase: C8-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: DenseEncoder implementation verified (batch embedding, ChunkRecord output, settings batch_size, trace metrics)
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dense_encoder.py"
+  result: "unit: 7 passed"
+  files:
+    - "src/ingestion/embedding/dense_encoder.py"
+    - "src/ingestion/embedding/__init__.py"
+    - "config/settings.yaml"
+    - "tests/unit/test_dense_encoder.py"
+  failures: []
