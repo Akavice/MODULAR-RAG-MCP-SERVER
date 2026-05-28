@@ -4025,17 +4025,17 @@ dashboard:
 
 |---------|---------|------|---------|------|
 
-| E1 | MCP Server 入口与 Stdio 约束 | [ ] | | |
+| E1 | MCP Server 入口与 Stdio 约束 | [x] | 2026-05-26 | Implemented `mcp_server/server.py` stdio loop with Content-Length framing, stderr logging, and JSON-RPC response writing; validated with subprocess integration `tests/integration/test_mcp_server.py`. |
 
-| E2 | Protocol Handler 协议解析与能力协商 | [ ] | | |
+| E2 | Protocol Handler 协议解析与能力协商 | [x] | 2026-05-26 | Implemented `ProtocolHandler` for `initialize` / `tools/list` / `tools/call`, JSON-RPC error mapping (-32600/-32601/-32602/-32603), and tool routing context; validated by `tests/unit/test_protocol_handler.py` + integration server calls. |
 
-| E3 | query_knowledge_hub Tool | [ ] | | |
+| E3 | query_knowledge_hub Tool | [x] | 2026-05-26 | Implemented `tools/query_knowledge_hub.py` using `HybridSearch + Reranker + ResponseBuilder + MultimodalAssembler`; added unit coverage `tests/unit/test_query_knowledge_hub_tool.py` and response-building tests. |
 
-| E4 | list_collections Tool | [ ] | | |
+| E4 | list_collections Tool | [x] | 2026-05-26 | Implemented `tools/list_collections.py` (persist directory scan, deterministic sorted output) with unit tests `tests/unit/test_list_collections.py`; also validated through MCP `tools/call` integration. |
 
-| E5 | get_document_summary Tool | [ ] | | |
+| E5 | get_document_summary Tool | [x] | 2026-05-26 | Implemented `tools/get_document_summary.py` (doc lookup from collection store JSON, title/summary/tags/chunk_count payload, not-found error) with unit tests `tests/unit/test_get_document_summary.py`. |
 
-| E6 | 多模态返回组装（Text + Image） | [ ] | | |
+| E6 | 多模态返回组装（Text + Image） | [x] | 2026-05-28 | Implemented `core/response/multimodal_assembler.py`; validated by unit tests `tests/unit/test_multimodal_assembler.py` (including missing-path skip and unknown-suffix MIME fallback) and MCP integrations `tests/integration/test_mcp_server.py` + `tests/integration/test_mcp_query_image_content.py` (`tools/call -> query_knowledge_hub` returns image content). |
 
 
 
@@ -4141,7 +4141,7 @@ dashboard:
 
 | 阶段 D | 7 | 7 | 100% |
 
-| 阶段 E | 6 | 0 | 0% |
+| 阶段 E | 6 | 6 | 100% |
 
 | 阶段 F | 5 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **41** | **60%** |
+| **总计** | **68** | **47** | **69%** |
 
 
 

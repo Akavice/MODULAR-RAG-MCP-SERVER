@@ -477,3 +477,34 @@
     - "tests/e2e/test_query_cli.py"
     - "tests/e2e/test_query_cli_contract_extra.py"
   failures: []
+
+- phase: E1-E6-review-1
+  date: 2026-05-26
+  status: PASS
+  summary: E-stage core/server/tools/response path verified; added MCP-level image return integration for tools/call -> query_knowledge_hub (E6 acceptance)
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_query_processor.py tests/unit/test_query_processor_contract_extra.py tests/unit/test_dense_retriever.py tests/unit/test_dense_retriever_contract_extra.py tests/unit/test_sparse_retriever.py tests/unit/test_sparse_retriever_contract_extra.py tests/unit/test_fusion_rrf.py tests/unit/test_fusion_rrf_contract_extra.py tests/integration/test_hybrid_search.py tests/integration/test_hybrid_search_contract_extra.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/e2e/test_query_cli_contract_extra.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py"
+  result: "16 passed (E suite); 77 passed (D+E regression)"
+  files:
+    - "src/mcp_server/server.py"
+    - "src/mcp_server/protocol_handler.py"
+    - "src/mcp_server/tools/query_knowledge_hub.py"
+    - "src/core/response/multimodal_assembler.py"
+    - "tests/integration/test_mcp_query_image_content.py"
+  failures: []
+
+- phase: E6-retest-1
+  date: 2026-05-28
+  status: PASS
+  summary: E6 multimodal image return re-verified with additional edge tests (missing image path skip, unknown suffix mime fallback) and MCP-level tools/call integration
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_multimodal_assembler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_query_knowledge_hub_tool.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py"
+  result: "8 passed (E6-focused); 19 passed (E-suite subset)"
+  files:
+    - "src/core/response/multimodal_assembler.py"
+    - "src/mcp_server/tools/query_knowledge_hub.py"
+    - "tests/unit/test_multimodal_assembler.py"
+    - "tests/integration/test_mcp_query_image_content.py"
+  failures: []
