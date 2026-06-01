@@ -4071,7 +4071,7 @@ dashboard:
 
 | G2 | DocumentManager 实现 | [x] | 2026-06-01 | Implemented cross-storage `DocumentManager` for `list/get_detail/delete/stats` over Chroma/BM25/ImageStorage/Integrity. Added `ChromaStore.delete_by_metadata`, `FileIntegrityChecker.remove_record/list_processed` (`SQLiteIntegrityChecker` implementation), and exports in `ingestion/__init__.py`. Added `tests/unit/test_document_manager.py` covering list/detail/delete/stats lifecycle, coordinated deletion behavior, unknown-doc error, and no-op delete path. Validation: `tests/unit/test_document_manager.py` + storage suite `34 passed`; query/mcp/ingestion/dashboard regression subset `93 passed`. |
 
-| G3 | 数据浏览器页面 | [ ] | | |
+| G3 | 数据浏览器页面 | [x] | 2026-06-01 | Implemented dashboard Data Browser with collection filter, document table, expandable chunk detail, metadata JSON, and linked image preview in `pages/data_browser.py`. Added `services/data_service.py` to load settings, bridge `DocumentManager`, and provide collections/documents/detail payloads with ingestion timestamps. Added `tests/unit/test_dashboard_data_service.py` for list/detail/collection and settings-error paths, plus collection dedupe/sort and collection-filter forwarding checks. Validation: G3 dashboard suite `10 passed`; query/mcp/ingestion/dashboard regression subset `97 passed`. |
 
 | G4 | Ingestion 管理页面 | [ ] | | |
 

@@ -9,7 +9,7 @@ description = "A modular RAG MCP server scaffold."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "OpenAI Codex" }]
-dependencies = ["PyYAML>=6.0,<7"]
+dependencies = ["PyYAML>=6.0,<7", "streamlit>=1.36,<2"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3,<9"]

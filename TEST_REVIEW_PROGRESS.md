@@ -614,3 +614,35 @@
     - "src/libs/loader/file_integrity.py"
     - "tests/unit/test_document_manager.py"
   failures: []
+
+- phase: G4-review-1
+  date: 2026-06-01
+  status: FAIL
+  summary: G4 page implementation is still placeholder; required upload/trigger/progress controls are missing in ingestion_manager page
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_ingestion_manager.py tests/unit/test_dashboard_data_service.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py"
+  result: "1 failed, 8 passed"
+  files:
+    - "src/observability/dashboard/pages/ingestion_manager.py"
+    - "tests/unit/test_dashboard_ingestion_manager.py"
+  failures:
+    - test: "test_ingestion_manager_exposes_g4_operational_controls"
+      error: "AssertionError: 'file_uploader' not in calls (only title/info called)"
+      cause: "ingestion_manager.render currently only renders placeholder info and does not expose G4 operational widgets"
+      locations:
+        - "src/observability/dashboard/pages/ingestion_manager.py:1"
+        - "tests/unit/test_dashboard_ingestion_manager.py:50"
+
+- phase: G3-review-1
+  date: 2026-06-01
+  status: PASS
+  summary: Data Browser service verified with additional coverage for collection list dedupe/sort and collection filter forwarding; existing detail/timestamp/error paths remain valid
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_data_service.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py tests/integration/test_ingestion_pipeline.py tests/e2e/test_data_ingestion.py tests/unit/test_pipeline_progress.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py tests/unit/test_dashboard_data_service.py tests/unit/test_document_manager.py"
+  result: "10 passed (G3 dashboard suite); 97 passed (query/mcp/ingestion/dashboard regression subset)"
+  files:
+    - "src/observability/dashboard/pages/data_browser.py"
+    - "src/observability/dashboard/services/data_service.py"
+    - "tests/unit/test_dashboard_data_service.py"
+  failures: []
