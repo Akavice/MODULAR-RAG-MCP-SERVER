@@ -4053,9 +4053,9 @@ dashboard:
 
 | F3 | 在 Query 链路打点 | [x] | 2026-06-01 | Added `query_processing` trace stage in `QueryProcessor` and passed trace through `HybridSearch` with backward-compatible processor invocation; verified end-to-end query trace stage coverage (`query_processing/dense_retrieval/sparse_retrieval/fusion/rerank`) via `tests/integration/test_hybrid_search.py` (including legacy processor compatibility case without `trace` kwarg). Validation: query+rerank+CLI suite `26 passed`, MCP/trace subset `65 passed`. |
 
-| F4 | 在 Ingestion 链路打点 | [ ] | | |
+| F4 | 在 Ingestion 链路打点 | [x] | 2026-06-01 | Added pipeline-level ingestion trace stages in `IngestionPipeline.run()` for `load/split/transform/embed/upsert` with stage payload fields (source/collection/doc counts/upsert counts), while keeping existing component trace details intact. Added integration assertions in `tests/integration/test_ingestion_pipeline.py` to verify stage presence, payload correctness, and `trace_type == \"ingestion\"`. Validation: ingestion+trace suite `27 passed`; query/ingestion/trace regression subset `53 passed`. |
 
-| F5 | Pipeline 进度回调 (on_progress) | [ ] | | |
+| F5 | Pipeline 进度回调 (on_progress) | [x] | 2026-06-01 | Finalized progress callback contract in `IngestionPipeline.run()` with explicit callback validation (`on_progress` must be callable when provided) and deterministic stage progress emission. Added `tests/unit/test_pipeline_progress.py` to verify success-stage ordering, skip-path behavior, invalid callback rejection, and `force=true` anti-short-circuit behavior. Validation: progress+ingestion+trace suite `36 passed`; F-series + query/mcp regression subset `81 passed`. |
 
 
 
@@ -4067,7 +4067,7 @@ dashboard:
 
 |---------|---------|------|---------|------|
 
-| G1 | Dashboard 基础架构与系统总览页 | [ ] | | |
+| G1 | Dashboard 基础架构与系统总览页 | [x] | 2026-06-01 | Implemented Streamlit dashboard entry with multi-page navigation (`st.navigation` + compatibility fallback), functional Overview page, settings/data summary `ConfigService`, and runnable `scripts/start_dashboard.py`. Added `tests/unit/test_dashboard_config_service.py` + `tests/unit/test_start_dashboard_script.py` for config/stat aggregation robustness and startup command/exception paths. Validation: dashboard suite `6 passed`; F-series + query/mcp/ingestion regression subset `87 passed`. |
 
 | G2 | DocumentManager 实现 | [ ] | | |
 
@@ -4143,15 +4143,15 @@ dashboard:
 
 | 阶段 E | 6 | 6 | 100% |
 
-| 阶段 F | 5 | 3 | 60% |
+| 阶段 F | 5 | 5 | 100% |
 
-| 阶段 G | 6 | 0 | 0% |
+| 阶段 G | 6 | 1 | 17% |
 
 | 阶段 H | 5 | 0 | 0% |
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **50** | **74%** |
+| **总计** | **68** | **53** | **78%** |
 
 
 

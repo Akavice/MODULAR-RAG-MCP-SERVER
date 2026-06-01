@@ -123,6 +123,7 @@ class IngestionPipeline:
         norm_collection = self._normalize_collection(collection)
         if not isinstance(force, bool):
             raise TypeError("force must be a boolean")
+        progress_callback = self._normalize_progress_callback(on_progress)
 
         trace_ctx = trace or TraceContext(trace_type="ingestion")
         stage_total = len(self._STAGES)
@@ -131,7 +132,7 @@ class IngestionPipeline:
             "integrity",
             lambda: self.integrity_checker.compute_sha256(norm_source_path),
         )
-        self._notify_progress(on_progress, "integrity", 1, stage_total)
+        self._notify_progress(progress_callback, "integrity", 1, stage_total)
 
         should_skip = False
         if not force:
@@ -157,22 +158,53 @@ class IngestionPipeline:
 
         try:
             document = self._run_stage("load", lambda: self.loader.load(norm_source_path))
-            self._notify_progress(on_progress, "load", 2, stage_total)
+            self._record_trace_stage(
+                trace_ctx,
+                "load",
+                source_path=norm_source_path,
+                collection=norm_collection,
+                document_id=document.id,
+            )
+            self._notify_progress(progress_callback, "load", 2, stage_total)
 
             chunks = self._run_stage("split", lambda: self.chunker.split_document(document))
-            self._notify_progress(on_progress, "split", 3, stage_total)
+            self._record_trace_stage(
+                trace_ctx,
+                "split",
+                source_path=norm_source_path,
+                collection=norm_collection,
+                document_id=document.id,
+                chunk_count=len(chunks),
+            )
+            self._notify_progress(progress_callback, "split", 3, stage_total)
 
             transformed_chunks = self._run_stage(
                 "transform",
                 lambda: self._transform_chunks(chunks, trace=trace_ctx),
             )
-            self._notify_progress(on_progress, "transform", 4, stage_total)
+            self._record_trace_stage(
+                trace_ctx,
+                "transform",
+                source_path=norm_source_path,
+                collection=norm_collection,
+                document_id=document.id,
+                chunk_count=len(transformed_chunks),
+            )
+            self._notify_progress(progress_callback, "transform", 4, stage_total)
 
             records = self._run_stage(
                 "encode",
                 lambda: self.batch_processor.process(transformed_chunks, trace=trace_ctx),
             )
-            self._notify_progress(on_progress, "encode", 5, stage_total)
+            self._record_trace_stage(
+                trace_ctx,
+                "embed",
+                source_path=norm_source_path,
+                collection=norm_collection,
+                document_id=document.id,
+                record_count=len(records),
+            )
+            self._notify_progress(progress_callback, "encode", 5, stage_total)
 
             vector_upserted, bm25_upserted, image_saved_count = self._run_stage(
                 "store",
@@ -184,7 +216,17 @@ class IngestionPipeline:
                     trace=trace_ctx,
                 ),
             )
-            self._notify_progress(on_progress, "store", 6, stage_total)
+            self._record_trace_stage(
+                trace_ctx,
+                "upsert",
+                source_path=norm_source_path,
+                collection=norm_collection,
+                document_id=document.id,
+                vector_upserted=vector_upserted,
+                bm25_upserted=bm25_upserted,
+                image_saved_count=image_saved_count,
+            )
+            self._notify_progress(progress_callback, "store", 6, stage_total)
 
             self.integrity_checker.mark_success(
                 file_hash,
@@ -339,6 +381,16 @@ class IngestionPipeline:
         callback(stage_name, current, total)
 
     @staticmethod
+    def _normalize_progress_callback(
+        callback: ProgressCallback | None,
+    ) -> ProgressCallback | None:
+        if callback is None:
+            return None
+        if not callable(callback):
+            raise TypeError("on_progress must be callable when provided")
+        return callback
+
+    @staticmethod
     def _run_stage(stage: str, fn: Callable[[], Any]) -> Any:
         try:
             return fn()
@@ -346,6 +398,12 @@ class IngestionPipeline:
             raise
         except Exception as exc:
             raise IngestionPipelineStageError(stage, exc) from exc
+
+    @staticmethod
+    def _record_trace_stage(trace: Any | None, stage_name: str, **payload: Any) -> None:
+        if trace is None or not hasattr(trace, "record_stage"):
+            return
+        trace.record_stage(stage_name, **payload)
 
     @staticmethod
     def _resolve_ingestion_section(settings: Any) -> dict[str, Any]:

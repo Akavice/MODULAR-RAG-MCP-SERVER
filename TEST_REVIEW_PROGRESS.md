@@ -552,3 +552,50 @@
     - "tests/integration/test_hybrid_search.py"
     - "tests/unit/test_query_processor.py"
   failures: []
+
+- phase: F4-review-1
+  date: 2026-06-01
+  status: PASS
+  summary: Ingestion-chain trace logging verified with stricter stage payload assertions (source_path/collection/document_id and count fields) in addition to stage presence
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_ingestion_pipeline.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/integration/test_ingestion_pipeline.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py"
+  result: "27 passed (F4+trace suite); 53 passed (query+ingestion+trace regression subset)"
+  files:
+    - "src/ingestion/pipeline.py"
+    - "tests/integration/test_ingestion_pipeline.py"
+    - "tests/unit/test_trace_context.py"
+    - "tests/unit/test_jsonl_logger.py"
+  failures: []
+
+- phase: F5-review-1
+  date: 2026-06-01
+  status: PASS
+  summary: Progress callback contract verified with additional force=true anti-short-circuit case; F-series end-to-end behavior remains stable
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_pipeline_progress.py tests/integration/test_ingestion_pipeline.py tests/e2e/test_data_ingestion.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py tests/integration/test_ingestion_pipeline.py tests/e2e/test_data_ingestion.py tests/unit/test_pipeline_progress.py"
+  result: "36 passed (F5+ingestion+trace suite); 81 passed (F-series + query/mcp regression subset)"
+  files:
+    - "src/ingestion/pipeline.py"
+    - "tests/unit/test_pipeline_progress.py"
+    - "tests/integration/test_ingestion_pipeline.py"
+    - "tests/e2e/test_data_ingestion.py"
+  failures: []
+
+- phase: G1-review-1
+  date: 2026-06-01
+  status: PASS
+  summary: Dashboard foundation verified; added robustness coverage for config-service JSON/traces edge cases and start_dashboard command/exception paths
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py tests/integration/test_ingestion_pipeline.py tests/e2e/test_data_ingestion.py tests/unit/test_pipeline_progress.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py"
+  result: "6 passed (G1 suite); 87 passed (F-series + query/mcp/ingestion regression subset)"
+  files:
+    - "src/observability/dashboard/app.py"
+    - "src/observability/dashboard/pages/overview.py"
+    - "src/observability/dashboard/services/config_service.py"
+    - "scripts/start_dashboard.py"
+    - "tests/unit/test_dashboard_config_service.py"
+    - "tests/unit/test_start_dashboard_script.py"
+  failures: []

@@ -8,6 +8,7 @@ from typing import Any
 
 import pytest
 
+from core.trace.trace_context import TraceContext
 from core.types import Chunk, ChunkRecord, Document
 from ingestion.pipeline import IngestionPipeline, IngestionPipelineStageError
 from ingestion.storage.image_storage import ImageStorage
@@ -313,3 +314,64 @@ def test_pipeline_run_continues_when_document_image_file_missing(tmp_path: Path)
     assert vector_upserter.last_records
     # path remains unresolved/original when image persistence is skipped
     assert "missing_image.png" in vector_upserter.last_records[0].metadata["images"][0]["path"]
+
+
+@pytest.mark.integration
+def test_pipeline_run_records_ingestion_trace_stages(tmp_path: Path) -> None:
+    source_pdf = tmp_path / "doc.pdf"
+    source_pdf.write_bytes(b"%PDF-1.4\nfake")
+    source_image = tmp_path / "raw_image.png"
+    source_image.write_bytes(b"\x89PNG\r\n\x1a\nimg")
+
+    integrity = FakeIntegrityChecker(should_skip=False)
+    loader = FakeLoader(source_image)
+    pipeline, _, _ = _build_pipeline(
+        tmp_path=tmp_path,
+        integrity_checker=integrity,
+        loader=loader,
+    )
+    trace = TraceContext(trace_type="ingestion")
+
+    result = pipeline.run(str(source_pdf), collection="kb", trace=trace)
+
+    assert result.status == "ingested"
+    stages = [entry["stage"] for entry in trace.stages]
+    for expected in ("load", "split", "transform", "embed", "upsert"):
+        assert expected in stages
+    payload = trace.to_dict()
+    assert payload["trace_type"] == "ingestion"
+    assert payload["trace_id"] == trace.trace_id
+
+
+@pytest.mark.integration
+def test_pipeline_run_records_ingestion_trace_stage_payloads(tmp_path: Path) -> None:
+    source_pdf = tmp_path / "doc.pdf"
+    source_pdf.write_bytes(b"%PDF-1.4\nfake")
+    source_image = tmp_path / "raw_image.png"
+    source_image.write_bytes(b"\x89PNG\r\n\x1a\nimg")
+
+    integrity = FakeIntegrityChecker(should_skip=False)
+    loader = FakeLoader(source_image)
+    pipeline, _, _ = _build_pipeline(
+        tmp_path=tmp_path,
+        integrity_checker=integrity,
+        loader=loader,
+    )
+    trace = TraceContext(trace_type="ingestion")
+
+    result = pipeline.run(str(source_pdf), collection="kb", trace=trace)
+
+    assert result.status == "ingested"
+    by_stage = {entry["stage"]: entry for entry in trace.stages}
+    for stage in ("load", "split", "transform", "embed", "upsert"):
+        assert stage in by_stage
+        assert by_stage[stage]["source_path"] == str(source_pdf.resolve())
+        assert by_stage[stage]["collection"] == "kb"
+        assert by_stage[stage]["document_id"] == "doc-1"
+
+    assert by_stage["split"]["chunk_count"] == 1
+    assert by_stage["transform"]["chunk_count"] == 1
+    assert by_stage["embed"]["record_count"] == 1
+    assert by_stage["upsert"]["vector_upserted"] == 1
+    assert by_stage["upsert"]["bm25_upserted"] == 1
+    assert by_stage["upsert"]["image_saved_count"] == 1
