@@ -4047,7 +4047,7 @@ dashboard:
 
 |---------|---------|------|---------|------|
 
-| F1 | TraceContext 增强（finish + 耗时统计 + trace_type） | [ ] | | |
+| F1 | TraceContext 增强（finish + 耗时统计 + trace_type） | [x] | 2026-05-28 | Implemented `TraceContext` lifecycle support (`trace_type`, `finish()`, total/stage `elapsed_ms()`, JSON-serializable `to_dict()`) plus in-memory `TraceCollector`; validated with `tests/unit/test_trace_context.py` (`14 passed`) and D/E/F regression subset (`94 passed`). |
 
 | F2 | 结构化日志 logger（JSON Lines） | [ ] | | |
 
@@ -4143,7 +4143,7 @@ dashboard:
 
 | 阶段 E | 6 | 6 | 100% |
 
-| 阶段 F | 5 | 0 | 0% |
+| 阶段 F | 5 | 1 | 20% |
 
 | 阶段 G | 6 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **47** | **69%** |
+| **总计** | **68** | **48** | **71%** |
 
 
 

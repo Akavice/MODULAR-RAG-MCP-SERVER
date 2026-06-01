@@ -508,3 +508,17 @@
     - "tests/unit/test_multimodal_assembler.py"
     - "tests/integration/test_mcp_query_image_content.py"
   failures: []
+
+- phase: F1-review-1
+  date: 2026-05-28
+  status: PASS
+  summary: TraceContext lifecycle and collector contract re-verified with extra edge coverage for trace_id validation, blank stage_name validation, and collector clear behavior
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_trace_context.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_query_processor.py tests/unit/test_query_processor_contract_extra.py tests/unit/test_dense_retriever.py tests/unit/test_dense_retriever_contract_extra.py tests/unit/test_sparse_retriever.py tests/unit/test_sparse_retriever_contract_extra.py tests/unit/test_fusion_rrf.py tests/unit/test_fusion_rrf_contract_extra.py tests/integration/test_hybrid_search.py tests/integration/test_hybrid_search_contract_extra.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/e2e/test_query_cli_contract_extra.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py"
+  result: "14 passed (F1 suite); 94 passed (D+E+F regression subset)"
+  files:
+    - "src/core/trace/trace_context.py"
+    - "src/core/trace/trace_collector.py"
+    - "tests/unit/test_trace_context.py"
+  failures: []
