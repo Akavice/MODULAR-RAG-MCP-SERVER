@@ -646,3 +646,17 @@
     - "src/observability/dashboard/services/data_service.py"
     - "tests/unit/test_dashboard_data_service.py"
   failures: []
+
+- phase: G4-review-2
+  date: 2026-06-01
+  status: PASS
+  summary: Ingestion Manager page verified with workflow-level tests for ingestion trigger (pipeline.run + progress callback) and delete action wiring (DocumentManager.delete_document + rerun)
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_ingestion_manager.py tests/unit/test_dashboard_data_service.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py tests/integration/test_ingestion_pipeline.py tests/e2e/test_data_ingestion.py tests/unit/test_pipeline_progress.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py tests/unit/test_dashboard_data_service.py tests/unit/test_document_manager.py tests/unit/test_dashboard_ingestion_manager.py"
+  result: "13 passed (G4 dashboard suite); 100 passed (query/mcp/ingestion/dashboard regression subset)"
+  files:
+    - "src/observability/dashboard/pages/ingestion_manager.py"
+    - "tests/unit/test_dashboard_ingestion_manager.py"
+    - "tests/unit/test_dashboard_data_service.py"
+  failures: []

@@ -76,6 +76,9 @@ class DataService:
         manager = self._get_manager()
         return manager.get_document_detail(doc_id)
 
+    def get_document_manager(self) -> DocumentManager:
+        return self._get_manager()
+
     def _get_manager(self) -> DocumentManager:
         if self._document_manager is not None:
             return self._document_manager

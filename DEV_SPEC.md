@@ -4073,7 +4073,7 @@ dashboard:
 
 | G3 | 数据浏览器页面 | [x] | 2026-06-01 | Implemented dashboard Data Browser with collection filter, document table, expandable chunk detail, metadata JSON, and linked image preview in `pages/data_browser.py`. Added `services/data_service.py` to load settings, bridge `DocumentManager`, and provide collections/documents/detail payloads with ingestion timestamps. Added `tests/unit/test_dashboard_data_service.py` for list/detail/collection and settings-error paths, plus collection dedupe/sort and collection-filter forwarding checks. Validation: G3 dashboard suite `10 passed`; query/mcp/ingestion/dashboard regression subset `97 passed`. |
 
-| G4 | Ingestion 管理页面 | [ ] | | |
+| G4 | Ingestion 管理页面 | [x] | 2026-06-01 | Implemented `pages/ingestion_manager.py` with PDF upload, collection/force controls, ingestion trigger via `IngestionPipeline.run(on_progress=...)`, progress bar updates, document table, and per-document delete actions wired to `DocumentManager.delete_document`. Added `DataService.get_document_manager()` to provide management operations in page flow. Expanded tests in `tests/unit/test_dashboard_ingestion_manager.py` to verify ingestion trigger workflow (including progress callback usage) and delete action wiring/rerun behavior. Validation: dashboard suite `13 passed`; query/mcp/ingestion/dashboard regression subset `100 passed`. |
 
 | G5 | Ingestion 追踪页面 | [ ] | | |
 
