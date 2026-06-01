@@ -28,13 +28,13 @@ def main(settings_path: str = "config/settings.yaml") -> None:
         layout="wide",
     )
     context = {"settings_path": settings_path}
-    pages: list[tuple[str, str, PageRender]] = [
-        ("System Overview", ":material/home:", overview.render),
-        ("Data Browser", ":material/folder_open:", data_browser.render),
-        ("Ingestion Manager", ":material/upload_file:", ingestion_manager.render),
-        ("Ingestion Traces", ":material/monitoring:", ingestion_traces.render),
-        ("Query Traces", ":material/search:", query_traces.render),
-        ("Evaluation Panel", ":material/insights:", evaluation_panel.render),
+    pages: list[tuple[str, str, str, PageRender]] = [
+        ("System Overview", "overview", ":material/home:", overview.render),
+        ("Data Browser", "data-browser", ":material/folder_open:", data_browser.render),
+        ("Ingestion Manager", "ingestion-manager", ":material/upload_file:", ingestion_manager.render),
+        ("Ingestion Traces", "ingestion-traces", ":material/monitoring:", ingestion_traces.render),
+        ("Query Traces", "query-traces", ":material/search:", query_traces.render),
+        ("Evaluation Panel", "evaluation-panel", ":material/insights:", evaluation_panel.render),
     ]
 
     if hasattr(st, "navigation") and hasattr(st, "Page"):
@@ -43,15 +43,16 @@ def main(settings_path: str = "config/settings.yaml") -> None:
                 lambda page=render_fn: page(context),
                 title=title,
                 icon=icon,
+                url_path=url_path,
             )
-            for title, icon, render_fn in pages
+            for title, url_path, icon, render_fn in pages
         ]
         st.navigation(st_pages).run()
         return
 
     # Backward compatible fallback for older Streamlit versions.
-    labels = [title for title, _, _ in pages]
-    label_to_page = {title: render_fn for title, _, render_fn in pages}
+    labels = [title for title, _, _, _ in pages]
+    label_to_page = {title: render_fn for title, _, _, render_fn in pages}
     choice = st.sidebar.radio("Pages", labels, index=0)
     label_to_page[choice](context)
 
