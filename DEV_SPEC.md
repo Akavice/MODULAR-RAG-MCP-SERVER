@@ -4075,7 +4075,7 @@ dashboard:
 
 | G4 | Ingestion 管理页面 | [x] | 2026-06-01 | Implemented `pages/ingestion_manager.py` with PDF upload, collection/force controls, ingestion trigger via `IngestionPipeline.run(on_progress=...)`, progress bar updates, document table, and per-document delete actions wired to `DocumentManager.delete_document`. Added `DataService.get_document_manager()` to provide management operations in page flow. Expanded tests in `tests/unit/test_dashboard_ingestion_manager.py` to verify ingestion trigger workflow (including progress callback usage) and delete action wiring/rerun behavior. Validation: dashboard suite `13 passed`; query/mcp/ingestion/dashboard regression subset `100 passed`. |
 
-| G5 | Ingestion 追踪页面 | [ ] | | |
+| G5 | Ingestion 追踪页面 | [x] | 2026-06-01 | Implemented `services/trace_service.py` to parse `traces.jsonl`, filter/sort ingestion traces, and build stage elapsed timeline; implemented `pages/ingestion_traces.py` with ingestion trace list, trace selector, stage timing waterfall (`bar_chart`), and payload detail JSON. Added `tests/unit/test_trace_service.py` and `tests/unit/test_dashboard_ingestion_traces.py`, including limit validation and settings-error UI path checks. Validation: G5 suite `7 passed`; query/mcp/ingestion/dashboard regression subset `107 passed`. |
 
 | G6 | Query 追踪页面 | [ ] | | |
 
