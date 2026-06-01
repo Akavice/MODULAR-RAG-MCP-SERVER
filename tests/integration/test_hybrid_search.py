@@ -8,6 +8,8 @@ import pytest
 
 from core.query_engine.hybrid_search import HybridSearch
 from core.query_engine.query_processor import ProcessedQuery
+from core.query_engine.reranker import Reranker
+from core.trace.trace_context import TraceContext
 from core.types import RetrievalResult
 
 
@@ -21,7 +23,14 @@ class FakeQueryProcessor:
     def __init__(self) -> None:
         self.calls: list[tuple[str, dict[str, Any] | None]] = []
 
-    def process(self, query: str, filters: dict[str, Any] | None = None) -> ProcessedQuery:
+    def process(
+        self,
+        query: str,
+        filters: dict[str, Any] | None = None,
+        trace: Any | None = None,
+    ) -> ProcessedQuery:
+        if trace is not None and hasattr(trace, "record_stage"):
+            trace.record_stage("query_processing", keyword_count=2, filter_count=len(filters or {}))
         self.calls.append((query, filters))
         return ProcessedQuery(
             query=query.strip(),
@@ -42,7 +51,8 @@ class FakeDenseRetriever:
         filters: dict[str, Any] | None = None,
         trace: Any | None = None,
     ) -> list[RetrievalResult]:
-        _ = trace
+        if trace is not None and hasattr(trace, "record_stage"):
+            trace.record_stage("dense_retrieval", hit_count=2)
         self.calls.append({"query": query, "top_k": top_k, "filters": filters})
         if self.explode:
             raise RuntimeError("dense unavailable")
@@ -63,7 +73,8 @@ class FakeSparseRetriever:
         top_k: int | None = None,
         trace: Any | None = None,
     ) -> list[RetrievalResult]:
-        _ = trace
+        if trace is not None and hasattr(trace, "record_stage"):
+            trace.record_stage("sparse_retrieval", hit_count=2)
         self.calls.append({"keywords": list(keywords), "top_k": top_k})
         if self.explode:
             raise RuntimeError("sparse unavailable")
@@ -85,7 +96,8 @@ class FakeFusion:
         top_k: int | None = None,
         trace: Any | None = None,
     ) -> list[RetrievalResult]:
-        _ = trace
+        if trace is not None and hasattr(trace, "record_stage"):
+            trace.record_stage("fusion", fused_count=3)
         self.calls.append(
             {
                 "dense_count": len(dense_results),
@@ -174,3 +186,51 @@ def test_search_fusion_failure_falls_back_to_single_path_results() -> None:
 
     assert len(results) == 1
     assert results[0].chunk_id == "s1"
+
+
+@pytest.mark.integration
+def test_query_trace_contains_all_query_stages() -> None:
+    trace = TraceContext(trace_type="query")
+    searcher = HybridSearch(
+        settings={"retrieval": {"top_k": 5}},
+        query_processor=FakeQueryProcessor(),  # type: ignore[arg-type]
+        dense_retriever=FakeDenseRetriever(),  # type: ignore[arg-type]
+        sparse_retriever=FakeSparseRetriever(),  # type: ignore[arg-type]
+        fusion=FakeFusion(),  # type: ignore[arg-type]
+    )
+    reranker = Reranker(settings={"rerank": {"enabled": False}})
+
+    fused = searcher.search("collection:kb rag", top_k=3, filters={"collection": "kb"}, trace=trace)
+    _ = reranker.rerank("collection:kb rag", fused, trace=trace)
+
+    stages = [entry["stage"] for entry in trace.stages]
+    assert "query_processing" in stages
+    assert "dense_retrieval" in stages
+    assert "sparse_retrieval" in stages
+    assert "fusion" in stages
+    assert "rerank" in stages
+    assert trace.to_dict()["trace_type"] == "query"
+
+
+@pytest.mark.integration
+def test_search_is_backward_compatible_with_query_processor_without_trace_kwarg() -> None:
+    class LegacyQueryProcessor:
+        def process(self, query: str, filters: dict[str, Any] | None = None) -> ProcessedQuery:
+            return ProcessedQuery(
+                query=query.strip(),
+                keywords=["rag"],
+                filters=dict(filters or {}),
+            )
+
+    searcher = HybridSearch(
+        settings={"retrieval": {"top_k": 3}},
+        query_processor=LegacyQueryProcessor(),  # type: ignore[arg-type]
+        dense_retriever=FakeDenseRetriever(),  # type: ignore[arg-type]
+        sparse_retriever=FakeSparseRetriever(),  # type: ignore[arg-type]
+        fusion=FakeFusion(),  # type: ignore[arg-type]
+    )
+
+    results = searcher.search(" collection:kb rag ", filters={"collection": "kb"}, trace=TraceContext())
+
+    assert results
+    assert all(item.metadata["collection"] == "kb" for item in results)

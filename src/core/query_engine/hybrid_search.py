@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 from collections.abc import Mapping
 from typing import Any
 
@@ -40,7 +41,7 @@ class HybridSearch:
     ) -> list[RetrievalResult]:
         resolved_top_k = self._normalize_top_k(top_k) if top_k is not None else self.default_top_k
         normalized_filters = self._normalize_filters(filters)
-        processed = self.query_processor.process(query, filters=normalized_filters)
+        processed = self._process_query(query, normalized_filters, trace=trace)
 
         dense_results: list[RetrievalResult] = []
         sparse_results: list[RetrievalResult] = []
@@ -101,6 +102,18 @@ class HybridSearch:
                 sparse_failed=sparse_error is not None,
             )
         return output
+
+    def _process_query(
+        self,
+        query: str,
+        filters: dict[str, Any] | None,
+        *,
+        trace: Any | None,
+    ) -> Any:
+        process = self.query_processor.process
+        if self._supports_trace_kwarg(process):
+            return process(query, filters=filters, trace=trace)
+        return process(query, filters=filters)
 
     def _fuse_with_fallback(
         self,
@@ -210,3 +223,16 @@ class HybridSearch:
         if isinstance(retrieval, Mapping) and "top_k" in retrieval:
             return HybridSearch._normalize_top_k(retrieval.get("top_k"))
         return 5
+
+    @staticmethod
+    def _supports_trace_kwarg(callable_obj: Any) -> bool:
+        try:
+            signature = inspect.signature(callable_obj)
+        except (TypeError, ValueError):
+            return False
+        if "trace" in signature.parameters:
+            return True
+        return any(
+            param.kind == inspect.Parameter.VAR_KEYWORD
+            for param in signature.parameters.values()
+        )

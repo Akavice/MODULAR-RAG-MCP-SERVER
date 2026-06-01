@@ -69,6 +69,7 @@ class QueryProcessor:
         self,
         query: str,
         filters: dict[str, Any] | None = None,
+        trace: Any | None = None,
     ) -> ProcessedQuery:
         normalized_query = self._normalize_query(query)
         extracted_filters, residual_text = self._extract_filters(normalized_query)
@@ -80,6 +81,13 @@ class QueryProcessor:
         if not keywords:
             # Ensure downstream retrieval always has at least one query signal.
             keywords = [normalized_query.lower()]
+        if trace is not None and hasattr(trace, "record_stage"):
+            trace.record_stage(
+                "query_processing",
+                query=normalized_query,
+                keyword_count=len(keywords),
+                filter_count=len(merged_filters),
+            )
         return ProcessedQuery(
             query=normalized_query,
             keywords=keywords,

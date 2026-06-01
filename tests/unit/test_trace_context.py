@@ -112,18 +112,21 @@ def test_elapsed_ms_rejects_blank_stage_name() -> None:
 def test_trace_collector_finishes_and_collects_trace_snapshot() -> None:
     trace = TraceContext(trace_id="trace-collector")
     trace.record_stage("fusion")
-    collector = TraceCollector()
+    written: list[dict[str, object]] = []
+    collector = TraceCollector(writer=lambda payload: written.append(payload))
 
     collector.collect(trace)
     records = collector.records()
     records[0]["trace_id"] = "mutated"
 
     assert trace.finished_at is not None
+    assert len(written) == 1
+    assert written[0]["trace_id"] == "trace-collector"
     assert collector.records()[0]["trace_id"] == "trace-collector"
 
 
 def test_trace_collector_rejects_non_trace_context() -> None:
-    collector = TraceCollector()
+    collector = TraceCollector(writer=lambda _: None)
 
     with pytest.raises(TypeError, match="TraceContext"):
         collector.collect(object())  # type: ignore[arg-type]
@@ -131,7 +134,7 @@ def test_trace_collector_rejects_non_trace_context() -> None:
 
 def test_trace_collector_clear_empties_records_snapshot() -> None:
     trace = TraceContext(trace_id="trace-clear")
-    collector = TraceCollector()
+    collector = TraceCollector(writer=lambda _: None)
 
     collector.collect(trace)
     assert collector.records()

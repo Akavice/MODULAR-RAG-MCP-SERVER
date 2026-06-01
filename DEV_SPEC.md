@@ -4049,9 +4049,9 @@ dashboard:
 
 | F1 | TraceContext 增强（finish + 耗时统计 + trace_type） | [x] | 2026-05-28 | Implemented `TraceContext` lifecycle support (`trace_type`, `finish()`, total/stage `elapsed_ms()`, JSON-serializable `to_dict()`) plus in-memory `TraceCollector`; validated with `tests/unit/test_trace_context.py` (`14 passed`) and D/E/F regression subset (`94 passed`). |
 
-| F2 | 结构化日志 logger（JSON Lines） | [ ] | | |
+| F2 | 结构化日志 logger（JSON Lines） | [x] | 2026-06-01 | Enhanced `observability/logger.py` with JSONL trace logger (`get_trace_logger` + `write_trace`), connected `TraceCollector.collect()` to persist each collected trace, and added `tests/unit/test_jsonl_logger.py`; validated with `tests/unit/test_jsonl_logger.py` + `tests/unit/test_trace_context.py` (`20 passed`) and D/E/F regression subset (`100 passed`). |
 
-| F3 | 在 Query 链路打点 | [ ] | | |
+| F3 | 在 Query 链路打点 | [x] | 2026-06-01 | Added `query_processing` trace stage in `QueryProcessor` and passed trace through `HybridSearch` with backward-compatible processor invocation; verified end-to-end query trace stage coverage (`query_processing/dense_retrieval/sparse_retrieval/fusion/rerank`) via `tests/integration/test_hybrid_search.py` (including legacy processor compatibility case without `trace` kwarg). Validation: query+rerank+CLI suite `26 passed`, MCP/trace subset `65 passed`. |
 
 | F4 | 在 Ingestion 链路打点 | [ ] | | |
 
@@ -4143,7 +4143,7 @@ dashboard:
 
 | 阶段 E | 6 | 6 | 100% |
 
-| 阶段 F | 5 | 1 | 20% |
+| 阶段 F | 5 | 3 | 60% |
 
 | 阶段 G | 6 | 0 | 0% |
 
@@ -4151,7 +4151,7 @@ dashboard:
 
 | 阶段 I | 5 | 0 | 0% |
 
-| **总计** | **68** | **48** | **71%** |
+| **总计** | **68** | **50** | **74%** |
 
 
 

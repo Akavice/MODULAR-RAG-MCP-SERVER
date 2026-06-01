@@ -522,3 +522,33 @@
     - "src/core/trace/trace_collector.py"
     - "tests/unit/test_trace_context.py"
   failures: []
+
+- phase: F2-review-1
+  date: 2026-06-01
+  status: PASS
+  summary: JSONL logger and TraceCollector persistence verified; added edge tests for multi-line append and invalid log path type
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_jsonl_logger.py tests/unit/test_trace_context.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_query_processor.py tests/unit/test_query_processor_contract_extra.py tests/unit/test_dense_retriever.py tests/unit/test_dense_retriever_contract_extra.py tests/unit/test_sparse_retriever.py tests/unit/test_sparse_retriever_contract_extra.py tests/unit/test_fusion_rrf.py tests/unit/test_fusion_rrf_contract_extra.py tests/integration/test_hybrid_search.py tests/integration/test_hybrid_search_contract_extra.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/e2e/test_query_cli_contract_extra.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py"
+  result: "20 passed (F2 suite); 100 passed (D+E+F regression subset)"
+  files:
+    - "src/observability/logger.py"
+    - "src/core/trace/trace_collector.py"
+    - "tests/unit/test_jsonl_logger.py"
+    - "tests/unit/test_trace_context.py"
+  failures: []
+
+- phase: F3-review-1
+  date: 2026-06-01
+  status: PASS
+  summary: Query-chain tracing verified end-to-end; added backward-compatibility coverage for legacy QueryProcessor without trace kwarg
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py"
+  result: "26 passed (F3-focused suite); 65 passed (query+mcp+trace regression subset)"
+  files:
+    - "src/core/query_engine/query_processor.py"
+    - "src/core/query_engine/hybrid_search.py"
+    - "tests/integration/test_hybrid_search.py"
+    - "tests/unit/test_query_processor.py"
+  failures: []

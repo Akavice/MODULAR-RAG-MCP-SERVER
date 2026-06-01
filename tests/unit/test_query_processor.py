@@ -68,3 +68,25 @@ def test_process_rejects_invalid_filters_argument() -> None:
         processor.process("rag query", filters="collection:kb")  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="filters keys must be non-empty strings"):
         processor.process("rag query", filters={"": "x"})
+
+
+@pytest.mark.unit
+def test_process_records_query_processing_stage_when_trace_provided() -> None:
+    class _Trace:
+        def __init__(self) -> None:
+            self.events: list[tuple[str, dict[str, object]]] = []
+
+        def record_stage(self, stage: str, **payload: object) -> None:
+            self.events.append((stage, payload))
+
+    trace = _Trace()
+    processor = QueryProcessor(settings={})
+
+    out = processor.process("collection:kb rag retrieval", trace=trace)
+
+    assert out.keywords
+    assert len(trace.events) == 1
+    stage, payload = trace.events[0]
+    assert stage == "query_processing"
+    assert payload["keyword_count"] == len(out.keywords)
+    assert payload["filter_count"] == 1
