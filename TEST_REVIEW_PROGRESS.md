@@ -675,3 +675,35 @@
     - "tests/unit/test_trace_service.py"
     - "tests/unit/test_dashboard_ingestion_traces.py"
   failures: []
+- phase: G6-review-1
+  date: 2026-06-01
+  status: FAIL
+  summary: Query Traces page has selection mismatch when dropdown labels are duplicated; newly added counterexample test fails and confirms wrong trace payload is shown
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_trace_service.py tests/unit/test_dashboard_query_traces.py"
+  result: "1 failed, 8 passed"
+  files:
+    - "src/observability/dashboard/pages/query_traces.py"
+    - "tests/unit/test_dashboard_query_traces.py"
+    - "tests/unit/test_trace_service.py"
+  failures:
+    - test: "test_query_traces_page_selectbox_duplicate_labels_should_map_correct_trace"
+      error: "AssertionError: expected selected payload trace_id 'abcdefgh-2', got 'abcdefgh-1'"
+      cause: "render() maps selected option back via labels.index(selected_label), which returns the first index for duplicate labels"
+      locations:
+        - "src/observability/dashboard/pages/query_traces.py:52"
+        - "tests/unit/test_dashboard_query_traces.py:166"
+- phase: G6-review-2
+  date: 2026-06-01
+  status: PASS
+  summary: Query Traces duplicate-label selection issue fixed by using full trace_id in labels; query trace page and trace service checks passed with added counterexample coverage
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_trace_service.py tests/unit/test_dashboard_query_traces.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_config_service.py tests/unit/test_dashboard_data_service.py tests/unit/test_dashboard_ingestion_manager.py tests/unit/test_dashboard_ingestion_traces.py tests/unit/test_trace_service.py tests/unit/test_dashboard_query_traces.py tests/unit/test_start_dashboard_script.py"
+  result: "9 passed (G6 suite); 25 passed (dashboard regression subset)"
+  files:
+    - "src/observability/dashboard/pages/query_traces.py"
+    - "src/observability/dashboard/services/trace_service.py"
+    - "tests/unit/test_dashboard_query_traces.py"
+    - "tests/unit/test_trace_service.py"
+  failures: []

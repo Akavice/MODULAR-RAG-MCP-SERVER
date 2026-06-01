@@ -4077,7 +4077,7 @@ dashboard:
 
 | G5 | Ingestion 追踪页面 | [x] | 2026-06-01 | Implemented `services/trace_service.py` to parse `traces.jsonl`, filter/sort ingestion traces, and build stage elapsed timeline; implemented `pages/ingestion_traces.py` with ingestion trace list, trace selector, stage timing waterfall (`bar_chart`), and payload detail JSON. Added `tests/unit/test_trace_service.py` and `tests/unit/test_dashboard_ingestion_traces.py`, including limit validation and settings-error UI path checks. Validation: G5 suite `7 passed`; query/mcp/ingestion/dashboard regression subset `107 passed`. |
 
-| G6 | Query 追踪页面 | [ ] | | |
+| G6 | Query 追踪页面 | [x] | 2026-06-01 | Implemented `pages/query_traces.py` with query-trace history, keyword search, stage timing waterfall, Dense/Sparse/Fusion metrics, and rerank before/after + fallback display. Extended `services/trace_service.py` with `list_query_traces(keyword, limit)` and `summarize_query_channels(...)` for query-stage analysis. Added `tests/unit/test_dashboard_query_traces.py` and expanded `tests/unit/test_trace_service.py` for query filtering and channel summary extraction. Validation: G6 suite `9 passed`; dashboard regression subset `25 passed`. |
 
 
 
@@ -6438,6 +6438,7 @@ RAG 系统的上限取决于其对特定业务数据的理解深度。未来的�
 
 
 这种演进方向将把本项目从一个“智能搜索引擎”升级为一个“智能研究助理”的基础设施底座。
+
 
 
 

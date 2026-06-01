@@ -125,6 +125,55 @@ def test_list_traces_raises_settings_error_for_missing_file(tmp_path: Path) -> N
 
 
 @pytest.mark.unit
+def test_list_query_traces_supports_keyword_filter_and_channel_summary(tmp_path: Path) -> None:
+    traces_path = tmp_path / "logs" / "traces.jsonl"
+    traces_path.parent.mkdir(parents=True, exist_ok=True)
+    traces_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "trace_id": "q-1",
+                        "trace_type": "query",
+                        "started_at": "2026-06-01T10:00:00Z",
+                        "stages": [
+                            {"stage": "query_processing", "query": "alpha budget"},
+                            {"stage": "dense_retrieval", "hit_count": 4, "elapsed_ms": 8.0},
+                            {"stage": "sparse_retrieval", "hit_count": 6, "elapsed_ms": 12.0},
+                            {"stage": "fusion", "fused_count": 5, "elapsed_ms": 4.0},
+                            {"stage": "rerank", "input_count": 5, "output_count": 3, "fallback": False},
+                        ],
+                    }
+                ),
+                json.dumps(
+                    {
+                        "trace_id": "q-2",
+                        "trace_type": "query",
+                        "started_at": "2026-06-01T11:00:00Z",
+                        "stages": [{"stage": "query_processing", "query": "beta roadmap"}],
+                    }
+                ),
+            ]
+        ),
+        encoding="utf-8",
+    )
+    settings_file = tmp_path / "settings.yaml"
+    settings_file.write_text(_settings_yaml(tmp_path, traces_path), encoding="utf-8")
+
+    service = TraceService(settings_path=str(settings_file))
+    traces = service.list_query_traces(keyword="budget")
+
+    assert [item.trace_id for item in traces] == ["q-1"]
+    summary = TraceService.summarize_query_channels(traces[0])
+    assert summary["dense_hit_count"] == 4
+    assert summary["sparse_hit_count"] == 6
+    assert summary["fused_count"] == 5
+    assert summary["rerank_input"] == 5
+    assert summary["rerank_output"] == 3
+    assert summary["rerank_fallback"] is False
+
+
+@pytest.mark.unit
 def test_list_traces_rejects_invalid_limit_types(tmp_path: Path) -> None:
     traces_path = tmp_path / "logs" / "traces.jsonl"
     traces_path.parent.mkdir(parents=True, exist_ok=True)
@@ -137,3 +186,16 @@ def test_list_traces_rejects_invalid_limit_types(tmp_path: Path) -> None:
         service.list_traces(limit="10")  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="limit must be greater than 0"):
         service.list_traces(limit=0)
+
+
+@pytest.mark.unit
+def test_list_query_traces_rejects_non_string_keyword(tmp_path: Path) -> None:
+    traces_path = tmp_path / "logs" / "traces.jsonl"
+    traces_path.parent.mkdir(parents=True, exist_ok=True)
+    traces_path.write_text("", encoding="utf-8")
+    settings_file = tmp_path / "settings.yaml"
+    settings_file.write_text(_settings_yaml(tmp_path, traces_path), encoding="utf-8")
+    service = TraceService(settings_path=str(settings_file))
+
+    with pytest.raises(TypeError, match="keyword must be a string"):
+        service.list_query_traces(keyword=123)  # type: ignore[arg-type]

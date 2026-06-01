@@ -22,6 +22,7 @@ class TraceSummary:
     stage_count: int
     source_path: str | None
     collection: str | None
+    query_text: str | None
     stages: list[dict[str, Any]]
 
     def to_dict(self) -> dict[str, Any]:
@@ -34,6 +35,7 @@ class TraceSummary:
             "stage_count": self.stage_count,
             "source_path": self.source_path,
             "collection": self.collection,
+            "query_text": self.query_text,
             "stages": [dict(item) for item in self.stages],
         }
 
@@ -46,6 +48,22 @@ class TraceService:
 
     def list_ingestion_traces(self, limit: int = 200) -> list[TraceSummary]:
         return self.list_traces(trace_type="ingestion", limit=limit)
+
+    def list_query_traces(
+        self,
+        *,
+        keyword: str | None = None,
+        limit: int = 200,
+    ) -> list[TraceSummary]:
+        traces = self.list_traces(trace_type="query", limit=limit)
+        normalized = self._normalize_keyword(keyword)
+        if normalized is None:
+            return traces
+        return [
+            item
+            for item in traces
+            if self._trace_matches_keyword(item, normalized)
+        ]
 
     def list_traces(
         self,
@@ -99,6 +117,51 @@ class TraceService:
             rows.append({"stage": stage_name.strip(), "elapsed_ms": float(elapsed)})
         return rows
 
+    @staticmethod
+    def summarize_query_channels(trace: TraceSummary) -> dict[str, Any]:
+        dense_hit_count = None
+        sparse_hit_count = None
+        fused_count = None
+        rerank_input = None
+        rerank_output = None
+        rerank_fallback = None
+
+        for stage in trace.stages:
+            if not isinstance(stage, dict):
+                continue
+            stage_name = stage.get("stage")
+            if stage_name == "dense_retrieval":
+                value = stage.get("hit_count")
+                if isinstance(value, (int, float)) and not isinstance(value, bool):
+                    dense_hit_count = int(value)
+            elif stage_name == "sparse_retrieval":
+                value = stage.get("hit_count")
+                if isinstance(value, (int, float)) and not isinstance(value, bool):
+                    sparse_hit_count = int(value)
+            elif stage_name == "fusion":
+                value = stage.get("fused_count")
+                if isinstance(value, (int, float)) and not isinstance(value, bool):
+                    fused_count = int(value)
+            elif stage_name == "rerank":
+                input_value = stage.get("input_count")
+                output_value = stage.get("output_count")
+                fallback_value = stage.get("fallback")
+                if isinstance(input_value, (int, float)) and not isinstance(input_value, bool):
+                    rerank_input = int(input_value)
+                if isinstance(output_value, (int, float)) and not isinstance(output_value, bool):
+                    rerank_output = int(output_value)
+                if isinstance(fallback_value, bool):
+                    rerank_fallback = fallback_value
+
+        return {
+            "dense_hit_count": dense_hit_count,
+            "sparse_hit_count": sparse_hit_count,
+            "fused_count": fused_count,
+            "rerank_input": rerank_input,
+            "rerank_output": rerank_output,
+            "rerank_fallback": rerank_fallback,
+        }
+
     def _resolve_traces_path(self) -> Path:
         settings = load_settings(self.settings_path)
         value = settings.observability.get("traces_path", "logs/traces.jsonl")
@@ -140,6 +203,7 @@ class TraceService:
 
         source_path: str | None = None
         collection: str | None = None
+        query_text: str | None = None
         for stage in stages:
             if not isinstance(stage, dict):
                 continue
@@ -151,8 +215,10 @@ class TraceService:
                 value = stage.get("collection")
                 if isinstance(value, str) and value.strip():
                     collection = value.strip()
-            if source_path and collection:
-                break
+            if query_text is None:
+                value = stage.get("query")
+                if isinstance(value, str) and value.strip():
+                    query_text = value.strip()
 
         return TraceSummary(
             trace_id=trace_id.strip(),
@@ -163,8 +229,30 @@ class TraceService:
             stage_count=len(stages),
             source_path=source_path,
             collection=collection,
+            query_text=query_text,
             stages=[dict(item) for item in stages if isinstance(item, dict)],
         )
+
+    @staticmethod
+    def _normalize_keyword(keyword: str | None) -> str | None:
+        if keyword is None:
+            return None
+        if not isinstance(keyword, str):
+            raise TypeError("keyword must be a string when provided")
+        normalized = keyword.strip().lower()
+        if not normalized:
+            return None
+        return normalized
+
+    @staticmethod
+    def _trace_matches_keyword(trace: TraceSummary, keyword: str) -> bool:
+        if keyword in trace.trace_id.lower():
+            return True
+        if trace.query_text and keyword in trace.query_text.lower():
+            return True
+        if trace.source_path and keyword in trace.source_path.lower():
+            return True
+        return False
 
 
 __all__ = ["TraceService", "TraceSummary", "SettingsError"]
