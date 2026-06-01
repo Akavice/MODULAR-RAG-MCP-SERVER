@@ -599,3 +599,18 @@
     - "tests/unit/test_dashboard_config_service.py"
     - "tests/unit/test_start_dashboard_script.py"
   failures: []
+
+- phase: G2-review-1
+  date: 2026-06-01
+  status: PASS
+  summary: DocumentManager cross-storage lifecycle verified with extra negative coverage for unknown doc_id and no-op delete path
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_document_manager.py tests/unit/test_vector_store_contract.py tests/unit/test_bm25_indexer_roundtrip.py tests/unit/test_image_storage.py tests/unit/test_file_integrity.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/integration/test_hybrid_search.py tests/unit/test_query_processor.py tests/unit/test_reranker_fallback.py tests/unit/test_reranker_fallback_contract_extra.py tests/e2e/test_query_cli.py tests/unit/test_protocol_handler.py tests/integration/test_mcp_server.py tests/integration/test_mcp_query_image_content.py tests/unit/test_response_builder.py tests/unit/test_list_collections.py tests/unit/test_get_document_summary.py tests/unit/test_query_knowledge_hub_tool.py tests/unit/test_multimodal_assembler.py tests/unit/test_trace_context.py tests/unit/test_jsonl_logger.py tests/integration/test_ingestion_pipeline.py tests/e2e/test_data_ingestion.py tests/unit/test_pipeline_progress.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py tests/unit/test_document_manager.py"
+  result: "34 passed (G2+storage suite); 93 passed (query/mcp/ingestion/dashboard regression subset)"
+  files:
+    - "src/ingestion/document_manager.py"
+    - "src/libs/vector_store/chroma_store.py"
+    - "src/libs/loader/file_integrity.py"
+    - "tests/unit/test_document_manager.py"
+  failures: []

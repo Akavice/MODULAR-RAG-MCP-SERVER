@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sqlite3
 import threading
 from abc import ABC, abstractmethod
@@ -28,6 +29,14 @@ class FileIntegrityChecker(ABC):
     @abstractmethod
     def mark_failed(self, file_hash: str, error_msg: str, **extra: Any) -> None:
         """Mark a file hash as failed with a readable error message."""
+
+    @abstractmethod
+    def remove_record(self, file_hash: str) -> bool:
+        """Remove one file-hash record and return True when deleted."""
+
+    @abstractmethod
+    def list_processed(self) -> list[dict[str, Any]]:
+        """List persisted ingestion records for management operations."""
 
 
 class SQLiteIntegrityChecker(FileIntegrityChecker):
@@ -88,6 +97,63 @@ class SQLiteIntegrityChecker(FileIntegrityChecker):
             extra=extra,
         )
 
+    def remove_record(self, file_hash: str) -> bool:
+        normalized = self._normalize_file_hash(file_hash)
+        with self._lock:
+            with self._connect() as connection:
+                cursor = connection.execute(
+                    "DELETE FROM ingestion_history WHERE file_hash = ?",
+                    (normalized,),
+                )
+                deleted = cursor.rowcount
+                connection.commit()
+        return bool(deleted)
+
+    def list_processed(self) -> list[dict[str, Any]]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT file_hash, status, file_path, error_msg, extra_json, created_at, updated_at
+                FROM ingestion_history
+                ORDER BY updated_at DESC, file_hash ASC
+                """
+            ).fetchall()
+
+        output: list[dict[str, Any]] = []
+        for row in rows:
+            extra: dict[str, Any] = {}
+            raw_extra = row[4]
+            if isinstance(raw_extra, str) and raw_extra.strip():
+                try:
+                    parsed = json.loads(raw_extra)
+                    if isinstance(parsed, dict):
+                        extra = parsed
+                except json.JSONDecodeError:
+                    extra = {}
+
+            source_path = extra.get("source_path")
+            if not isinstance(source_path, str) or not source_path.strip():
+                source_path = row[2] if isinstance(row[2], str) else None
+
+            collection = extra.get("collection")
+            if not isinstance(collection, str) or not collection.strip():
+                collection = None
+
+            output.append(
+                {
+                    "file_hash": row[0],
+                    "status": row[1],
+                    "file_path": row[2],
+                    "error_msg": row[3],
+                    "source_path": source_path,
+                    "collection": collection,
+                    "extra": extra,
+                    "created_at": row[5],
+                    "updated_at": row[6],
+                }
+            )
+        return output
+
     def _initialize_database(self) -> None:
         with self._connect() as connection:
             connection.execute(
@@ -134,8 +200,6 @@ class SQLiteIntegrityChecker(FileIntegrityChecker):
     ) -> None:
         extra_json = None
         if extra:
-            import json
-
             extra_json = json.dumps(extra, ensure_ascii=False, sort_keys=True)
 
         with self._lock:

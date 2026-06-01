@@ -127,6 +127,29 @@ class ChromaStore(BaseVectorStore):
             )
         return output
 
+    def delete_by_metadata(self, filters: dict[str, Any]) -> int:
+        if not isinstance(filters, dict):
+            raise TypeError("filters must be a mapping")
+        if not filters:
+            raise ValueError("filters must not be empty")
+
+        removed_ids: list[str] = []
+        for item_id, record in self._records.items():
+            if not isinstance(record, dict):
+                continue
+            metadata = record.get("metadata", {})
+            if not isinstance(metadata, dict):
+                metadata = {}
+            if self._record_matches_filters(metadata, filters):
+                removed_ids.append(item_id)
+
+        for item_id in removed_ids:
+            self._records.pop(item_id, None)
+
+        if removed_ids:
+            self._persist()
+        return len(removed_ids)
+
     def _similarity(self, left: list[float], right: list[float]) -> float:
         if self.distance_metric != "cosine":
             # Default to dot product for unknown metrics to keep behavior deterministic.
@@ -280,3 +303,22 @@ class ChromaStore(BaseVectorStore):
     def _safe_name(name: str) -> str:
         safe = re.sub(r"[^A-Za-z0-9._-]+", "_", name.strip())
         return safe or "default"
+
+    def _record_matches_filters(
+        self,
+        metadata: dict[str, Any],
+        filters: dict[str, Any],
+    ) -> bool:
+        for key, expected in filters.items():
+            if key == "collection":
+                if not isinstance(expected, str):
+                    return False
+                record_collection = metadata.get("collection")
+                if not isinstance(record_collection, str) or not record_collection.strip():
+                    record_collection = self.collection_name
+                if record_collection != expected:
+                    return False
+                continue
+            if metadata.get(key) != expected:
+                return False
+        return True

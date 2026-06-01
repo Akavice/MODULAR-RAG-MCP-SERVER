@@ -4069,7 +4069,7 @@ dashboard:
 
 | G1 | Dashboard 基础架构与系统总览页 | [x] | 2026-06-01 | Implemented Streamlit dashboard entry with multi-page navigation (`st.navigation` + compatibility fallback), functional Overview page, settings/data summary `ConfigService`, and runnable `scripts/start_dashboard.py`. Added `tests/unit/test_dashboard_config_service.py` + `tests/unit/test_start_dashboard_script.py` for config/stat aggregation robustness and startup command/exception paths. Validation: dashboard suite `6 passed`; F-series + query/mcp/ingestion regression subset `87 passed`. |
 
-| G2 | DocumentManager 实现 | [ ] | | |
+| G2 | DocumentManager 实现 | [x] | 2026-06-01 | Implemented cross-storage `DocumentManager` for `list/get_detail/delete/stats` over Chroma/BM25/ImageStorage/Integrity. Added `ChromaStore.delete_by_metadata`, `FileIntegrityChecker.remove_record/list_processed` (`SQLiteIntegrityChecker` implementation), and exports in `ingestion/__init__.py`. Added `tests/unit/test_document_manager.py` covering list/detail/delete/stats lifecycle, coordinated deletion behavior, unknown-doc error, and no-op delete path. Validation: `tests/unit/test_document_manager.py` + storage suite `34 passed`; query/mcp/ingestion/dashboard regression subset `93 passed`. |
 
 | G3 | 数据浏览器页面 | [ ] | | |
 

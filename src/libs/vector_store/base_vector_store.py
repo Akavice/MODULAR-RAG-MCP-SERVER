@@ -56,6 +56,12 @@ class BaseVectorStore(ABC):
             f"{self.__class__.__name__} does not implement get_by_ids()"
         )
 
+    def delete_by_metadata(self, filters: Mapping[str, Any]) -> int:
+        """Delete records matching metadata filters and return removed count."""
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not implement delete_by_metadata()"
+        )
+
     @staticmethod
     def validate_records(records: Sequence[Mapping[str, Any]]) -> None:
         """Validate upsert payload shape before provider calls."""
