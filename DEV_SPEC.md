@@ -4079,6 +4079,8 @@ dashboard:
 
 | G6 | Query 追踪页面 | [x] | 2026-06-01 | Implemented `pages/query_traces.py` with query-trace history, keyword search, stage timing waterfall, Dense/Sparse/Fusion metrics, and rerank before/after + fallback display. Extended `services/trace_service.py` with `list_query_traces(keyword, limit)` and `summarize_query_channels(...)` for query-stage analysis. Added `tests/unit/test_dashboard_query_traces.py` and expanded `tests/unit/test_trace_service.py` for query filtering and channel summary extraction. Validation: G6 suite `9 passed`; dashboard regression subset `25 passed`. |
 
+| G7 | Dashboard 双语与语言切换 | [x] | 2026-06-02 | Implemented `services/i18n.py` with centralized message catalog, locale normalization, session-state locale persistence, and `en-US` fallback strategy; updated `app.py` to render a locale switcher and pass locale context into all dashboard pages; replaced hard-coded dashboard page copy in G1-G6 and evaluation placeholder with i18n keys. Added `tests/unit/test_dashboard_i18n.py` and expanded `tests/unit/test_dashboard_query_traces.py` to verify locale switching, zh-CN page labels, duplicate-trace selection stability, and missing-key fallback to `en-US`. Validation: G7 + dashboard regression subset `29 passed`. |
+
 
 
 #### 阶段 H：评估体系
@@ -6068,6 +6070,46 @@ dashboard:
 - **验收标准**：执行 query 后，Dashboard 显示查询追踪详情与各阶段对比。
 
 - **测试方法**：手动验证（先 query → 打开 Dashboard → 查看追踪）。
+
+
+
+### G7：Dashboard 双语与语言切换（zh-CN / en-US）
+
+- **目标**：为 G1-G6 页面增加中英文支持，并在右上角提供语言切换入口；切换后页面文案即时生效。
+
+- **前置依赖**：G1-G6（页面骨架与数据服务已就绪）
+
+- **修改文件**：
+
+  - `src/observability/dashboard/app.py`（新增语言切换控件，放置在右上角）
+
+  - `src/observability/dashboard/pages/*.py`（将硬编码文案替换为 i18n key）
+
+  - `src/observability/dashboard/services/i18n.py`（新增：字典加载、翻译函数、回退策略）
+
+  - `tests/unit/test_dashboard_i18n.py`（新增：语言切换与回退逻辑测试）
+
+- **实现要点**：
+
+  - 语言范围：`zh-CN`、`en-US`，默认 `zh-CN`（可配置）。
+
+  - 切换入口：`app.py` 顶部右侧按钮或分段控件，状态存入 `st.session_state["locale"]`。
+
+  - 文案管理：统一使用 `t("dashboard.xxx")`，禁止页面继续写死文案字符串。
+
+  - 回退规则：`当前语言 -> en-US -> key 原文`，保证缺失 key 时页面可用。
+
+  - 兼容性：仅替换文案层，不改数据查询、摄取、追踪业务逻辑。
+
+- **验收标准**：
+
+  - G1-G6 标题、按钮、提示、表格列名、错误提示可在中英文间切换。
+
+  - 切换语言后，当前会话页面立即刷新显示对应文案。
+
+  - 任意缺失 key 不应导致页面异常（按回退策略展示）。
+
+- **测试方法**：`pytest -q tests/unit/test_dashboard_i18n.py tests/unit/test_dashboard_*`，并手动验证右上角语言切换行为。
 
 
 

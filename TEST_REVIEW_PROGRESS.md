@@ -707,3 +707,23 @@
     - "tests/unit/test_dashboard_query_traces.py"
     - "tests/unit/test_trace_service.py"
   failures: []
+
+- phase: G7-review-1
+  date: 2026-06-02
+  status: PASS
+  summary: Dashboard bilingual wiring verified across app/page translations with added coverage for zh-CN page labels and missing-locale-key fallback to en-US
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_i18n.py tests/unit/test_dashboard_query_traces.py tests/unit/test_dashboard_ingestion_traces.py tests/unit/test_dashboard_ingestion_manager.py tests/unit/test_dashboard_data_service.py tests/unit/test_dashboard_config_service.py tests/unit/test_start_dashboard_script.py tests/unit/test_trace_service.py"
+  result: "29 passed (G7 + dashboard regression subset)"
+  files:
+    - "src/observability/dashboard/app.py"
+    - "src/observability/dashboard/services/i18n.py"
+    - "src/observability/dashboard/pages/overview.py"
+    - "src/observability/dashboard/pages/data_browser.py"
+    - "src/observability/dashboard/pages/ingestion_manager.py"
+    - "src/observability/dashboard/pages/ingestion_traces.py"
+    - "src/observability/dashboard/pages/query_traces.py"
+    - "src/observability/dashboard/pages/evaluation_panel.py"
+    - "tests/unit/test_dashboard_i18n.py"
+    - "tests/unit/test_dashboard_query_traces.py"
+  failures: []

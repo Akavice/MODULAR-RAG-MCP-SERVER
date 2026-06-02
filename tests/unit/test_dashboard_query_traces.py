@@ -14,24 +14,39 @@ from observability.dashboard.pages import query_traces
 class _FakeColumn:
     def __init__(self, calls: list[str]) -> None:
         self._calls = calls
+        self.metrics: list[tuple[object, object]] = []
 
-    def metric(self, *_args: object, **_kwargs: object) -> None:
+    def metric(self, *args: object, **_kwargs: object) -> None:
         self._calls.append("column.metric")
+        if len(args) >= 2:
+            self.metrics.append((args[0], args[1]))
 
 
 class _FakeStreamlit:
     def __init__(self) -> None:
         self.calls: list[str] = []
         self.json_payload: object | None = None
+        self.title_text: object | None = None
+        self.caption_text: object | None = None
+        self.text_input_label: object | None = None
+        self.selectbox_label: object | None = None
+        self.subheaders: list[object] = []
+        self.columns_created: list[_FakeColumn] = []
 
-    def title(self, *_args: object, **_kwargs: object) -> None:
+    def title(self, *args: object, **_kwargs: object) -> None:
         self.calls.append("title")
+        if args:
+            self.title_text = args[0]
 
-    def caption(self, *_args: object, **_kwargs: object) -> None:
+    def caption(self, *args: object, **_kwargs: object) -> None:
         self.calls.append("caption")
+        if args:
+            self.caption_text = args[0]
 
-    def text_input(self, *_args: object, **_kwargs: object) -> str:
+    def text_input(self, *args: object, **_kwargs: object) -> str:
         self.calls.append("text_input")
+        if args:
+            self.text_input_label = args[0]
         return "alpha"
 
     def metric(self, *_args: object, **_kwargs: object) -> None:
@@ -40,19 +55,24 @@ class _FakeStreamlit:
     def dataframe(self, *_args: object, **_kwargs: object) -> None:
         self.calls.append("dataframe")
 
-    def selectbox(self, _label: str, options: list[str], index: int = 0) -> str:
+    def selectbox(self, label: str, options: list[str], index: int = 0) -> str:
         self.calls.append("selectbox")
+        self.selectbox_label = label
         return options[index]
 
-    def subheader(self, *_args: object, **_kwargs: object) -> None:
+    def subheader(self, *args: object, **_kwargs: object) -> None:
         self.calls.append("subheader")
+        if args:
+            self.subheaders.append(args[0])
 
     def bar_chart(self, *_args: object, **_kwargs: object) -> None:
         self.calls.append("bar_chart")
 
     def columns(self, n: int) -> list[_FakeColumn]:
         self.calls.append("columns")
-        return [_FakeColumn(self.calls) for _ in range(n)]
+        columns = [_FakeColumn(self.calls) for _ in range(n)]
+        self.columns_created.extend(columns)
+        return columns
 
     def json(self, *_args: object, **_kwargs: object) -> None:
         self.calls.append("json")
@@ -207,3 +227,49 @@ def test_query_traces_page_selectbox_duplicate_labels_should_map_correct_trace(
 
     assert isinstance(fake_st.json_payload, dict)
     assert fake_st.json_payload.get("trace_id") == "abcdefgh-2"
+
+
+@pytest.mark.unit
+def test_query_traces_page_renders_zh_cn_labels_and_boolean_text(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    traces_path = tmp_path / "logs" / "traces.jsonl"
+    traces_path.parent.mkdir(parents=True, exist_ok=True)
+    traces_path.write_text(
+        json.dumps(
+            {
+                "trace_id": "q-zh",
+                "trace_type": "query",
+                "started_at": "2026-06-02T10:00:00Z",
+                "stages": [
+                    {"stage": "query_processing", "query": "alpha test", "elapsed_ms": 1.0},
+                    {"stage": "dense_retrieval", "hit_count": 2, "elapsed_ms": 5.0},
+                    {"stage": "sparse_retrieval", "hit_count": 3, "elapsed_ms": 6.0},
+                    {"stage": "fusion", "fused_count": 2, "elapsed_ms": 2.0},
+                    {"stage": "rerank", "input_count": 2, "output_count": 1, "fallback": True, "elapsed_ms": 3.0},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    settings_file = _write_settings(tmp_path, traces_path)
+
+    fake_st = _FakeStreamlit()
+    monkeypatch.setitem(sys.modules, "streamlit", fake_st)
+
+    query_traces.render({"settings_path": str(settings_file), "locale": "zh-CN"})
+
+    assert fake_st.title_text == "查询追踪"
+    assert fake_st.caption_text == "查看查询历史、阶段耗时和重排效果。"
+    assert fake_st.text_input_label == "关键词搜索"
+    assert fake_st.selectbox_label == "选择追踪"
+    assert "Dense / Sparse 对比" in fake_st.subheaders
+    assert "重排前后对比" in fake_st.subheaders
+    assert len(fake_st.columns_created) >= 2
+    rerank_metrics = [
+        metric
+        for column in fake_st.columns_created
+        for metric in column.metrics
+    ]
+    assert ("是否降级", "是") in rerank_metrics

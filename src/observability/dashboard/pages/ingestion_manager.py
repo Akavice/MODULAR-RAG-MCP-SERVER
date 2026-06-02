@@ -10,38 +10,40 @@ from typing import Any
 from core.settings import SettingsError, load_settings
 from ingestion.pipeline import IngestionPipeline
 from observability.dashboard.services.data_service import DataService
+from observability.dashboard.services.i18n import locale_from_context, t
 
 
 def render(context: dict[str, Any] | None = None) -> None:
     import streamlit as st
 
-    st.title("Ingestion Manager")
-    st.info("Upload a PDF, trigger ingestion, watch progress, and delete ingested documents.")
+    locale = locale_from_context(context)
+    st.title(t("ingestion_manager.title", locale=locale))
+    st.info(t("ingestion_manager.caption", locale=locale))
 
     settings_path = _resolve_settings_path(context)
     service = DataService(settings_path=settings_path)
 
-    upload = st.file_uploader("Upload PDF", type=["pdf"])
+    upload = st.file_uploader(t("ingestion_manager.upload_pdf", locale=locale), type=["pdf"])
     collection_input = _call_st(
         st,
         "text_input",
-        "Collection",
+        t("ingestion_manager.collection", locale=locale),
         value="default",
-        help="Target collection for this ingestion run.",
+        help=t("ingestion_manager.collection_help", locale=locale),
     )
     force_value = _call_st(
         st,
         "checkbox",
-        "Force reingestion",
+        t("ingestion_manager.force", locale=locale),
         value=False,
-        help="Ignore SHA256 skip check and ingest anyway.",
+        help=t("ingestion_manager.force_help", locale=locale),
     )
     force = bool(force_value) if isinstance(force_value, bool) else False
     progress = st.progress(0.0)
 
-    if st.button("Start Ingestion", type="primary"):
+    if st.button(t("ingestion_manager.start", locale=locale), type="primary"):
         if upload is None:
-            _notify(st, "warning", "Please select a PDF file before ingestion.")
+            _notify(st, "warning", t("ingestion_manager.warn.select_pdf", locale=locale))
         else:
             _run_ingestion(
                 st=st,
@@ -50,26 +52,28 @@ def render(context: dict[str, Any] | None = None) -> None:
                 collection=collection_input if isinstance(collection_input, str) else "default",
                 force=force,
                 progress=progress,
+                locale=locale,
             )
 
     try:
         documents = service.list_documents()
     except SettingsError as exc:
-        _notify(st, "error", f"Failed to load settings: {exc}")
-        _notify(st, "info", f"Current settings path: `{settings_path}`")
+        _notify(st, "error", t("common.failed_load_settings", locale=locale, error=exc))
+        _notify(st, "info", t("common.current_settings_path", locale=locale, path=settings_path))
         return
 
     if not documents:
-        _notify(st, "info", "No ingested documents yet.")
+        _notify(st, "info", t("ingestion_manager.info.no_documents", locale=locale))
         return
 
+    placeholder = t("common.placeholder", locale=locale)
     rows = [
         {
-            "Collection": doc.collection,
-            "Source Path": doc.source_path,
-            "Chunks": doc.chunk_count,
-            "Images": doc.image_count,
-            "Ingested At": doc.ingested_at or "-",
+            t("data_browser.table.collection", locale=locale): doc.collection,
+            t("data_browser.table.source_path", locale=locale): doc.source_path,
+            t("data_browser.table.chunks", locale=locale): doc.chunk_count,
+            t("data_browser.table.images", locale=locale): doc.image_count,
+            t("data_browser.table.ingested_at", locale=locale): doc.ingested_at or placeholder,
         }
         for doc in documents
     ]
@@ -78,13 +82,18 @@ def render(context: dict[str, Any] | None = None) -> None:
     manager = service.get_document_manager()
     for doc in documents:
         key = f"delete::{doc.doc_id}"
-        label = f"Delete [{doc.collection}] {Path(doc.source_path).name}"
+        label = t(
+            "ingestion_manager.delete_button",
+            locale=locale,
+            collection=doc.collection,
+            name=Path(doc.source_path).name,
+        )
         if st.button(label, key=key):
             result = manager.delete_document(doc.source_path, doc.collection)
             if result.deleted:
-                _notify(st, "success", f"Deleted document: {doc.source_path}")
+                _notify(st, "success", t("ingestion_manager.delete_success", locale=locale, source_path=doc.source_path))
             else:
-                _notify(st, "warning", f"No records deleted: {doc.source_path}")
+                _notify(st, "warning", t("ingestion_manager.delete_noop", locale=locale, source_path=doc.source_path))
             _rerun(st)
 
 
@@ -96,6 +105,7 @@ def _run_ingestion(
     collection: str,
     force: bool,
     progress: Any,
+    locale: str,
 ) -> None:
     temp_file: Path | None = None
     try:
@@ -114,14 +124,20 @@ def _run_ingestion(
             force=force,
             on_progress=on_progress,
         )
-        _update_progress(progress, 1.0, text="ingestion finished")
+        _update_progress(progress, 1.0, text=t("ingestion_manager.progress_done", locale=locale))
         _notify(
             st,
             "success",
-            f"Ingestion {result.status}: chunks={result.chunk_count}, records={result.record_count}",
+            t(
+                "ingestion_manager.success",
+                locale=locale,
+                status=result.status,
+                chunks=result.chunk_count,
+                records=result.record_count,
+            ),
         )
     except Exception as exc:
-        _notify(st, "error", f"Ingestion failed: {exc}")
+        _notify(st, "error", t("ingestion_manager.error_failed", locale=locale, error=exc))
     finally:
         if temp_file is not None:
             try:

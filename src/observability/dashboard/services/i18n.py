@@ -1,0 +1,260 @@
+﻿"""Dashboard i18n helpers (zh-CN / en-US)."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping, MutableMapping
+from typing import Any
+
+
+DEFAULT_LOCALE = "en-US"
+FALLBACK_LOCALE = "en-US"
+SUPPORTED_LOCALES = ("en-US", "zh-CN")
+LOCALE_STATE_KEY = "dashboard_locale"
+
+_MESSAGES: dict[str, dict[str, str]] = {
+    "en-US": {
+        "app.page_title": "Modular RAG Dashboard",
+        "app.language_label": "Language",
+        "app.language.zh": "\u4e2d\u6587",
+        "app.language.en": "EN",
+        "app.nav.overview": "System Overview",
+        "app.nav.data_browser": "Data Browser",
+        "app.nav.ingestion_manager": "Ingestion Manager",
+        "app.nav.ingestion_traces": "Ingestion Traces",
+        "app.nav.query_traces": "Query Traces",
+        "app.nav.evaluation_panel": "Evaluation Panel",
+        "app.sidebar.pages": "Pages",
+        "common.failed_load_settings": "Failed to load settings: {error}",
+        "common.current_settings_path": "Current settings path: `{path}`",
+        "common.placeholder": "-",
+        "overview.title": "System Overview",
+        "overview.caption": "Component configuration and local data status.",
+        "overview.metric.collections": "Collections",
+        "overview.metric.chunks": "Chunks",
+        "overview.metric.images": "Images",
+        "overview.metric.traces": "Traces",
+        "overview.components": "Components",
+        "overview.component.provider": "Provider",
+        "overview.component.config": "Config",
+        "overview.settings_summary": "Settings Summary",
+        "data_browser.title": "Data Browser",
+        "data_browser.caption": "Browse ingested documents, chunk details, and linked images.",
+        "data_browser.select.collection": "Collection",
+        "data_browser.collection.all": "All Collections",
+        "data_browser.metric.documents": "Documents",
+        "data_browser.info.no_documents": "No documents found. Run ingestion first.",
+        "data_browser.table.collection": "Collection",
+        "data_browser.table.source_path": "Source Path",
+        "data_browser.table.chunks": "Chunks",
+        "data_browser.table.images": "Images",
+        "data_browser.table.ingested_at": "Ingested At",
+        "data_browser.details": "Document Details",
+        "data_browser.metric.file_hashes": "File Hashes",
+        "data_browser.hashes_prefix": "Hashes",
+        "data_browser.chunk_prefix": "Chunk",
+        "data_browser.linked_images": "Linked Images",
+        "data_browser.image_fallback": "image",
+        "ingestion_manager.title": "Ingestion Manager",
+        "ingestion_manager.caption": "Upload a PDF, trigger ingestion, watch progress, and delete ingested documents.",
+        "ingestion_manager.upload_pdf": "Upload PDF",
+        "ingestion_manager.collection": "Collection",
+        "ingestion_manager.collection_help": "Target collection for this ingestion run.",
+        "ingestion_manager.force": "Force reingestion",
+        "ingestion_manager.force_help": "Ignore SHA256 skip check and ingest anyway.",
+        "ingestion_manager.start": "Start Ingestion",
+        "ingestion_manager.warn.select_pdf": "Please select a PDF file before ingestion.",
+        "ingestion_manager.progress_done": "ingestion finished",
+        "ingestion_manager.success": "Ingestion {status}: chunks={chunks}, records={records}",
+        "ingestion_manager.error_failed": "Ingestion failed: {error}",
+        "ingestion_manager.info.no_documents": "No ingested documents yet.",
+        "ingestion_manager.delete_button": "Delete [{collection}] {name}",
+        "ingestion_manager.delete_success": "Deleted document: {source_path}",
+        "ingestion_manager.delete_noop": "No records deleted: {source_path}",
+        "ingestion_traces.title": "Ingestion Traces",
+        "ingestion_traces.caption": "Browse ingestion history and stage elapsed-time waterfall.",
+        "ingestion_traces.metric.count": "Ingestion Traces",
+        "ingestion_traces.info.no_traces": "No ingestion traces found. Run ingestion first.",
+        "ingestion_traces.table.trace_id": "Trace ID",
+        "ingestion_traces.table.started_at": "Started At",
+        "ingestion_traces.table.finished_at": "Finished At",
+        "ingestion_traces.table.elapsed_ms": "Elapsed (ms)",
+        "ingestion_traces.table.stages": "Stages",
+        "ingestion_traces.table.collection": "Collection",
+        "ingestion_traces.table.source_path": "Source Path",
+        "ingestion_traces.select_trace": "Select Trace",
+        "ingestion_traces.unknown_collection": "unknown",
+        "ingestion_traces.stage_waterfall": "Stage Timing Waterfall",
+        "ingestion_traces.info.no_timeline": "No stage timing data found for this trace.",
+        "ingestion_traces.payload": "Trace Payload",
+        "query_traces.title": "Query Traces",
+        "query_traces.caption": "Browse query history with stage timing and rerank effects.",
+        "query_traces.search_keyword": "Search keyword",
+        "query_traces.metric.count": "Query Traces",
+        "query_traces.info.no_traces": "No query traces found. Run query first.",
+        "query_traces.table.trace_id": "Trace ID",
+        "query_traces.table.started_at": "Started At",
+        "query_traces.table.elapsed_ms": "Elapsed (ms)",
+        "query_traces.table.query": "Query",
+        "query_traces.table.stages": "Stages",
+        "query_traces.table.collection": "Collection",
+        "query_traces.select_trace": "Select Trace",
+        "query_traces.no_query": "no-query",
+        "query_traces.stage_waterfall": "Stage Timing Waterfall",
+        "query_traces.info.no_timeline": "No stage timing data found for this trace.",
+        "query_traces.section.dense_sparse": "Dense vs Sparse",
+        "query_traces.metric.dense_hits": "Dense Hits",
+        "query_traces.metric.sparse_hits": "Sparse Hits",
+        "query_traces.metric.fused_count": "Fused Count",
+        "query_traces.section.rerank": "Rerank Delta",
+        "query_traces.metric.before_rerank": "Before Rerank",
+        "query_traces.metric.after_rerank": "After Rerank",
+        "query_traces.metric.fallback": "Fallback",
+        "query_traces.section.payload": "Trace Payload",
+        "query_traces.bool.yes": "yes",
+        "query_traces.bool.no": "no",
+        "evaluation_panel.title": "Evaluation Panel",
+        "evaluation_panel.placeholder": "Coming in H4: run evaluation jobs and inspect metrics.",
+    },
+    "zh-CN": {
+        "app.page_title": "Modular RAG \u4eea\u8868\u76d8",
+        "app.language_label": "\u8bed\u8a00",
+        "app.language.zh": "\u4e2d\u6587",
+        "app.language.en": "EN",
+        "app.nav.overview": "\u7cfb\u7edf\u603b\u89c8",
+        "app.nav.data_browser": "\u6570\u636e\u6d4f\u89c8",
+        "app.nav.ingestion_manager": "\u6444\u53d6\u7ba1\u7406",
+        "app.nav.ingestion_traces": "\u6444\u53d6\u8ffd\u8e2a",
+        "app.nav.query_traces": "\u67e5\u8be2\u8ffd\u8e2a",
+        "app.nav.evaluation_panel": "\u8bc4\u4f30\u9762\u677f",
+        "app.sidebar.pages": "\u9875\u9762",
+        "common.failed_load_settings": "\u52a0\u8f7d\u914d\u7f6e\u5931\u8d25\uff1a{error}",
+        "common.current_settings_path": "\u5f53\u524d\u914d\u7f6e\u8def\u5f84\uff1a`{path}`",
+        "common.placeholder": "-",
+        "overview.title": "\u7cfb\u7edf\u603b\u89c8",
+        "overview.caption": "\u67e5\u770b\u7ec4\u4ef6\u914d\u7f6e\u4e0e\u672c\u5730\u6570\u636e\u72b6\u6001\u3002",
+        "overview.metric.collections": "\u96c6\u5408\u6570",
+        "overview.metric.chunks": "\u5207\u7247\u6570",
+        "overview.metric.images": "\u56fe\u7247\u6570",
+        "overview.metric.traces": "\u8ffd\u8e2a\u6570",
+        "overview.components": "\u7ec4\u4ef6",
+        "overview.component.provider": "\u63d0\u4f9b\u65b9",
+        "overview.component.config": "\u914d\u7f6e",
+        "overview.settings_summary": "\u914d\u7f6e\u6458\u8981",
+        "data_browser.title": "\u6570\u636e\u6d4f\u89c8",
+        "data_browser.caption": "\u6d4f\u89c8\u5df2\u6444\u53d6\u6587\u6863\u3001\u5207\u7247\u8be6\u60c5\u548c\u5173\u8054\u56fe\u7247\u3002",
+        "data_browser.select.collection": "\u96c6\u5408",
+        "data_browser.collection.all": "\u5168\u90e8\u96c6\u5408",
+        "data_browser.metric.documents": "\u6587\u6863\u6570",
+        "data_browser.info.no_documents": "\u672a\u53d1\u73b0\u6587\u6863\uff0c\u8bf7\u5148\u6267\u884c\u6444\u53d6\u3002",
+        "data_browser.table.collection": "\u96c6\u5408",
+        "data_browser.table.source_path": "\u6e90\u8def\u5f84",
+        "data_browser.table.chunks": "\u5207\u7247\u6570",
+        "data_browser.table.images": "\u56fe\u7247\u6570",
+        "data_browser.table.ingested_at": "\u6444\u53d6\u65f6\u95f4",
+        "data_browser.details": "\u6587\u6863\u8be6\u60c5",
+        "data_browser.metric.file_hashes": "\u6587\u4ef6\u54c8\u5e0c\u6570",
+        "data_browser.hashes_prefix": "\u54c8\u5e0c",
+        "data_browser.chunk_prefix": "\u5207\u7247",
+        "data_browser.linked_images": "\u5173\u8054\u56fe\u7247",
+        "data_browser.image_fallback": "\u56fe\u7247",
+        "ingestion_manager.title": "\u6444\u53d6\u7ba1\u7406",
+        "ingestion_manager.caption": "\u4e0a\u4f20 PDF\u3001\u89e6\u53d1\u6444\u53d6\u3001\u67e5\u770b\u8fdb\u5ea6\u5e76\u5220\u9664\u5df2\u6444\u53d6\u6587\u6863\u3002",
+        "ingestion_manager.upload_pdf": "\u4e0a\u4f20 PDF",
+        "ingestion_manager.collection": "\u96c6\u5408",
+        "ingestion_manager.collection_help": "\u672c\u6b21\u6444\u53d6\u5199\u5165\u7684\u76ee\u6807\u96c6\u5408\u3002",
+        "ingestion_manager.force": "\u5f3a\u5236\u91cd\u65b0\u6444\u53d6",
+        "ingestion_manager.force_help": "\u5ffd\u7565 SHA256 \u53bb\u91cd\u68c0\u67e5\uff0c\u5f3a\u5236\u6267\u884c\u6444\u53d6\u3002",
+        "ingestion_manager.start": "\u5f00\u59cb\u6444\u53d6",
+        "ingestion_manager.warn.select_pdf": "\u8bf7\u5148\u9009\u62e9 PDF \u6587\u4ef6\u3002",
+        "ingestion_manager.progress_done": "\u6444\u53d6\u5b8c\u6210",
+        "ingestion_manager.success": "\u6444\u53d6\u7ed3\u679c {status}\uff1a\u5207\u7247={chunks}\uff0c\u8bb0\u5f55={records}",
+        "ingestion_manager.error_failed": "\u6444\u53d6\u5931\u8d25\uff1a{error}",
+        "ingestion_manager.info.no_documents": "\u5f53\u524d\u8fd8\u6ca1\u6709\u5df2\u6444\u53d6\u6587\u6863\u3002",
+        "ingestion_manager.delete_button": "\u5220\u9664 [{collection}] {name}",
+        "ingestion_manager.delete_success": "\u5df2\u5220\u9664\u6587\u6863\uff1a{source_path}",
+        "ingestion_manager.delete_noop": "\u672a\u5220\u9664\u4efb\u4f55\u8bb0\u5f55\uff1a{source_path}",
+        "ingestion_traces.title": "\u6444\u53d6\u8ffd\u8e2a",
+        "ingestion_traces.caption": "\u67e5\u770b\u6444\u53d6\u5386\u53f2\u4e0e\u9636\u6bb5\u8017\u65f6\u7011\u5e03\u56fe\u3002",
+        "ingestion_traces.metric.count": "\u6444\u53d6\u8ffd\u8e2a\u6570",
+        "ingestion_traces.info.no_traces": "\u672a\u53d1\u73b0\u6444\u53d6\u8ffd\u8e2a\uff0c\u8bf7\u5148\u6267\u884c\u6444\u53d6\u3002",
+        "ingestion_traces.table.trace_id": "\u8ffd\u8e2a ID",
+        "ingestion_traces.table.started_at": "\u5f00\u59cb\u65f6\u95f4",
+        "ingestion_traces.table.finished_at": "\u7ed3\u675f\u65f6\u95f4",
+        "ingestion_traces.table.elapsed_ms": "\u8017\u65f6 (ms)",
+        "ingestion_traces.table.stages": "\u9636\u6bb5\u6570",
+        "ingestion_traces.table.collection": "\u96c6\u5408",
+        "ingestion_traces.table.source_path": "\u6e90\u8def\u5f84",
+        "ingestion_traces.select_trace": "\u9009\u62e9\u8ffd\u8e2a",
+        "ingestion_traces.unknown_collection": "\u672a\u77e5\u96c6\u5408",
+        "ingestion_traces.stage_waterfall": "\u9636\u6bb5\u8017\u65f6\u7011\u5e03\u56fe",
+        "ingestion_traces.info.no_timeline": "\u8be5\u8ffd\u8e2a\u6ca1\u6709\u9636\u6bb5\u8017\u65f6\u6570\u636e\u3002",
+        "ingestion_traces.payload": "\u8ffd\u8e2a\u8be6\u60c5",
+        "query_traces.title": "\u67e5\u8be2\u8ffd\u8e2a",
+        "query_traces.caption": "\u67e5\u770b\u67e5\u8be2\u5386\u53f2\u3001\u9636\u6bb5\u8017\u65f6\u548c\u91cd\u6392\u6548\u679c\u3002",
+        "query_traces.search_keyword": "\u5173\u952e\u8bcd\u641c\u7d22",
+        "query_traces.metric.count": "\u67e5\u8be2\u8ffd\u8e2a\u6570",
+        "query_traces.info.no_traces": "\u672a\u53d1\u73b0\u67e5\u8be2\u8ffd\u8e2a\uff0c\u8bf7\u5148\u6267\u884c\u67e5\u8be2\u3002",
+        "query_traces.table.trace_id": "\u8ffd\u8e2a ID",
+        "query_traces.table.started_at": "\u5f00\u59cb\u65f6\u95f4",
+        "query_traces.table.elapsed_ms": "\u8017\u65f6 (ms)",
+        "query_traces.table.query": "\u67e5\u8be2\u8bed\u53e5",
+        "query_traces.table.stages": "\u9636\u6bb5\u6570",
+        "query_traces.table.collection": "\u96c6\u5408",
+        "query_traces.select_trace": "\u9009\u62e9\u8ffd\u8e2a",
+        "query_traces.no_query": "\u65e0\u67e5\u8be2\u8bed\u53e5",
+        "query_traces.stage_waterfall": "\u9636\u6bb5\u8017\u65f6\u7011\u5e03\u56fe",
+        "query_traces.info.no_timeline": "\u8be5\u8ffd\u8e2a\u6ca1\u6709\u9636\u6bb5\u8017\u65f6\u6570\u636e\u3002",
+        "query_traces.section.dense_sparse": "Dense / Sparse \u5bf9\u6bd4",
+        "query_traces.metric.dense_hits": "Dense \u547d\u4e2d\u6570",
+        "query_traces.metric.sparse_hits": "Sparse \u547d\u4e2d\u6570",
+        "query_traces.metric.fused_count": "\u878d\u5408\u7ed3\u679c\u6570",
+        "query_traces.section.rerank": "\u91cd\u6392\u524d\u540e\u5bf9\u6bd4",
+        "query_traces.metric.before_rerank": "\u91cd\u6392\u524d",
+        "query_traces.metric.after_rerank": "\u91cd\u6392\u540e",
+        "query_traces.metric.fallback": "\u662f\u5426\u964d\u7ea7",
+        "query_traces.section.payload": "\u8ffd\u8e2a\u8be6\u60c5",
+        "query_traces.bool.yes": "\u662f",
+        "query_traces.bool.no": "\u5426",
+        "evaluation_panel.title": "\u8bc4\u4f30\u9762\u677f",
+        "evaluation_panel.placeholder": "H4 \u9636\u6bb5\u5c06\u652f\u6301\u8bc4\u4f30\u4efb\u52a1\u6267\u884c\u4e0e\u6307\u6807\u67e5\u770b\u3002",
+    },
+}
+
+
+def normalize_locale(locale: Any) -> str:
+    if not isinstance(locale, str):
+        return DEFAULT_LOCALE
+    value = locale.strip()
+    if value not in SUPPORTED_LOCALES:
+        return DEFAULT_LOCALE
+    return value
+
+
+def get_locale(session_state: MutableMapping[str, Any] | Mapping[str, Any]) -> str:
+    value = session_state.get(LOCALE_STATE_KEY, DEFAULT_LOCALE)
+    return normalize_locale(value)
+
+
+def set_locale(session_state: MutableMapping[str, Any], locale: str) -> str:
+    normalized = normalize_locale(locale)
+    session_state[LOCALE_STATE_KEY] = normalized
+    return normalized
+
+
+def locale_from_context(context: dict[str, Any] | None) -> str:
+    if isinstance(context, dict):
+        return normalize_locale(context.get("locale"))
+    return DEFAULT_LOCALE
+
+
+def t(key: str, *, locale: str | None = None, **kwargs: Any) -> str:
+    normalized_locale = normalize_locale(locale) if locale is not None else DEFAULT_LOCALE
+    primary = _MESSAGES.get(normalized_locale, {})
+    fallback = _MESSAGES[FALLBACK_LOCALE]
+    value = primary.get(key) or fallback.get(key) or key
+    if kwargs:
+        try:
+            return value.format(**kwargs)
+        except Exception:
+            return value
+    return value
