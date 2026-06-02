@@ -8,6 +8,7 @@ from typing import Any
 from libs.evaluator.base_evaluator import BaseEvaluator
 from libs.evaluator.custom_evaluator import CustomEvaluator
 from libs.evaluator.ragas_evaluator import RagasEvaluator
+from observability.evaluation.composite_evaluator import CompositeEvaluator
 
 
 class EvaluatorFactory:
@@ -39,6 +40,10 @@ class EvaluatorFactory:
     def create(cls, settings: Mapping[str, Any] | Any) -> BaseEvaluator:
         """Create an evaluator from settings containing `evaluation.provider`."""
         evaluation_settings = cls._extract_evaluation_settings(settings)
+        backends = evaluation_settings.get("backends")
+        if backends is not None:
+            return cls._create_composite(evaluation_settings, backends)
+
         provider = evaluation_settings.get("provider")
         if not isinstance(provider, str) or not provider.strip():
             raise ValueError("Missing required setting: evaluation.provider")
@@ -57,6 +62,35 @@ class EvaluatorFactory:
         config = dict(evaluation_settings)
         config.pop("provider", None)
         return evaluator_cls(**config)
+
+    @classmethod
+    def _create_composite(
+        cls,
+        evaluation_settings: Mapping[str, Any],
+        backends: Any,
+    ) -> CompositeEvaluator:
+        if not isinstance(backends, list) or not backends:
+            raise ValueError("evaluation.backends must be a non-empty list")
+
+        common_options = dict(evaluation_settings)
+        common_options.pop("provider", None)
+        common_options.pop("backends", None)
+
+        evaluators: list[BaseEvaluator] = []
+        for index, backend in enumerate(backends):
+            if isinstance(backend, str):
+                backend_settings = {**common_options, "provider": backend}
+            elif isinstance(backend, Mapping):
+                backend_settings = {**common_options, **dict(backend)}
+            else:
+                raise TypeError(f"evaluation.backends[{index}] must be a string or mapping")
+
+            provider = backend_settings.get("provider")
+            if not isinstance(provider, str) or not provider.strip():
+                raise ValueError(f"evaluation.backends[{index}].provider must be a non-empty string")
+            evaluators.append(cls.create(backend_settings))
+
+        return CompositeEvaluator(evaluators)
 
     @classmethod
     def clear_registry(cls) -> None:

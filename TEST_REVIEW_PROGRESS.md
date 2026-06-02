@@ -742,3 +742,35 @@
     - "src/observability/evaluation/ragas_evaluator.py"
     - "tests/unit/test_ragas_evaluator.py"
   failures: []
+
+- phase: H2-review-1
+  date: 2026-06-02
+  status: FAIL
+  summary: CompositeEvaluator loses metrics when more than two evaluators of the same class return the same metric name; duplicate-name disambiguation only prefixes once and then overwrites prior prefixed values
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_composite_evaluator.py"
+  result: "1 failed, 6 passed"
+  files:
+    - "src/observability/evaluation/composite_evaluator.py"
+    - "tests/unit/test_composite_evaluator.py"
+  failures:
+    - test: "test_composite_evaluator_preserves_all_duplicate_metric_names"
+      error: "AssertionError: expected 3 merged metrics, got 2"
+      cause: "_merge_metrics() renames duplicate `score` to `static.score`, but a third duplicate from the same evaluator type reuses the same key and overwrites the second metric"
+      locations:
+        - "src/observability/evaluation/composite_evaluator.py:63"
+        - "tests/unit/test_composite_evaluator.py:169"
+
+- phase: H2-review-2
+  date: 2026-06-02
+  status: PASS
+  summary: CompositeEvaluator duplicate-key overwrite bug fixed by generating unique suffixed metric names; composite factory/config regression remained stable with added triple-duplicate counterexample coverage
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_composite_evaluator.py tests/unit/test_custom_evaluator.py tests/unit/test_ragas_evaluator.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_composite_evaluator.py tests/unit/test_custom_evaluator.py tests/unit/test_ragas_evaluator.py tests/unit/test_config_loading.py tests/unit/test_dashboard_config_service.py"
+  result: "22 passed (H2 + evaluator suite); 28 passed (evaluation/config regression subset)"
+  files:
+    - "src/observability/evaluation/composite_evaluator.py"
+    - "src/libs/evaluator/evaluator_factory.py"
+    - "tests/unit/test_composite_evaluator.py"
+  failures: []
