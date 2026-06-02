@@ -727,3 +727,18 @@
     - "tests/unit/test_dashboard_i18n.py"
     - "tests/unit/test_dashboard_query_traces.py"
   failures: []
+
+- phase: H1-review-1
+  date: 2026-06-02
+  status: PASS
+  summary: RagasEvaluator implementation verified with additional counterexample coverage for non-numeric metric coercion and non-mapping trace.to_dict fallback; factory registration and config-loading regression remained stable
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_ragas_evaluator.py tests/unit/test_custom_evaluator.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_ragas_evaluator.py tests/unit/test_custom_evaluator.py tests/unit/test_config_loading.py tests/unit/test_dashboard_config_service.py"
+  result: "17 passed (H1 suite); 23 passed (evaluation/config regression subset)"
+  files:
+    - "src/libs/evaluator/ragas_evaluator.py"
+    - "src/libs/evaluator/evaluator_factory.py"
+    - "src/observability/evaluation/ragas_evaluator.py"
+    - "tests/unit/test_ragas_evaluator.py"
+  failures: []

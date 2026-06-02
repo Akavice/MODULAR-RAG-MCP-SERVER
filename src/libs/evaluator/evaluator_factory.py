@@ -7,13 +7,17 @@ from typing import Any
 
 from libs.evaluator.base_evaluator import BaseEvaluator
 from libs.evaluator.custom_evaluator import CustomEvaluator
+from libs.evaluator.ragas_evaluator import RagasEvaluator
 
 
 class EvaluatorFactory:
     """Provider-based constructor for `BaseEvaluator` implementations."""
 
     _registry: dict[str, type[BaseEvaluator]] = {}
-    _builtin_registry: dict[str, type[BaseEvaluator]] = {"custom": CustomEvaluator}
+    _builtin_registry: dict[str, type[BaseEvaluator]] = {
+        "custom": CustomEvaluator,
+        "ragas": RagasEvaluator,
+    }
 
     @classmethod
     def register(

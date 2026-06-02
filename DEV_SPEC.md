@@ -4091,7 +4091,7 @@ dashboard:
 
 |---------|---------|------|---------|------|
 
-| H1 | RagasEvaluator 实现 | [ ] | | |
+| H1 | RagasEvaluator 实现 | [x] | 2026-06-02 | Implemented `libs.evaluator.RagasEvaluator` with optional `ragas`/`datasets` lazy import, injected mock hooks for deterministic tests, faithfulness/answer_relevancy/context_precision metric normalization, trace/context sample building, and clear dependency `ImportError`; `observability.evaluation.ragas_evaluator` now exports the same implementation. Registered built-in `evaluation.provider=ragas` in `EvaluatorFactory`. Added extra counterexample coverage for non-numeric ragas metric rejection and non-mapping `trace.to_dict()` fallback. Validation: H1 suite `17 passed`; evaluation/config regression subset `23 passed`. |
 
 | H2 | CompositeEvaluator 实现 | [ ] | | |
 
