@@ -136,7 +136,8 @@ def test_evaluate_cli_dry_run_outputs_json(capsys: pytest.CaptureFixture[str]) -
     assert code == 0
     output = json.loads(capsys.readouterr().out)
     assert "metrics" in output
-    assert len(output["cases"]) == 2
+    fixture = json.loads(Path("tests/fixtures/golden_test_set.json").read_text(encoding="utf-8"))
+    assert len(output["cases"]) == len(fixture["test_cases"])
 
 
 @pytest.mark.unit

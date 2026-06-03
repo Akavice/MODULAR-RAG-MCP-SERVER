@@ -4099,7 +4099,7 @@ dashboard:
 
 | H4 | 评估面板页面 | [x] | 2026-06-03 | Replaced Dashboard evaluation placeholder with a runnable panel: backend selector (`custom`/`ragas`), golden test-set path, top_k input, dry-run/live toggle, run button, metrics cards, case detail table, and JSON report output. Integrated `EvalRunner`, `EvaluatorFactory`, and optional real `HybridSearch` execution while keeping dry-run as the default local-safe mode. Fixed review-found i18n gap by localizing case-table metric headers (`hit_rate`/`mrr`) while keeping raw JSON report keys machine-readable. Added bilingual i18n keys and `tests/unit/test_dashboard_evaluation_panel.py` for control rendering, successful run output, error display, and zh-CN table labels. Validation: H4 suite `4 passed`; dashboard regression subset `27 passed`; H3/i18n subset `8 passed`. |
 
-| H5 | Recall 回归测试（E2E） | [ ] | | |
+| H5 | Recall 回归测试（E2E） | [x] | 2026-06-03 | Added `tests/e2e/test_recall.py` using the golden test set plus deterministic retrieval to enforce minimum recall thresholds (`hit_rate >= 0.95`, `mrr >= 0.80`) without external providers. Expanded `tests/fixtures/golden_test_set.json` with an additional source-only case to cover source fallback recall. Updated the CLI dry-run unit assertion to track fixture case count instead of hard-coding 2. Added counterexample coverage to ensure a missed source-only golden case also drops below the recall threshold. Validation: H5 suite `3 passed`; H3/H4/H5 regression subset `12 passed`; `python scripts/evaluate.py` outputs metrics JSON for 3 cases. |
 
 
 

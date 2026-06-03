@@ -824,3 +824,31 @@
       locations:
         - "src/observability/dashboard/pages/evaluation_panel.py:83"
         - "tests/unit/test_dashboard_evaluation_panel.py:179"
+
+- phase: H4-review-2
+  date: 2026-06-03
+  status: PASS
+  summary: Evaluation panel now localizes case-table metric headers and passes zh-CN rendering checks; dashboard regression remains stable
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_evaluation_panel.py tests/unit/test_dashboard_i18n.py tests/unit/test_eval_runner.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_config_service.py tests/unit/test_dashboard_data_service.py tests/unit/test_dashboard_ingestion_manager.py tests/unit/test_dashboard_ingestion_traces.py tests/unit/test_dashboard_query_traces.py tests/unit/test_dashboard_i18n.py tests/unit/test_dashboard_evaluation_panel.py tests/unit/test_start_dashboard_script.py"
+  result: "12 passed (H4 + i18n/eval subset); 27 passed (dashboard regression subset)"
+  files:
+    - "src/observability/dashboard/pages/evaluation_panel.py"
+    - "src/observability/dashboard/services/i18n.py"
+    - "tests/unit/test_dashboard_evaluation_panel.py"
+  failures: []
+
+- phase: H5-review-1
+  date: 2026-06-03
+  status: PASS
+  summary: Recall E2E regression checks verified with added source-only miss counterexample; golden fixture expansion and CLI case-count assertion remain consistent with H3/H4 behavior
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/e2e/test_recall.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/e2e/test_recall.py tests/unit/test_eval_runner.py tests/unit/test_dashboard_evaluation_panel.py"
+  result: "3 passed (H5 suite); 12 passed (H3/H4/H5 regression subset)"
+  files:
+    - "tests/e2e/test_recall.py"
+    - "tests/fixtures/golden_test_set.json"
+    - "tests/unit/test_eval_runner.py"
+  failures: []

@@ -9,6 +9,11 @@
       "query": "How can I inspect query traces?",
       "expected_chunk_ids": ["chunk_query_trace"],
       "expected_sources": ["dashboard_guide.pdf"]
+    },
+    {
+      "query": "How do I run recall regression?",
+      "expected_chunk_ids": [],
+      "expected_sources": ["evaluation_guide.pdf"]
     }
   ]
 }
