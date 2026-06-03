@@ -805,3 +805,22 @@
     - "src/observability/evaluation/eval_runner.py"
     - "tests/unit/test_eval_runner.py"
   failures: []
+
+- phase: H4-review-1
+  date: 2026-06-03
+  status: FAIL
+  summary: Evaluation panel leaves case-table metric headers hard-coded as `hit_rate` and `mrr`, so zh-CN rendering is incomplete even though the rest of the page is localized
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_dashboard_evaluation_panel.py"
+  result: "1 failed, 3 passed"
+  files:
+    - "src/observability/dashboard/pages/evaluation_panel.py"
+    - "src/observability/dashboard/services/i18n.py"
+    - "tests/unit/test_dashboard_evaluation_panel.py"
+  failures:
+    - test: "test_evaluation_panel_renders_zh_cn_labels_for_case_table"
+      error: "AssertionError: expected localized case-table metric headers, got raw 'hit_rate'/'mrr' keys"
+      cause: "render() localizes query/expected/retrieved columns but hard-codes `hit_rate` and `mrr` in the dataframe rows instead of routing them through i18n keys"
+      locations:
+        - "src/observability/dashboard/pages/evaluation_panel.py:83"
+        - "tests/unit/test_dashboard_evaluation_panel.py:179"
