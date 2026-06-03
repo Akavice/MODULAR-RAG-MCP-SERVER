@@ -774,3 +774,34 @@
     - "src/libs/evaluator/evaluator_factory.py"
     - "tests/unit/test_composite_evaluator.py"
   failures: []
+
+- phase: H3-review-1
+  date: 2026-06-02
+  status: FAIL
+  summary: EvalRunner source-fallback hit_rate/mrr is overwritten by evaluator-returned metrics with the same names, causing source-only golden cases to report false negatives with CustomEvaluator
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_eval_runner.py"
+  result: "1 failed, 4 passed"
+  files:
+    - "src/observability/evaluation/eval_runner.py"
+    - "tests/unit/test_eval_runner.py"
+  failures:
+    - test: "test_eval_runner_preserves_source_fallback_hit_rate_with_custom_evaluator"
+      error: "AssertionError: expected hit_rate 1.0, got 0.0"
+      cause: "run() computes fallback-aware case_metrics first, then `case_metrics.update(evaluator_metrics)` overwrites `hit_rate`/`mrr` with CustomEvaluator outputs that only compare retrieved_ids against golden_ids derived from expected_sources"
+      locations:
+        - "src/observability/evaluation/eval_runner.py:101"
+        - "tests/unit/test_eval_runner.py:145"
+
+- phase: H3-review-2
+  date: 2026-06-02
+  status: PASS
+  summary: EvalRunner now preserves source-aware runner metrics and prefixes conflicting evaluator metrics, fixing false negatives on source-only golden cases; H1-H3 evaluator regression remained stable
+  commands:
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_eval_runner.py"
+    - ".\\.venv\\Scripts\\python -m pytest -q tests/unit/test_eval_runner.py tests/unit/test_composite_evaluator.py tests/unit/test_custom_evaluator.py tests/unit/test_ragas_evaluator.py"
+  result: "5 passed (H3 suite); 27 passed (H1-H3 evaluator regression subset)"
+  files:
+    - "src/observability/evaluation/eval_runner.py"
+    - "tests/unit/test_eval_runner.py"
+  failures: []

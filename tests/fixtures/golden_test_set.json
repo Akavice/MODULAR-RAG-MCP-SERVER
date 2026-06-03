@@ -1,0 +1,14 @@
+{
+  "test_cases": [
+    {
+      "query": "How do I configure Azure OpenAI?",
+      "expected_chunk_ids": ["chunk_azure_config"],
+      "expected_sources": ["config_guide.pdf"]
+    },
+    {
+      "query": "How can I inspect query traces?",
+      "expected_chunk_ids": ["chunk_query_trace"],
+      "expected_sources": ["dashboard_guide.pdf"]
+    }
+  ]
+}
